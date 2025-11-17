@@ -1,0 +1,47 @@
+---
+// src/pages/promociones.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PromoCard from '../components/PromoCard.astro';
+// 1. Importamos nuestra nueva función en lugar de tener datos aquí
+import { getActivePromos } from '../services/contentful';
+
+// 2. Llamamos a la función para obtener los datos en vivo desde Contentful
+const promociones = await getActivePromos();
+---
+
+<BaseLayout 
+  title="Promociones - Grupo Linea Digital" 
+  description="Descubre todas nuestras promociones de temporada y mantente siempre conectado con Telcel.">
+  
+  <section class="bg-[#0F172A] text-[#002A5C] py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center">
+        <h1 class="text-4xl lg:text-5xl text-white font-bold mb-4">Nuestras Promociones</h1>
+        <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+          Mantente al día con las mejores ofertas en planes, equipos y servicios que tenemos para ti.
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        {promociones.map((promo: any) => {
+          // Type assertion to ensure TypeScript knows about the fields property
+          const p = (promo as any).fields;
+          // Add https: to the image URL since Contentful returns URLs without it
+          const imageUrl = p.imagen?.fields?.file?.url ? `https:${p.imagen.fields.file.url}` : '/path/to/fallback-image.jpg';
+          
+          return (
+            <a href={p.enlace || '#'}>
+              <PromoCard 
+                title={p.titulo || ''}
+                description={p.descripcion || ''}
+                imageUrl={imageUrl}
+                tag={p.etiqueta || undefined}
+                endDate={p.fechaFin ? new Date(p.fechaFin).toLocaleDateString('es-MX') : 'Fecha no disponible'}
+              />
+            </a>
+          )
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
