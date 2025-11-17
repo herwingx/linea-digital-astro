@@ -9,6 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.15.5"
+    "astro": "^5.15.5",
+    "contentful": "^11.8.13"
+  },
+  "devDependencies": {
+    "@astrojs/tailwind": "^6.0.2"
   }
 }
