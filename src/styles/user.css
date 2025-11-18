@@ -1,3 +1,67 @@
-#hero-image img {
-  mask-image: linear-gradient(black 80%, transparent);
+/* user.css */
+
+/* Define la animación de deslizamiento y aparición */
+@keyframes fade-up-slide {
+  0% {
+    opacity: 0;
+    /* Usamos 'translateY' para simplificar, ya que 'translate3d(0, Y, 0)' es similar */
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Opcional: Incluir prefijos para máxima compatibilidad (aunque modernos navegadores ya no los necesitan) */
+@-webkit-keyframes fade-up-slide {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+
+/* user.css (Continuación) */
+
+.animate-fade-up {
+  /* Aplica la animación 'fade-up-slide' */
+  animation-name: fade-up-slide;
+
+  /* Duración de la animación (ej: 0.8 segundos) */
+  animation-duration: 1.5s;
+
+  /* Función de tiempo (para un deslizamiento suave) */
+  animation-timing-function: ease-out;
+
+  /* 'forwards' asegura que el estado final (100%) permanezca aplicado */
+  animation-fill-mode: forwards;
+
+  /* Opcional: Define un retraso si quieres que aparezcan secuencialmente */
+  /* animation-delay: 0.2s; */
+
+  /* Versión corta para simplificar: */
+  /* animation: fade-up-slide 0.8s ease-out forwards; */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#phone-image {
+  mask-image: linear-gradient(black 60%, transparent);
 }
