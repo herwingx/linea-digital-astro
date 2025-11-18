@@ -19,9 +19,14 @@ const { title, description } = Astro.props;
         <link rel="icon" type="image/svg+xml" href="/logo-white.svg" />
         <title>{title}</title>
         <meta name="description" content={description} />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
+        />
     </head>
-    <body class="text-white bg-white dark:bg-[#0F172A] transition-colors duration-300">
+    <body
+        class="text-white bg-white dark:bg-[#0F172A] transition-colors duration-300"
+    >
         <img
             src="/hero-shape-1.svg"
             alt=""
@@ -40,6 +45,3 @@ const { title, description } = Astro.props;
         <FloatingButtons />
     </body>
 </html>
-
-    
-
