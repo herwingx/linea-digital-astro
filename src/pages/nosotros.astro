@@ -2,6 +2,7 @@
 // src/pages/quienes-somos.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
 import AnimatedCounter from "../components/AnimatedCounter.astro";
+import "../styles/user.css";
 ---
 
 <BaseLayout
@@ -85,119 +86,144 @@ import AnimatedCounter from "../components/AnimatedCounter.astro";
     </div>
   </section>
   <!-- Sección de Marcas que manejamos -->
-  <section class="py-16 bg-[#0F172A]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
-          Marcas que manejamos
-        </h2>
-        <p class="text-lg text-gray-400 max-w-3xl mx-auto">
-          Trabajamos con las mejores marcas del mercado para ofrecerte productos
-          de la más alta calidad.
-        </p>
+ <section class="py-16 bg-[#0F172A] relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+        Marcas que manejamos
+      </h2>
+      <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+        Trabajamos con las mejores marcas del mercado para ofrecerte productos
+        de la más alta calidad.
+      </p>
+    </div>
+
+    <div
+      class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8 items-center justify-center"
+    >
+      <div
+        class="logo-card group"
+        style="--logo-index: 1;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+          alt="Apple"
+          class="logo-img"
+          loading="lazy"
+        />
       </div>
 
       <div
-        class="grid grid-cols-2 sm:grid-cols-4 gap-8 md:gap-12 items-center justify-center"
+        class="logo-card group"
+        style="--logo-index: 2;"
       >
-        <!-- Apple -->
-        <div
-          class="flex justify-center p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-            alt="Apple"
-            class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- Samsung -->
-        <div
-          class="flex justify-center p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg"
-            alt="Samsung"
-            class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- Xiaomi -->
-        <div
-          class="flex justify-center p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/2/29/Xiaomi_logo.svg"
-            alt="Xiaomi"
-            class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- Huawei -->
-        <div
-          class="flex justify-center p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Huawei_Standard_logo.svg"
-            alt="Huawei"
-            class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- Motorola -->
-        <div
-          class="flex justify-center p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Motorola_M_symbol_blue_2011.svg"
-            alt="Motorola"
-            class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- Google -->
-        <div
-          class="flex justify-center p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-            alt="Google"
-            class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- LG -->
-        <div
-          class="flex justify-center p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/2/20/LG_symbol.svg"
-            alt="LG"
-            class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- OnePlus -->
-        <div
-          class="flex justify-center p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all duration-300"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/1/1e/OnePlus_logo.svg"
-            alt="OnePlus"
-            class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-            loading="lazy"
-          />
-        </div>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg"
+          alt="Samsung"
+          class="logo-img"
+          loading="lazy"
+        />
       </div>
+
+      <div
+        class="logo-card group"
+        style="--logo-index: 3;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/2/29/Xiaomi_logo.svg"
+          alt="Xiaomi"
+          class="logo-img"
+          loading="lazy"
+        />
+      </div>
+
+      <div
+        class="logo-card group"
+        style="--logo-index: 4;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Huawei_Standard_logo.svg"
+          alt="Huawei"
+          class="logo-img"
+          loading="lazy"
+        />
+      </div>
+
+      <div
+        class="logo-card group"
+        style="--logo-index: 5;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+          alt="Google"
+          class="logo-img"
+          loading="lazy"
+        />
+      </div>
+      
+      <div
+        class="logo-card group"
+        style="--logo-index: 6;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Motorola_M_symbol_blue_2011.svg"
+          alt="Motorola"
+          class="logo-img"
+          loading="lazy"
+        />
+      </div>
+
+      <div
+        class="logo-card group"
+        style="--logo-index: 7;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/2/20/LG_symbol.svg"
+          alt="LG"
+          class="logo-img"
+          loading="lazy"
+        />
+      </div>
+
+      <div
+        class="logo-card group"
+        style="--logo-index: 8;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/1/1e/OnePlus_logo.svg"
+          alt="OnePlus"
+          class="logo-img"
+          loading="lazy"
+        />
+      </div>
+      
+      <div
+        class="logo-card group hidden sm:flex"
+        style="--logo-index: 9;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/1/18/Sony_logo.svg"
+          alt="Sony"
+          class="logo-img"
+          loading="lazy"
+        />
+      </div>
+      
+      <div
+        class="logo-card group hidden md:flex"
+        style="--logo-index: 10;"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Nokia_logo.svg"
+          alt="Nokia"
+          class="logo-img"
+          loading="lazy"
+        />
+      </div>
+      
     </div>
-  </section>
+  </div>
+</section>
   <section class="py-16 sm:py-24 bg-[#0A192F]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 lg:mb-16">

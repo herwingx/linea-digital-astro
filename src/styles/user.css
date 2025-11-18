@@ -52,7 +52,65 @@
 
 
 
+/* 1. ESTILO BASE DE LA TARJETA (FRAME) */
+    .logo-card {
+      /* Estilos base (ya presentes en tu código, pero renombrados para limpieza) */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.05); /* bg-white/5 */
+      border-radius: 0.75rem; /* rounded-xl */
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Transición suave */
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      min-height: 96px; /* Asegurar altura mínima */
+    }
 
+    /* 2. EFECTO DE HOVER MODERNO */
+    .logo-card:hover {
+      background-color: rgba(255, 255, 255, 0.15); /* Hover: más claro */
+      border-color: rgba(65, 131, 215, 0.5); /* Borde de color de énfasis sutil (como el color #4183D7) */
+      transform: translateY(-4px) scale(1.02); /* Se levanta un poco */
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1); /* Sombra 3D */
+    }
+
+    /* 3. ESTILO BASE DEL LOGO (IMAGEN) */
+    .logo-img {
+      height: 4rem; /* h-16 */
+      width: auto;
+      object-fit: contain;
+      /* Animación minimalista: por defecto están atenuados */
+      opacity: 0.5; 
+      filter: saturate(0) brightness(1.5); /* Más grises y ligeramente brillantes */
+      transition: opacity 0.4s, filter 0.4s, transform 0.4s;
+    }
+
+    /* 4. EFECTO DE HOVER EN EL LOGO */
+    .logo-card:hover .logo-img {
+      opacity: 1; /* Al pasar el ratón, recuperan la opacidad total */
+      filter: saturate(1) brightness(1); /* Muestra el color original */
+      transform: scale(1.05); /* Crecen un poco */
+    }
+
+    /* 5. ANIMACIÓN DE ENTRADA (CADA LOGO APARECE ESCALONADO) */
+    @keyframes fadeInSlide {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo-card {
+      opacity: 0; /* Ocultar por defecto */
+      animation: fadeInSlide 0.6s ease-out forwards;
+      /* Variable CSS para el retardo basado en el índice */
+      animation-delay: calc(0.1s * var(--logo-index));
+    }
 
 
 
