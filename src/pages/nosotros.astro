@@ -2,6 +2,8 @@
 // src/pages/quienes-somos.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
 import AnimatedCounter from "../components/AnimatedCounter.astro";
+import { Image } from "astro:assets";
+import mexicoMap from "../assets/mexico-linea-compress.webp";
 import "../styles/user.css";
 ---
 
@@ -13,10 +15,13 @@ import "../styles/user.css";
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div class="relative">
-          <img
-            src="/mexico-linea-compress.webp"
-            class="block w-full"
+          <Image
+            src={mexicoMap}
             alt="Mapa de México"
+            class="block w-full"
+            loading="eager"
+            fetchpriority="high"
+            sizes="(min-width: 1024px) 50vw, 100vw"
           />
         </div>
         <div class="text-center">

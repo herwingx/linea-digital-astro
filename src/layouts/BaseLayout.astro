@@ -1,8 +1,11 @@
 ---
 // src/layouts/BaseLayout.astro
+import { Image } from "astro:assets";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FloatingButtons from "../components/FloatingButtons.astro";
+import heroShape1 from "../assets/hero-shape-1.svg";
+import heroShape2 from "../assets/hero-shape-2.svg";
 
 export interface Props {
     title: string;
@@ -27,13 +30,13 @@ const { title, description } = Astro.props;
     <body
         class="text-white bg-white dark:bg-[#0F172A] transition-colors duration-300"
     >
-        <img
-            src="/hero-shape-1.svg"
+        <Image
+            src={heroShape1}
             alt=""
             class="absolute top-0 left-0 z-10"
         />
-        <img
-            src="/hero-shape-2.svg"
+        <Image
+            src={heroShape2}
             alt=""
             class="absolute top-0 right-0 z-10"
         />
