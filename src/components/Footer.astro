@@ -1,3 +1,9 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo-white.svg";
+
+---
+
 <footer class="bg-[#0F172A] footer-bg text-gray-white relative py-16 px-4">
   <div class="container mx-auto relative z-10">
     <!-- Contenido principal del footer (grid de 3 columnas) -->
@@ -5,11 +11,7 @@
       <!-- Columna 1: Logo, Descripción y Redes Sociales -->
       <div class="lg:col-span-2">
         <a href="/" class="flex items-center gap-3 mb-4">
-          <img
-            src="https://erp.linea-digital.com/erp/images/icono2.png"
-            alt="Logo de Línea Digital"
-            class="w-20 h-10"
-          />
+          <Image src={logo} alt="Logo" class="block w-40 h-20" />
         </a>
         <p class="text-sm leading-relaxed max-w-md mb-6">
           Somos una empresa líder en la comercialización de soluciones
@@ -223,11 +225,11 @@
   .footer-bg {
     /* Propiedades de las rayas */
     background-image: linear-gradient(
-        rgba(100, 255, 218, 0.03) 1px,
+        rgba(29, 78, 216, 0.08) 1px,
         transparent 1px
       ),
-      linear-gradient(90deg, rgba(100, 255, 218, 0.03) 1px, transparent 1px);
-    background-size: 2rem 2rem;
+      linear-gradient(90deg,  rgba(29, 78, 216, 0.08) 1px, transparent 1px);
+    background-size: 4rem 4rem;
 
     /* PROPIEDADES AÑADIDAS PARA EL DESVANECIMIENTO */
 

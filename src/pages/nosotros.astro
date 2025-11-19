@@ -11,10 +11,10 @@ import "../styles/user.css";
   title="Quienes Somos - Grupo Linea Digital"
   description="Conoce más sobre Grupo Linea Digital, distribuidor autorizado Telcel."
 >
-  <section class="bg-[#0F172A] py-16 text-white">
-    <div class="container mx-auto px-4">
+  <section class="bg-[#0F172A] py-4 text-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div class="relative">
+        <div class="relative z-10">
           <Image
             src={mexicoMap}
             alt="Mapa de México"
@@ -34,323 +34,339 @@ import "../styles/user.css";
         </div>
       </div>
     </div>
-  </section>
-  <!-- Sección de Estadísticas -->
-  <section class="py-16 from-[#0F172A] to-[#1E293B]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
-          ACERCA DE NOSOTROS
-        </h2>
-        <div class="h-1 w-24 bg-blue-600 mx-auto rounded-full mb-8"></div>
+    <!-- Sección de Estadísticas -->
+    <section class="py-4">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+            ACERCA DE NOSOTROS
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Empresas con convenio -->
+          <div
+            class="bg-slate-800 backdrop-blur-sm p-8 rounded-xl text-center border border-white/5 hover:border-blue-700/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div class="text-5xl font-bold text-blue-600 mb-2">
+              <AnimatedCounter end={100} prefix="+" duration={2000} />
+            </div>
+            <p class="text-lg text-gray-400">Empresas con convenio exclusivo</p>
+          </div>
+
+          <!-- Clientes satisfechos -->
+          <div
+            class="bg-slate-800 backdrop-blur-sm p-8 rounded-xl text-center border border-white/5 hover:border-blue-700/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div class="text-5xl font-bold text-blue-600 mb-2">
+              <AnimatedCounter end={10000} prefix="+" duration={2500} />
+            </div>
+            <p class="text-lg text-gray-400">
+              Clientes satisfechos a nivel nacional
+            </p>
+          </div>
+
+          <!-- Productos disponibles -->
+          <div
+            class="bg-slate-800 backdrop-blur-sm p-8 rounded-xl text-center border border-white/5 hover:border-blue-700/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div class="text-5xl font-bold text-blue-600 mb-2">
+              <AnimatedCounter end={1000} prefix="+" duration={3000} />
+            </div>
+            <p class="text-lg text-gray-400">Productos a tu disposición</p>
+          </div>
+
+          <!-- Distribuidor Telcel -->
+          <div
+            class="bg-slate-800 backdrop-blur-sm p-8 rounded-xl text-center border border-white/5 hover:border-blue-700/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div class="text-5xl font-bold text-blue-600 mb-2">#1</div>
+            <p class="text-lg text-gray-400">
+              Somos el distribuidor Telcel #1 a nivel nacional
+            </p>
+          </div>
+        </div>
       </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Empresas con convenio -->
-        <div
-          class="bg-white/5 backdrop-blur-sm p-8 rounded-xl text-center hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1"
-        >
-          <div class="text-5xl font-bold text-blue-600 mb-2">
-            <AnimatedCounter end={100} prefix="+" duration={2000} />
-          </div>
-          <p class="text-lg text-gray-400">Empresas con convenio exclusivo</p>
-        </div>
-
-        <!-- Clientes satisfechos -->
-        <div
-          class="bg-white/5 backdrop-blur-sm p-8 rounded-xl text-center hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1"
-        >
-          <div class="text-5xl font-bold text-blue-600 mb-2">
-            <AnimatedCounter end={10000} prefix="+" duration={2500} />
-          </div>
-          <p class="text-lg text-gray-400">
-            Clientes satisfechos a nivel nacional
-          </p>
-        </div>
-
-        <!-- Productos disponibles -->
-        <div
-          class="bg-white/5 backdrop-blur-sm p-8 rounded-xl text-center hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1"
-        >
-          <div class="text-5xl font-bold text-blue-600 mb-2">
-            <AnimatedCounter end={1000} prefix="+" duration={3000} />
-          </div>
-          <p class="text-lg text-gray-400">Productos a tu disposición</p>
-        </div>
-
-        <!-- Distribuidor Telcel -->
-        <div
-          class="bg-white/5 backdrop-blur-sm p-8 rounded-xl text-center hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1"
-        >
-          <div class="text-5xl font-bold text-blue-600 mb-2">#1</div>
-          <p class="text-lg text-gray-400">
-            Somos el distribuidor Telcel #1 a nivel nacional
-          </p>
-        </div>
-      </div>
-    </div>
+    </section>
   </section>
   <!-- Sección de Marcas que manejamos -->
- <section class="py-16 bg-[#0F172A] relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
-        Marcas que manejamos
+ <section class="relative py-20 bg-[#0F172A] overflow-hidden">
+  
+  <!-- Fondo sutil (Grid) para continuidad visual -->
+  <div class="absolute inset-0 opacity-10 pointer-events-none" 
+       style="background-image: linear-gradient(#1d4ed8 1px, transparent 1px), linear-gradient(90deg, #1d4ed8 1px, transparent 1px); background-size: 4rem 4rem; mask-image: radial-gradient(circle, black, transparent 80%);">
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Encabezado -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">
+        ALIADOS <span class="text-transparent bg-clip-text text-blue-700">ESTRATÉGICOS</span>
       </h2>
-      <p class="text-lg text-gray-400 max-w-3xl mx-auto">
-        Trabajamos con las mejores marcas del mercado para ofrecerte productos
-        de la más alta calidad.
+      <p class="text-gray-400 max-w-2xl mx-auto text-lg">
+        Potenciamos tu experiencia con la mejor tecnología del mercado global.
       </p>
     </div>
 
-    <div
-      class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8 items-center justify-center"
-    >
-      <div
-        class="logo-card group"
-        style="--logo-index: 1;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-          alt="Apple"
-          class="logo-img"
-          loading="lazy"
-        />
-      </div>
-
-      <div
-        class="logo-card group"
-        style="--logo-index: 2;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg"
-          alt="Samsung"
-          class="logo-img"
-          loading="lazy"
-        />
-      </div>
-
-      <div
-        class="logo-card group"
-        style="--logo-index: 3;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/2/29/Xiaomi_logo.svg"
-          alt="Xiaomi"
-          class="logo-img"
-          loading="lazy"
-        />
-      </div>
-
-      <div
-        class="logo-card group"
-        style="--logo-index: 4;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Huawei_Standard_logo.svg"
-          alt="Huawei"
-          class="logo-img"
-          loading="lazy"
-        />
-      </div>
-
-      <div
-        class="logo-card group"
-        style="--logo-index: 5;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-          alt="Google"
-          class="logo-img"
-          loading="lazy"
-        />
-      </div>
+    <!-- Grid de Logos -->
+    <!-- Cambiamos a grid-cols-2 en móvil y subimos hasta 5 en escritorio para que no se vean gigantes -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-8">
       
-      <div
-        class="logo-card group"
-        style="--logo-index: 6;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Motorola_M_symbol_blue_2011.svg"
-          alt="Motorola"
-          class="logo-img"
+      <!-- Item de Logo (Repetir estructura para cada logo) -->
+      <!-- Apple -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img 
+          src="https://cdn.worldvectorlogo.com/logos/apple-13.svg" 
+          alt="Apple" 
+          class="h-10 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110"
           loading="lazy"
         />
       </div>
 
-      <div
-        class="logo-card group"
-        style="--logo-index: 7;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/2/20/LG_symbol.svg"
-          alt="LG"
-          class="logo-img"
-          loading="lazy"
-        />
+      <!-- Samsung -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/samsung-8.svg" alt="Samsung" class="h-8 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
       </div>
 
-      <div
-        class="logo-card group"
-        style="--logo-index: 8;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/1/1e/OnePlus_logo.svg"
-          alt="OnePlus"
-          class="logo-img"
-          loading="lazy"
-        />
+      <!-- Xiaomi -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/xiaomi-3.svg" alt="Xiaomi" class="h-10 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
       </div>
-      
-      <div
-        class="logo-card group hidden sm:flex"
-        style="--logo-index: 9;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/1/18/Sony_logo.svg"
-          alt="Sony"
-          class="logo-img"
-          loading="lazy"
-        />
+
+      <!-- Huawei -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/huawei.svg" alt="Huawei" class="h-10 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
       </div>
-      
-      <div
-        class="logo-card group hidden md:flex"
-        style="--logo-index: 10;"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Nokia_logo.svg"
-          alt="Nokia"
-          class="logo-img"
-          loading="lazy"
-        />
+
+      <!-- Google -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/google-1-1.svg" alt="Google" class="h-8 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
       </div>
-      
+
+       <!-- Motorola -->
+       <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/motorola-new-logo.svg" alt="Motorola" class="h-10 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
+      </div>
+
+      <!-- LG -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/lg.svg" alt="LG" class="h-8 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
+      </div>
+
+      <!-- OnePlus -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/oneplus-2.svg" alt="OnePlus" class="h-8 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
+      </div>
+
+      <!-- Sony -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/sony-logo-1.svg" alt="Sony" class="h-6 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
+      </div>
+
+      <!-- Nokia -->
+      <div class="group relative flex items-center justify-center p-8 rounded-xl bg-slate-800 border border-white/5 transition-all duration-500 hover:border-blue-700/50 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(54,69,217,0.2)] hover:-translate-y-1">
+        <img src="https://cdn.worldvectorlogo.com/logos/nokia-3.svg" alt="Nokia" class="h-5 w-auto object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110" loading="lazy"/>
+      </div>
+
     </div>
   </div>
 </section>
-  <section class="py-16 sm:py-24 bg-[#0A192F]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section
+    class="relative min-h-screen w-screen bg-[#0F172A] overflow-hidden flex items-center"
+  >
+    <!-- 1. FONDO FUTURISTA (CYBER GRID) -->
+    <!-- Este div crea una rejilla de perspectiva estilo Tron/Futuro -->
+    <div class="absolute inset-0 z-0 opacity-20 pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 lg:mb-16">
         <h2
-          class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tighter text-white uppercase"
+          class="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight uppercase"
         >
-          Filosofía Corporativa
+          Filosofía <span class="text-transparent bg-clip-text text-blue-700"
+            >Corporativa</span
+          >
         </h2>
-        <div class="mt-4 h-1.5 w-24 bg-blue-600 mx-auto rounded-full"></div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-        {/* Sección Izquierda: Título Principal */}
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+      >
+        <!-- SECCIÓN IZQUIERDA: Título + Animación de Evolución -->
         <div
-          class="flex items-center justify-center h-full p-8 order-2 lg:order-1"
+          class="flex items-center justify-center h-full p-4 lg:p-8 order-2 lg:order-1 relative"
         >
-          <div class="relative w-full max-w-lg text-center">
-            {/* Efectos de fondo oscuros y sutiles */}
-            <div
-              class="hidden lg:block absolute -top-16 -left-16 w-36 h-36 bg-blue-600/10 rounded-full blur-2xl"
+          <!-- 2. REPRESENTACIÓN DE EVOLUCIÓN (El SVG Animado) -->
+          <!-- Usamos 'animate-[spin_20s_linear_infinite]' para forzar la animación con Tailwind -->
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] -z-10 opacity-60"
+          >
+            <svg
+              viewBox="0 0 200 200"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-full h-full animate-[spin_20s_linear_infinite]"
             >
-            </div>
-            <div
-              class="hidden lg:block absolute -bottom-16 -right-16 w-48 h-48 bg-blue-600/10 rounded-full blur-2xl"
-            >
-            </div>
+              <defs>
+                <linearGradient
+                  id="evoGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stop-color="#06b6d4"></stop>
+                  <!-- Cyan -->
+                  <stop offset="100%" stop-color="#2563eb"></stop>
+                  <!-- Blue -->
+                </linearGradient>
+              </defs>
+              <!-- Anillo Exterior -->
+              <circle
+                cx="100"
+                cy="100"
+                r="90"
+                fill="none"
+                stroke="url(#evoGradient)"
+                stroke-width="1"
+                stroke-dasharray="10 15"
+                class="opacity-50"></circle>
+              <!-- Anillo Medio (Gira al revés visualmente por el diseño) -->
+              <circle
+                cx="100"
+                cy="100"
+                r="60"
+                fill="none"
+                stroke="#22d3ee"
+                stroke-width="2"
+                stroke-dasharray="4 4"
+                class="opacity-80"></circle>
+              <!-- Núcleo Conectado -->
+              <path
+                d="M100,20 L100,180 M20,100 L180,100 M45,45 L155,155 M155,45 L45,155"
+                stroke="url(#evoGradient)"
+                stroke-width="0.5"
+                class="opacity-30"></path>
+              <!-- Partículas (Círculos pequeños en órbita) -->
+              <circle cx="100" cy="10" r="3" fill="#fff" class="animate-pulse"
+              ></circle>
+              <circle cx="100" cy="190" r="3" fill="#fff" class="animate-pulse"
+              ></circle>
+            </svg>
+          </div>
+
+          <!-- Contenido de Texto -->
+          <div class="relative w-full max-w-lg text-center lg:text-center">
             <h3
-              class="relative text-5xl sm:text-6xl font-black tracking-tight text-white uppercase leading-tight"
+              class="relative text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight uppercase leading-none"
             >
               EVOLUCIONANDO
               <span
-                class="block text-blue-600 font-black text-6xl sm:text-7xl"
+                class="text-center block bg-clip-text text-white font-bold text-3xl sm:text-4xl mb-4 tracking-tight"
               >
                 CONTIGO
               </span>
             </h3>
-            <div class="mt-8 text-sm text-gray-400">
-              <p>Innovación y compromiso en cada conexión</p>
+            <div
+              class="mt-8 p-4 border-l-4 border-blue-700 bg-slate-800/80 backdrop-blur-sm rounded-r-lg"
+            >
+              <p class="text-gray-300 text-lg font-light">
+                Innovación y compromiso en cada conexión digital.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Sección Derecha: Misión y Valores */}
-        <div class="space-y-10 order-1 lg:order-2">
-          {/* Misión */}
-          <div
-            class="bg-[#102A43] p-6 sm:p-8 rounded-xl shadow-2xl border-t-4 border-blue-600"
-          >
-            <h3 class="text-2xl font-bold text-white mb-4">Misión</h3>
-            <p class="text-base leading-relaxed text-gray-400">
-              Reinventamos la forma de dar productos y servicios de
-              telecomunicaciones, logramos que sea fácil y rápido, creemos en la
-              inclusión digital y que la tecnología llegue a todos.
-            </p>
+        <!-- SECCIÓN DERECHA: Tarjetas Glassmorphism -->
+        <div class="space-y-8 order-1 lg:order-2">
+          <!-- Misión -->
+          <div class="relative group">
+            <!-- Borde brillante al hacer hover -->
+           
+            <div
+              class="relative bg-slate-800 p-8 rounded-2xl border border-white/10 shadow-2xl"
+            >
+              <div class="flex items-center mb-4 justify-center">
+                <h3 class="text-2xl font-bold text-white">Misión</h3>
+              </div>
+              <p class="text-base leading-relaxed text-gray-400">
+                Reinventamos la forma de dar productos y servicios de
+                telecomunicaciones, logramos que sea fácil y rápido, creemos en
+                la inclusión digital.
+              </p>
+            </div>
           </div>
 
-          {/* Valores */}
-          <div class="bg-[#102A43] p-6 sm:p-8 rounded-xl shadow-2xl">
-            <h3 class="text-2xl font-bold text-white mb-6">Valores</h3>
-            <ul class="space-y-6">
-              {/* Valor 1: Fe en Dios */}
-              <li class="flex items-start space-x-4">
-                <div class="shrink-0 text-blue-600 text-3xl mt-1">
-                  {/* Ícono de corazón - similar al de la imagen */}
-                  <span class="material-icons-round text-3xl"
+          <!-- Valores -->
+          <div
+            class="relative bg-slate-800 backdrop-blur-md p-8 rounded-2xl border border-white/5 shadow-2xl"
+          >
+            <h3
+              class="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4"
+            >
+              Valores
+            </h3>
+            <ul class="space-y-8">
+              <!-- Valor 1 -->
+              <li class="flex items-start space-x-4 group">
+                <div
+                  class="shrink-0 p-2 bg-blue-900/30 rounded-lg text-blue-700 group-hover:text-white group-hover:bg-blue-700 transition-all duration-300"
+                >
+                  <span class="material-icons-round text-2xl"
                     >favorite_border</span
                   >
                 </div>
                 <div>
                   <h4 class="font-bold text-lg text-white">Fe en Dios</h4>
-                  <p class="text-base text-gray-400 mt-1">
-                    Promover nuestra capacidad para alcanzar cada uno de los
-                    retos que se nos presentan a través de la confianza en
-                    nuestro Creador, quien es el que sustenta nuestra filosofía
-                    institucional.
-                  </p>
-                </div>
-              </li>
-              {/* Valor 2: Unidad */}
-              <li class="flex items-start space-x-4">
-                <div class="shrink-0 text-blue-600 text-3xl mt-1">
-                  {/* Ícono de grupo/personas - similar al de la imagen */}
-                  <span class="material-icons-round text-3xl">groups</span>
-                </div>
-                <div>
-                  <h4 class="font-bold text-lg text-white">Unidad</h4>
-                  <p class="text-base text-gray-400 mt-1">
-                    Fomentar el trabajo en equipo, el compañerismo y la buena
-                    comunicación dentro de nuestra organización.
-                  </p>
-                </div>
-              </li>
-              {/* Valor 3: Respeto */}
-              <li class="flex items-start space-x-4">
-                <div class="shrink-0 text-blue-600 text-3xl mt-1">
-                  <span class="material-icons-round text-3xl">handshake</span>
-                </div>
-                <div>
-                  <h4 class="font-bold text-lg text-white">Respeto</h4>
-                  <p class="text-base text-gray-400 mt-1">
-                    Tratar a toda persona, sin importar nivel social, ideología
-                    o grupo étnico, de manera digna con tolerancia y cortesía.
+                  <p class="text-sm text-gray-400 mt-1">
+                    Confianza en nuestro Creador para alcanzar retos.
                   </p>
                 </div>
               </li>
 
-              {/* Valor 4: Integridad y ética */}
-              <li class="flex items-start space-x-4">
-                <div class="shrink-0 text-blue-600 text-3xl mt-1">
-                  <span class="material-icons-round text-3xl"
+              <!-- Valor 2 -->
+              <li class="flex items-start space-x-4 group">
+                <div
+                  class="shrink-0 p-2 bg-blue-900/30 rounded-lg text-blue-700 group-hover:text-white group-hover:bg-blue-700 transition-all duration-300"
+                >
+                  <span class="material-icons-round text-2xl">groups</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg text-white">Unidad</h4>
+                  <p class="text-sm text-gray-400 mt-1">
+                    Trabajo en equipo y buena comunicación.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Valor 3 -->
+              <li class="flex items-start space-x-4 group">
+                <div
+                  class="shrink-0 p-2 bg-blue-900/30 rounded-lg text-blue-700 group-hover:text-white group-hover:bg-blue-700 transition-all duration-300"
+                >
+                  <span class="material-icons-round text-2xl">handshake</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg text-white">Respeto</h4>
+                  <p class="text-sm text-gray-400 mt-1">
+                    Trato digno con tolerancia y cortesía.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Valor 4 -->
+              <li class="flex items-start space-x-4 group">
+                <div
+                  class="shrink-0 p-2 bg-blue-900/30 rounded-lg text-blue-700 group-hover:text-white group-hover:bg-blue-700 transition-all duration-300"
+                >
+                  <span class="material-icons-round text-2xl"
                     >verified_user</span
                   >
                 </div>
                 <div>
-                  <h4 class="font-bold text-lg text-white">
-                    Integridad y ética
-                  </h4>
-                  <p class="text-base text-gray-400 mt-1">
-                    Conducirse intachablemente demostrando ser digno de
-                    confianza y mostrarse de una sola pieza. Actuando siempre
-                    con principios sólidos los cuales motivarán el efecto de
-                    nuestra productividad.
+                  <h4 class="font-bold text-lg text-white">Integridad</h4>
+                  <p class="text-sm text-gray-400 mt-1">
+                    Conducta intachable y principios sólidos.
                   </p>
                 </div>
               </li>
