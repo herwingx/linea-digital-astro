@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import logo from "../assets/logo-white.svg";
+import logoWhite from "../assets/logo-white.svg";
+import logoDark from "../assets/logo-dark.svg";
 
 ---
 <footer class="footer-bg relative py-16 px-4">
@@ -12,7 +13,8 @@ import logo from "../assets/logo-white.svg";
       <!-- Columna 1: Logo, Descripción y Redes Sociales -->
       <div class="lg:col-span-2">
         <a href="/" class="flex items-center gap-3 mb-4">
-          <Image src={logo} alt="Logo" class="block w-40 h-20" />
+          <Image src={logoWhite} alt="Logo" class="mt-4 w-32 sm:w-40 md:w-48 h-auto hidden dark:block" />
+          <Image src={logoDark} alt="Logo" class="mt-4 w-32 sm:w-40 md:w-48 h-auto dark:hidden" />
         </a>
         <p class="text-sm leading-relaxed max-w-md mb-6 font-semibold">
           Somos una empresa líder en la comercialización de soluciones
