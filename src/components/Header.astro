@@ -6,32 +6,45 @@ import DarkModeToggle from "./DarkModeToggle.astro";
 
 <header class="relative z-[9999]">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <nav class="flex items-center justify-between h-20 lg:h-24">
-      
+    <!-- 
+      IMPORTANTE: Agregamos 'relative' aquí. 
+      Esto convierte al NAV en el punto de referencia para el menú desplegable.
+    -->
+    <nav class="relative flex items-center justify-between h-20 lg:h-24">
       <!-- 1. LOGO -->
       <div class="flex-shrink-0 z-50">
         <a href="/" class="block">
-          <Image src={logo} alt="Logo" class="w-32 sm:w-40 md:w-48 h-auto" />
+          <Image src={logo} alt="Logo" class="mt-4 w-32 sm:w-40 md:w-48 h-auto" />
         </a>
       </div>
 
       <!-- 2. MENÚ DESKTOP (CENTRADO) -->
-      <!-- Este es el único que se verá en escritorio -->
-      <div class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <!-- Absolute + Translate para centrado perfecto matemático -->
+      <div
+        class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      >
         <ul class="flex items-center space-x-8">
           <li>
-            <a href="/nosotros" class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+            <a
+              href="/nosotros"
+              class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors"
+            >
               Nosotros
             </a>
           </li>
           <li>
-            <a href="/promociones" class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+            <a
+              href="/promociones"
+              class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors"
+            >
               Promociones
             </a>
           </li>
           <li>
-            <a href="/form" class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+            <a
+              href="/form"
+              class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors"
+            >
               Contacto
             </a>
           </li>
@@ -39,8 +52,7 @@ import DarkModeToggle from "./DarkModeToggle.astro";
       </div>
 
       <!-- 3. ACCIONES DERECHA -->
-      <div class="flex items-center gap-4 z-50">
-        
+      <div class="flex items-center gap-3 sm:gap-4 z-50">
         <!-- Dark Mode -->
         <div class="flex items-center">
           <DarkModeToggle />
@@ -61,90 +73,135 @@ import DarkModeToggle from "./DarkModeToggle.astro";
           class="relative block lg:hidden p-2 text-gray-700 dark:text-white focus:outline-none"
           aria-label="Toggle navigation"
         >
-          <div class="w-6 h-5 flex flex-col justify-between relative overflow-hidden">
-            <span class="navbar-span w-full h-[2px] bg-current transition-all duration-300 origin-left"></span>
-            <span class="navbar-span w-full h-[2px] bg-current transition-all duration-300"></span>
-            <span class="navbar-span w-full h-[2px] bg-current transition-all duration-300 origin-left"></span>
+          <div
+            class="w-6 h-5 flex flex-col justify-between relative overflow-hidden"
+          >
+            <span
+              class="navbar-span w-full h-[2px] bg-current transition-all duration-300"
+            ></span>
+            <span
+              class="navbar-span w-full h-[2px] bg-current transition-all duration-300"
+            ></span>
+            <span
+              class="navbar-span w-full h-[2px] bg-current transition-all duration-300"
+            ></span>
           </div>
         </button>
       </div>
 
-    </nav>
-
-    <!-- MENÚ MÓVIL DESPLEGABLE -->
-    <!-- 
-         CORRECCIÓN IMPORTANTE:
-         1. Eliminé 'lg:static lg:flex lg:w-auto...' 
-         2. Agregué 'lg:hidden'. Esto asegura que este bloque JAMÁS se vea en escritorio.
-    -->
-    <nav
-      id="navbarCollapse"
-      class="hidden absolute top-full right-0 mt-2 w-[250px] rounded-lg bg-white py-4 px-6 shadow-lg dark:bg-[#0f172a] z-[9999] lg:hidden"
-    >
-      <ul class="block space-y-4">
-        <li>
-          <a href="/nosotros" class="block text-lg font-semibold text-body-color-2 hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
-            Nosotros
-          </a>
-        </li>
-        <li>
-          <a href="/promociones" class="block text-lg font-semibold text-body-color-2 hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
-            Promociones
-          </a>
-        </li>
-        <li>
-          <a href="/form" class="block text-lg font-semibold text-body-color-2 hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
-            Contacto
-          </a>
-        </li>
-      </ul>
-      
-      <!-- Botón Mi Telcel (Versión Móvil) -->
-      <a
-        target="_blank"
-        href="https://www.mitelcel.com/mitelcel/login"
-        class="block w-full text-center bg-[#0F172A] text-white px-5 py-3 rounded-md font-semibold mt-4 hover:bg-blue-700 transition-colors dark:bg-white/10"
+      <!-- 
+         4. MENÚ MÓVIL DESPLEGABLE (Estilo Tarjeta Flotante)
+         - absolute: Se sale del flujo normal.
+         - top-full: Se pone justo debajo del NAV.
+         - right-0: SE ALINEA A LA DERECHA (Justo debajo del hamburguesa).
+         - mt-4: Un pequeño espacio hacia abajo.
+         - w-64: Ancho fijo estilo tarjeta.
+      -->
+      <div
+        id="navbarCollapse"
+        class="hidden absolute top-full right-0 mt-4 w-64 rounded-xl bg-white dark:bg-[#0f172a] shadow-2xl py-4 px-4 lg:hidden origin-top-right transition-all duration-200 ease-out z-[10000]"
       >
-        Mi Telcel
-      </a>
+        <ul class="flex flex-col space-y-2">
+          <li>
+            <a
+              href="/nosotros"
+              class="block px-4 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-white/5 hover:text-blue-600 transition-colors"
+            >
+              Nosotros
+            </a>
+          </li>
+          <li>
+            <a
+              href="/promociones"
+              class="block px-4 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-white/5 hover:text-blue-600 transition-colors"
+            >
+              Promociones
+            </a>
+          </li>
+          <li>
+            <a
+              href="/form"
+              class="block px-4 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-white/5 hover:text-blue-600 transition-colors"
+            >
+              Contacto
+            </a>
+          </li>
+          <li class="pt-2 border-t border-gray-100 dark:border-gray-700 mt-2">
+            <a
+              target="_blank"
+              href="https://www.mitelcel.com/mitelcel/login"
+              class="flex items-center justify-center w-full bg-[#0F172A] text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors dark:bg-white/10 dark:hover:bg-white/20"
+            >
+              Mi Telcel
+            </a>
+          </li>
+        </ul>
+      </div>
     </nav>
-
   </div>
 </header>
 
 <script is:inline>
-  function initNavbar() {
-    const toggler = document.getElementById("navbarToggler");
-    const menu = document.getElementById("navbarCollapse");
-    const spans = document.querySelectorAll(".navbar-span");
+function initNavbar() {
+  const navbarToggler = document.getElementById("navbarToggler");
+  const navbarCollapse = document.getElementById("navbarCollapse");
+  const navbarSpans = document.querySelectorAll(".navbar-span");
+  
+  // Seleccionamos los links dentro del menú para cerrar al hacer click
+  const navLinks = navbarCollapse ? navbarCollapse.querySelectorAll("a") : [];
 
-    if (!toggler || !menu) return;
+  if (!navbarToggler || !navbarCollapse) return;
 
-    toggler.addEventListener("click", () => {
-      const isHidden = menu.classList.contains("hidden");
-      
-      if (isHidden) {
-        menu.classList.remove("hidden");
-        spans[0].classList.add("rotate-45", "translate-x-[2px]", "-translate-y-[2px]");
-        spans[1].classList.add("opacity-0");
-        spans[2].classList.add("-rotate-45", "translate-x-[2px]", "translate-y-[2px]");
-      } else {
-        menu.classList.add("hidden");
-        spans[0].classList.remove("rotate-45", "translate-x-[2px]", "-translate-y-[2px]");
-        spans[1].classList.remove("opacity-0");
-        spans[2].classList.remove("-rotate-45", "translate-x-[2px]", "translate-y-[2px]");
+  // --- LÓGICA DEL BOTÓN (TOGGLE) ---
+  navbarToggler.addEventListener("click", () => {
+    navbarCollapse.classList.toggle("hidden");
+
+    // Línea Superior: Rota 45 grados y baja 9px al centro
+    if (navbarSpans[0]) {
+      navbarSpans[0].classList.toggle("rotate-45");
+      navbarSpans[0].classList.toggle("translate-y-[9px]");
+    }
+
+    // Línea del Medio: Desaparece
+    if (navbarSpans[1]) {
+      navbarSpans[1].classList.toggle("opacity-0");
+    }
+
+    // Línea Inferior: Rota -45 grados y sube 9px al centro
+    if (navbarSpans[2]) {
+      navbarSpans[2].classList.toggle("-rotate-45");
+      navbarSpans[2].classList.toggle("-translate-y-[9px]");
+    }
+  });
+
+  // --- LÓGICA PARA CERRAR AL DAR CLICK EN ENLACE ---
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      navbarCollapse.classList.add("hidden");
+
+      // Reseteamos las clases manualmente (remove)
+      if (navbarSpans[0]) {
+        navbarSpans[0].classList.remove("rotate-45", "translate-y-[9px]");
+      }
+      if (navbarSpans[1]) {
+        navbarSpans[1].classList.remove("opacity-0");
+      }
+      if (navbarSpans[2]) {
+        navbarSpans[2].classList.remove("-rotate-45", "-translate-y-[9px]");
       }
     });
-
-    menu.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        menu.classList.add("hidden");
-        spans[0].classList.remove("rotate-45", "translate-x-[2px]", "-translate-y-[2px]");
-        spans[1].classList.remove("opacity-0");
-        spans[2].classList.remove("-rotate-45", "translate-x-[2px]", "translate-y-[2px]");
-      });
-    });
-  }
+  });
+  
+  // OPCIONAL: Cerrar si das click fuera del menú
+  document.addEventListener('click', (e) => {
+      if (!navbarCollapse.contains(e.target) && !navbarToggler.contains(e.target) && !navbarCollapse.classList.contains('hidden')) {
+        navbarCollapse.classList.add("hidden");
+        if (navbarSpans[0]) navbarSpans[0].classList.remove("rotate-45", "translate-y-[9px]");
+        if (navbarSpans[1]) navbarSpans[1].classList.remove("opacity-0");
+        if (navbarSpans[2]) navbarSpans[2].classList.remove("-rotate-45", "-translate-y-[9px]");
+      }
+  });
+}
 
   document.addEventListener("DOMContentLoaded", initNavbar);
 </script>
