@@ -5,6 +5,13 @@ import nodemailer from 'nodemailer';
 
 export const prerender = false;
 
+interface EmailData {
+  name: string;
+  email: string;
+  message: string;
+  phone?: string;
+}
+
 export const POST: APIRoute = async ({ request }) => {
   if (!request.headers.get("Content-Type")?.startsWith("application/json")) {
     return new Response(JSON.stringify({ error: "Solicitud no válida" }), {
@@ -18,11 +25,11 @@ export const POST: APIRoute = async ({ request }) => {
     if (!rawBody) {
       throw new Error("Request body is empty.");
     }
-    const data = JSON.parse(rawBody);
+    const data: EmailData = JSON.parse(rawBody);
 
     const { name, email, message, phone } = data;
 
-    // Validar campos requeridos
+    // Validate required fields
     if (!name || !email || !message) {
       return new Response(
         JSON.stringify({
@@ -62,9 +69,8 @@ export const POST: APIRoute = async ({ request }) => {
         <hr>
         <p>Este mensaje fue enviado desde el formulario de contacto del sitio web.</p>
       `,
-      text: `Nuevo mensaje de ${name} (${email})${
-        phone ? ` - Teléfono: ${phone}` : ""
-      }:\n\n${message}`,
+      text: `Nuevo mensaje de ${name} (${email})${phone ? ` - Teléfono: ${phone}` : ""
+        }:\n\n${message}`,
     };
 
     // Enviar el correo
