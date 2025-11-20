@@ -32,28 +32,43 @@
 </div>
 
 <script is:inline>
-  const darkToggler = document.getElementById("darkToggler");
-  const htmlElement = document.documentElement;
+  function initDarkMode() {
+    const darkToggler = document.getElementById("darkToggler");
+    const htmlElement = document.documentElement;
 
-  // Check for saved theme preference or system preference
-  const savedTheme = localStorage.getItem("theme");
-  if (
-    savedTheme === "dark" ||
-    (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    htmlElement.classList.add("dark");
-    darkToggler.checked = true; // Set checkbox to checked if dark mode is active
-  } else {
-    darkToggler.checked = false; // Set checkbox to unchecked if light mode is active
-  }
+    if (!darkToggler) return;
 
-  darkToggler.addEventListener("change", () => {
-    if (darkToggler.checked) {
+    // Check for saved theme preference or system preference
+    const savedTheme = localStorage.getItem("theme");
+    const isDark =
+      savedTheme === "dark" ||
+      (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+    // Apply theme
+    if (isDark) {
       htmlElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      darkToggler.checked = true;
     } else {
       htmlElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      darkToggler.checked = false;
     }
-  });
+
+    // Listen for changes
+    darkToggler.addEventListener("change", () => {
+      if (darkToggler.checked) {
+        htmlElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        htmlElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+      }
+    });
+  }
+
+  // Execute immediately if DOM is ready, otherwise wait
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initDarkMode);
+  } else {
+    initDarkMode();
+  }
 </script>

@@ -15,7 +15,7 @@ const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es" class="dark">
+<html lang="es">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
@@ -26,6 +26,23 @@ const { title, description } = Astro.props;
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
         />
+        <script is:inline>
+          // Aplicar el tema antes de que se renderice la página
+          (function() {
+            // Verificar preferencia guardada
+            const savedTheme = localStorage.getItem('theme');
+            
+            // Verificar preferencia del sistema
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            // Aplicar tema guardado o preferencia del sistema
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+              document.documentElement.classList.add('dark');
+            } else {
+              document.documentElement.classList.remove('dark');
+            }
+          })();
+        </script>
     </head>
     <body
         class="roboto-mono-family bg-white text-[#0F172A] dark:bg-[#0F172A] dark:text-white transition-colors duration-300"
