@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "astro": "^5.15.5",
-    "contentful": "^11.8.13"
+    "contentful": "^11.8.13",
+    "dotenv": "^17.2.3",
+    "nodemailer": "^7.0.10"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^6.0.2"
+    "@astrojs/tailwind": "^6.0.2",
+    "@types/nodemailer": "^7.0.4"
   }
 }
