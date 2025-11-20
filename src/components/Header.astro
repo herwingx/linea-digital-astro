@@ -4,35 +4,147 @@ import logo from "../assets/logo-white.svg";
 import DarkModeToggle from "./DarkModeToggle.astro";
 ---
 
-<header>
-  <div class="container mx-auto px-2 relative z-10">
-    <!-- Barra de Navegación -->
-    <nav class="flex justify-between items-center py-2">
-      <a href="/" class="text-xl font-black flex items-center gap-2">
-        <Image src={logo} alt="Logo" class="block w-40 h-20" />
-      </a>
-      <div class="hidden md:flex items-center space-x-8">
-        <a
-          href="/nosotros"
-          class="hover:text-blue-600 transition-color lg:font-semibold lg:text-xl">Nosotros</a
-        >
-        <a
-          href="/promociones"
-          class="hover:text-blue-600 transition-color lg:font-semibold lg:text-xl">Promociones</a
-        >
-        <a href="/form" class="hover:text-blue-600 transition-color lg:font-semibold lg:text-xl"
-          >Contacto</a
-        >
+<header class="relative z-[9999]">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <nav class="flex items-center justify-between h-20 lg:h-24">
+      
+      <!-- 1. LOGO -->
+      <div class="flex-shrink-0 z-50">
+        <a href="/" class="block">
+          <Image src={logo} alt="Logo" class="w-32 sm:w-40 md:w-48 h-auto" />
+        </a>
       </div>
-      <div class="flex justify-end pr-16 lg:pr-0 xl:pl-12 2xl:pl-20 items-center gap-4">
-        <DarkModeToggle />
+
+      <!-- 2. MENÚ DESKTOP (CENTRADO) -->
+      <!-- Este es el único que se verá en escritorio -->
+      <div class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <ul class="flex items-center space-x-8">
+          <li>
+            <a href="/nosotros" class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+              Nosotros
+            </a>
+          </li>
+          <li>
+            <a href="/promociones" class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+              Promociones
+            </a>
+          </li>
+          <li>
+            <a href="/form" class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+              Contacto
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 3. ACCIONES DERECHA -->
+      <div class="flex items-center gap-4 z-50">
+        
+        <!-- Dark Mode -->
+        <div class="flex items-center">
+          <DarkModeToggle />
+        </div>
+
+        <!-- Botón Mi Telcel (Solo Desktop) -->
         <a
           target="_blank"
           href="https://www.mitelcel.com/mitelcel/login"
-          class="dark:bg-white/10 bg-[#0F172A] hover:bg-blue-700/70 text-white px-5 py-2 rounded-md dark:hover:bg-white/20 transition-colors text-sm font-semibold"
-          >Mi Telcel</a
+          class="hidden lg:inline-flex items-center justify-center rounded-md bg-[#0F172A] px-6 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-white/10 dark:hover:bg-white/20 transition-all"
         >
+          Mi Telcel
+        </a>
+
+        <!-- Botón Hamburguesa (Solo Móvil) -->
+        <button
+          id="navbarToggler"
+          class="relative block lg:hidden p-2 text-gray-700 dark:text-white focus:outline-none"
+          aria-label="Toggle navigation"
+        >
+          <div class="w-6 h-5 flex flex-col justify-between relative overflow-hidden">
+            <span class="navbar-span w-full h-[2px] bg-current transition-all duration-300 origin-left"></span>
+            <span class="navbar-span w-full h-[2px] bg-current transition-all duration-300"></span>
+            <span class="navbar-span w-full h-[2px] bg-current transition-all duration-300 origin-left"></span>
+          </div>
+        </button>
       </div>
+
     </nav>
+
+    <!-- MENÚ MÓVIL DESPLEGABLE -->
+    <!-- 
+         CORRECCIÓN IMPORTANTE:
+         1. Eliminé 'lg:static lg:flex lg:w-auto...' 
+         2. Agregué 'lg:hidden'. Esto asegura que este bloque JAMÁS se vea en escritorio.
+    -->
+    <nav
+      id="navbarCollapse"
+      class="hidden absolute top-full right-0 mt-2 w-[250px] rounded-lg bg-white py-4 px-6 shadow-lg dark:bg-[#0f172a] z-[9999] lg:hidden"
+    >
+      <ul class="block space-y-4">
+        <li>
+          <a href="/nosotros" class="block text-lg font-semibold text-body-color-2 hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+            Nosotros
+          </a>
+        </li>
+        <li>
+          <a href="/promociones" class="block text-lg font-semibold text-body-color-2 hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+            Promociones
+          </a>
+        </li>
+        <li>
+          <a href="/form" class="block text-lg font-semibold text-body-color-2 hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors">
+            Contacto
+          </a>
+        </li>
+      </ul>
+      
+      <!-- Botón Mi Telcel (Versión Móvil) -->
+      <a
+        target="_blank"
+        href="https://www.mitelcel.com/mitelcel/login"
+        class="block w-full text-center bg-[#0F172A] text-white px-5 py-3 rounded-md font-semibold mt-4 hover:bg-blue-700 transition-colors dark:bg-white/10"
+      >
+        Mi Telcel
+      </a>
+    </nav>
+
   </div>
 </header>
+
+<script is:inline>
+  function initNavbar() {
+    const toggler = document.getElementById("navbarToggler");
+    const menu = document.getElementById("navbarCollapse");
+    const spans = document.querySelectorAll(".navbar-span");
+
+    if (!toggler || !menu) return;
+
+    toggler.addEventListener("click", () => {
+      const isHidden = menu.classList.contains("hidden");
+      
+      if (isHidden) {
+        menu.classList.remove("hidden");
+        spans[0].classList.add("rotate-45", "translate-x-[2px]", "-translate-y-[2px]");
+        spans[1].classList.add("opacity-0");
+        spans[2].classList.add("-rotate-45", "translate-x-[2px]", "translate-y-[2px]");
+      } else {
+        menu.classList.add("hidden");
+        spans[0].classList.remove("rotate-45", "translate-x-[2px]", "-translate-y-[2px]");
+        spans[1].classList.remove("opacity-0");
+        spans[2].classList.remove("-rotate-45", "translate-x-[2px]", "translate-y-[2px]");
+      }
+    });
+
+    menu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        menu.classList.add("hidden");
+        spans[0].classList.remove("rotate-45", "translate-x-[2px]", "-translate-y-[2px]");
+        spans[1].classList.remove("opacity-0");
+        spans[2].classList.remove("-rotate-45", "translate-x-[2px]", "translate-y-[2px]");
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", initNavbar);
+</script>
