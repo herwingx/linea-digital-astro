@@ -2,7 +2,6 @@
 @keyframes fade-up-slide {
   0% {
     opacity: 0;
-    /* Usamos 'translateY' para simplificar, ya que 'translate3d(0, Y, 0)' es similar */
     transform: translateY(20px);
   }
 
@@ -25,7 +24,7 @@
   }
 }
 
-/* user.css (Continuación) */
+
 
 .animate-fade-up {
   /* Aplica la animación 'fade-up-slide' */
@@ -39,12 +38,6 @@
 
   /* 'forwards' asegura que el estado final (100%) permanezca aplicado */
   animation-fill-mode: forwards;
-
-  /* Opcional: Define un retraso si quieres que aparezcan secuencialmente */
-  /* animation-delay: 0.2s; */
-
-  /* Versión corta para simplificar: */
-  /* animation: fade-up-slide 0.8s ease-out forwards; */
 }
 
 #phone-image {
