@@ -15,9 +15,7 @@ import Testimonials from "../components/Testimonials.astro";
     class="relative flex items-center justify-center min-h-[60vh] md:min-h-[500px] py-20 px-4 overflow-hidden"
   >
     <!-- Contenedor principal centrado -->
-    <div
-      class="relative z-10 text-center max-w-4xl mx-auto animate-fade-up"
-    >
+    <div class="relative z-10 text-center max-w-4xl mx-auto animate-fade-up">
       <!-- Título principal -->
       <h1 class="text-5xl md:text-6xl font-extrabold mb-4 leading-tight">
         Soluciones en Telefonía. <br class="hidden md:block" /> El futuro es ahora.
@@ -128,11 +126,67 @@ import Testimonials from "../components/Testimonials.astro";
         </p>
       </div>
 
+      <script>
+        // Inicializar el estado activo
+        let activeMap = 'tuxtla';
+        
+        function showMap(location: string) {
+          // Ocultar todos los mapas
+          const maps = document.querySelectorAll('.location-map');
+          for (let i = 0; i < maps.length; i++) {
+            maps[i].classList.add('hidden');
+          }
+          
+          // Mostrar el mapa seleccionado
+          const selectedMap = document.getElementById(location + '-map');
+          if (selectedMap) {
+            selectedMap.classList.remove('hidden');
+          }
+          
+          // Actualizar el estado activo
+          activeMap = location;
+          
+          // Actualizar estilos de las tarjetas
+          const cards = document.querySelectorAll('.location-card');
+          for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            if (card.getAttribute('data-location') === location) {
+              card.classList.add('border-blue-600', 'dark:border-blue-600/50');
+              card.classList.remove('border-gray-200', 'dark:border-white/10');
+            } else {
+              card.classList.remove('border-blue-600', 'dark:border-blue-600/50');
+              card.classList.add('border-gray-200', 'dark:border-white/10');
+            }
+          }
+        }
+        
+        // Hacer la función accesible globalmente
+        window.showMap = showMap;
+        
+        // Inicializar el mapa por defecto al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+          showMap('tuxtla');
+          
+          // Agregar event listeners a las tarjetas
+          const cards = document.querySelectorAll('.location-card');
+          cards.forEach((card) => {
+            card.addEventListener('click', () => {
+              const location = card.getAttribute('data-location');
+              if (location) {
+                showMap(location);
+              }
+            });
+          });
+        });
+      </script>
+
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 w-full">
         <div class="flex flex-col gap-6">
           <!-- Sucursal Tuxtla -->
           <div
-            class="flex flex-col gap-4 border dark:border-white/10 dark:bg-slate-800 p-6 rounded-xl hover:border-blue-600/50 transition-colors duration-300"
+            class="location-card flex flex-col gap-4 border dark:border-white/10 dark:bg-slate-800 p-6 rounded-xl hover:border-blue-600/50 transition-colors duration-300 cursor-pointer"
+            data-location="tuxtla"
+            onclick="showMap('tuxtla')"
           >
             <div class="flex items-center gap-4">
               <div
@@ -223,7 +277,9 @@ import Testimonials from "../components/Testimonials.astro";
 
           <!-- Sucursal Tapachula -->
           <div
-            class="flex flex-col gap-4 border dark:border-white/10 dark:bg-slate-800 p-6 rounded-xl hover:border-blue-600/50 transition-colors duration-300"
+            class="location-card flex flex-col gap-4 border dark:border-white/10 dark:bg-slate-800 p-6 rounded-xl hover:border-blue-600/50 transition-colors duration-300 cursor-pointer"
+            data-location="tapachula"
+            onclick="showMap('tapachula')"
           >
             <div class="flex items-center gap-4">
               <div
@@ -314,18 +370,32 @@ import Testimonials from "../components/Testimonials.astro";
         </div>
 
         <!-- Mapa -->
-        <div
-          class="w-full h-full min-h-[400px] lg:min-h-full rounded-xl overflow-hidden"
-        >
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3820.4196777143943!2d-93.1224185!3d16.7557832!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ecd8f3d3af5e09%3A0xedacab470275254a!2sLinea%20Digital%20del%20Sureste!5e0!3m2!1ses-419!2smx!4v1741478607844!5m2!1ses-419!2smx"
-            width="100%"
-            height="100%"
-            style="border:0; min-height: 400px;"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            class="rounded-xl border border-white/10"></iframe>
+        <div class="relative w-full h-full min-h-[400px] lg:min-h-full">
+          <!-- Mapa de Tuxtla -->
+          <div id="tuxtla-map" class="location-map w-full h-full rounded-xl overflow-hidden">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3820.4196777143943!2d-93.1224185!3d16.7557832!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ecd8f3d3af5e09%3A0xedacab470275254a!2sLinea%20Digital%20del%20Sureste!5e0!3m2!1ses-419!2smx!4v1741478607844!5m2!1ses-419!2smx"
+              width="100%"
+              height="100%"
+              style="border:0; min-height: 400px;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="rounded-xl border border-white/10"></iframe>
+          </div>
+          
+          <!-- Mapa de Tapachula -->
+          <div id="tapachula-map" class="location-map w-full h-full rounded-xl overflow-hidden hidden">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3855.4472567510143!2d-92.2621971!3d14.912154999999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x858e0ed8913f73ad%3A0xab0ea708b27df293!2sL%C3%ADnea%20Digital%20del%20Sureste%20Tapachula!5e0!3m2!1sen!2smx!4v1763676826030!5m2!1sen!2smx"
+              width="100%"
+              height="100%"
+              style="border:0; min-height: 400px;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="rounded-xl border border-white/10"></iframe>
+          </div>
         </div>
       </div>
     </div>
