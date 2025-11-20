@@ -3,8 +3,9 @@ import { Image } from "astro:assets";
 import logo from "../assets/logo-white.svg";
 
 ---
-
-<footer class="footer-bg text-gray-white relative py-16 px-4">
+<footer class="footer-bg relative py-16 px-4">
+  <div class="border-t dark:border-none pt-6 border-[#0F172A]/30">
+     </div>
   <div class="container mx-auto relative z-10">
     <!-- Contenido principal del footer (grid de 3 columnas) -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-10">
@@ -13,7 +14,7 @@ import logo from "../assets/logo-white.svg";
         <a href="/" class="flex items-center gap-3 mb-4">
           <Image src={logo} alt="Logo" class="block w-40 h-20" />
         </a>
-        <p class="text-sm leading-relaxed max-w-md mb-6">
+        <p class="text-sm leading-relaxed max-w-md mb-6 font-semibold">
           Somos una empresa líder en la comercialización de soluciones
           innovadoras en comunicación inalámbrica, con un enfoque especializado
           en la telefonía celular y la venta de accesorios tecnológicos de alta
@@ -114,34 +115,34 @@ import logo from "../assets/logo-white.svg";
 
       <!-- Columna 2: Menú de Navegación -->
       <div>
-        <h3 class="text-lg font-bold text-white uppercase tracking-wider mb-4">
+        <h3 class="text-lg font-bold uppercase tracking-wider mb-4">
           Menú
         </h3>
         <ul class="space-y-3">
           <li>
             <a
               href="/planes-moviles"
-              class="hover:text-gray-400 transition-colors">Planes Móviles</a
+              class="hover:text-blue-600 transition-color lg:font-semibold transition-colors">Planes Móviles</a
             >
           </li>
           <li>
             <a
               href="/internet-en-casa"
-              class="hover:text-gray-400 transition-colors">Internet en Casa</a
+              class="hover:text-blue-600 transition-color lg:font-semibold transition-colors">Internet en Casa</a
             >
           </li>
           <li>
-            <a href="/equipos" class="hover:text-gray-400 transition-colors"
+            <a href="/equipos" class="hover:text-blue-600 transition-color lg:font-semibold transition-colors"
               >Equipos</a
             >
           </li>
           <li>
-            <a href="/nosotros" class="hover:text-gray-400 transition-colors"
+            <a href="/nosotros" class="hover:text-blue-600 transition-color lg:font-semibold transition-colors"
               >Nosotros</a
             >
           </li>
           <li>
-            <a href="/contacto" class="hover:text-gray-400 transition-colors"
+            <a href="/contacto" class="hover:text-blue-600 transition-color lg:font-semibold transition-colors"
               >Contacto</a
             >
           </li>
@@ -157,7 +158,7 @@ import logo from "../assets/logo-white.svg";
           <li class="flex items-start gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mt-0.5 hover:text-gray-400"
+              class="h-5 w-5 mt-0.5 hover:text-blue-600"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -170,14 +171,14 @@ import logo from "../assets/logo-white.svg";
             >
             <a
               href="mailto:bolsa_trabajo@linea-digital.com"
-              class="hover:text-gray-400 transition-colors"
+              class="hover:text-blue-600 transition-color lg:font-semibold transition-colors"
               >bolsa_trabajo@linea-digital.com</a
             >
           </li>
-          <li class="flex items-start gap-3">
+          <li class="flex items-start gap-3 hover:text-blue-600 transition-color lg:font-semibold transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mt-0.5 text-white"
+              class="h-5 w-5 mt-0.5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -193,10 +194,10 @@ import logo from "../assets/logo-white.svg";
             >
             <span>Tuxtla Gutiérrez, Chiapas.</span>
           </li>
-          <li class="flex items-start gap-3">
+          <li class="flex items-start gap-3 hover:text-blue-600 transition-color lg:font-semibold transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mt-0.5 text-white"
+              class="h-5 w-5 mt-0.5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -214,8 +215,8 @@ import logo from "../assets/logo-white.svg";
     </div>
 
     <!-- Separador y Copyright -->
-    <div class="border-t border-slate-800 pt-6">
-      <p class="text-center text-sm text-gray-500">
+    <div class="border-t dark:border-slate-800 pt-6 border-[#0F172A]/30">
+      <p class="text-center text-sm">
         © 2025 Línea Digital. Todos los derechos reservados.
       </p>
     </div>
@@ -225,10 +226,10 @@ import logo from "../assets/logo-white.svg";
   .footer-bg {
     /* Propiedades de las rayas */
     background-image: linear-gradient(
-        rgba(29, 78, 216, 0.08) 1px,
+        rgba(29, 78, 216, 0.1) 1px,
         transparent 1px
       ),
-      linear-gradient(90deg,  rgba(29, 78, 216, 0.08) 1px, transparent 1px);
+      linear-gradient(90deg,  rgba(29, 78, 216, 0.1) 1px, transparent 1px);
     background-size: 4rem 4rem;
 
     /* PROPIEDADES AÑADIDAS PARA EL DESVANECIMIENTO */

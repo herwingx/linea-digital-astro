@@ -1,33 +1,35 @@
 ---
 import { Image } from "astro:assets";
 import logo from "../assets/logo-white.svg";
+import DarkModeToggle from "./DarkModeToggle.astro";
 ---
 
 <header>
   <div class="container mx-auto px-2 relative z-10">
     <!-- Barra de Navegación -->
     <nav class="flex justify-between items-center py-2">
-      <a href="/" class="text-xl font-bold flex items-center gap-2">
+      <a href="/" class="text-xl font-black flex items-center gap-2">
         <Image src={logo} alt="Logo" class="block w-40 h-20" />
       </a>
       <div class="hidden md:flex items-center space-x-8">
         <a
           href="/nosotros"
-          class="text-white hover:text-blue-600 transition-color">Nosotros</a
+          class="hover:text-blue-600 transition-color lg:font-semibold lg:text-xl">Nosotros</a
         >
         <a
           href="/promociones"
-          class="text-white hover:text-blue-600 transition-color">Promociones</a
+          class="hover:text-blue-600 transition-color lg:font-semibold lg:text-xl">Promociones</a
         >
-        <a href="/form" class="text-white hover:text-blue-600 transition-color"
+        <a href="/form" class="hover:text-blue-600 transition-color lg:font-semibold lg:text-xl"
           >Contacto</a
         >
       </div>
-      <div class="flex justify-end pr-16 lg:pr-0 xl:pl-12 2xl:pl-20">
+      <div class="flex justify-end pr-16 lg:pr-0 xl:pl-12 2xl:pl-20 items-center gap-4">
+        <DarkModeToggle />
         <a
           target="_blank"
           href="https://www.mitelcel.com/mitelcel/login"
-          class="bg-white/10 px-5 py-2 rounded-md hover:bg-white/20 transition-colors text-sm font-semibold text-white"
+          class="dark:bg-white/10 bg-[#0F172A] hover:bg-blue-700/70 text-white px-5 py-2 rounded-md dark:hover:bg-white/20 transition-colors text-sm font-semibold"
           >Mi Telcel</a
         >
       </div>

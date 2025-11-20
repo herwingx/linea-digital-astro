@@ -14,8 +14,8 @@ export interface Props {
 const { title, description } = Astro.props;
 ---
 
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es" class="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
@@ -28,18 +28,11 @@ const { title, description } = Astro.props;
         />
     </head>
     <body
-        class="text-white bg-white dark:bg-[#0F172A] transition-colors duration-300"
+        class="roboto-mono-family bg-white text-[#0F172A] dark:bg-[#0F172A] dark:text-white transition-colors duration-300"
+        style="background-image: linear-gradient(180deg, rgba(62, 126, 255, 0.3) 0%, rgba(62, 126, 255, 0) 15%);"
     >
-        <Image
-            src={heroShape1}
-            alt=""
-            class="absolute top-0 left-0 z-10"
-        />
-        <Image
-            src={heroShape2}
-            alt=""
-            class="absolute top-0 right-0 z-10"
-        />
+        <Image src={heroShape1} alt="" class="absolute top-0 left-0 z-10" />
+        <Image src={heroShape2} alt="" class="absolute top-0 right-0 z-10" />
         <Header />
         <main>
             <slot />
