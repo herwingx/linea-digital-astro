@@ -1,0 +1,46 @@
+---
+// src/pages/planes.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PlanCard from "../components/PlanTelcelLibreCard.astro";
+import { getPlans } from "../services/contentful";
+
+// Llamamos a la función para obtener los datos en vivo desde Contentful
+const planes = await getPlans();
+
+---
+
+<BaseLayout
+  title="Planes - Grupo Linea Digital"
+  description="Descubre todos nuestros planes móviles y accede a los mejores beneficios."
+>
+  <section class="py-16 ">
+    <div class="container mx-auto px-8 bg-slate-100 dark:bg-[#020617] rounded-xl p-8">
+      <div class="text-center">
+        <h1 class="text-4xl lg:text-5xl font-bold mb-4">Contrata Planes Telcel Libre, sin plazo forzoso</h1>
+        <p class="text-lg max-w-2xl mx-auto">
+          Con los planes Telcel Libre navega con la mayor velocidad 5G y disfruta de GB incluidos, Minutos y SMS ilimitados en México, E.U.A. y Canadá, así como Redes Sociales ilimitadas y Cashback Telcel. ¡Todos estos beneficios ahora sin plazos forzosos!
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12 ">
+        {planes.map((plan: any) => {
+          // Type assertion to ensure TypeScript knows about the fields property
+          const p = (plan as any).fields;
+          
+          return (
+            <PlanCard
+              titulo={p.titulo || ''}
+              datosIncluidos={p.datosIncluidos || ''}
+              precio={p.precio || 0}
+              recommended={p.recomendado || false}
+              enlace={p.enlace || ''}
+              redesSociales={p.redesSociales || []}
+              minutosYSms={p.minutosYSmsIncluidos || ''}
+              cashbackTelcel={p.cashbackTelcel || ''}
+            />
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

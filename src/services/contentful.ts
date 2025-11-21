@@ -11,8 +11,21 @@ interface PromoFields extends EntrySkeletonType {
   imagen: Asset;
 }
 
+// Estos nombres (keys) deben coincidir EXACTAMENTE con los "Field ID" de Contentful
+interface PlanFields extends EntrySkeletonType {
+  titulo: string;           // Short text
+  datosIncluidos: string;    // Short text (ej: "24 GB")  
+  minutosYSmsIncluidos: string;    // Short text (ej: "1000")
+  cashbackTelcel: string;    // Short text (ej: "1000")
+  precio: number;           // Number (Decimal)
+  redesSociales?: string[]; // List (Text) - Puede ser undefined si no marcan nada
+  recomendado?: boolean;   // Boolean
+  enlace?: string;           // Short text (URL)
+}
+
 // The entry type that Contentful returns
 type PromoEntry = Entry<PromoFields, undefined, string>;
+type PlanEntry = Entry<PlanFields, undefined, string>;
 
 // Initialize the Contentful client
 const client = createClient({
@@ -30,6 +43,23 @@ export async function getActivePromos(): Promise<PromoEntry[]> {
     return entries.items as PromoEntry[];
   } catch (error) {
     console.error('Error fetching promotions from Contentful:', error);
+    return [];
+  }
+}
+
+// --- NUEVA FUNCIÓN PARA TRAER PLANES ---
+export async function getPlans(): Promise<PlanEntry[]> {
+  try {
+    const entries = await client.getEntries<PlanFields>({
+      content_type: 'planesTelcelLibre',
+      // Opcional: Ordenar por precio ascendente
+      order: ['fields.precio'], 
+
+    });
+    
+    return entries.items as PlanEntry[];
+  } catch (error) {
+    console.error('Error obteniendo planes de Contentful:', error);
     return [];
   }
 }
