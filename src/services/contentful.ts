@@ -21,6 +21,8 @@ interface PlanFields extends EntrySkeletonType {
   redesSociales?: string[]; // List (Text) - Puede ser undefined si no marcan nada
   recomendado?: boolean;   // Boolean
   enlace?: string;           // Short text (URL)
+  politicasDeUso?: string;   // Long text
+  velocidadDeNavegacion?: string; // Short text
 }
 
 // The entry type that Contentful returns
@@ -48,18 +50,67 @@ export async function getActivePromos(): Promise<PromoEntry[]> {
 }
 
 // --- NUEVA FUNCIÓN PARA TRAER PLANES ---
-export async function getPlans(): Promise<PlanEntry[]> {
+export async function getPlansLibre(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'planesTelcelLibre',
       // Opcional: Ordenar por precio ascendente
-      order: ['fields.precio'], 
+      order: ['fields.precio'],
 
     });
-    
+
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
     return [];
   }
 }
+
+export async function getPlansUltra(): Promise<PlanEntry[]> {
+  try {
+    const entries = await client.getEntries<PlanFields>({
+      content_type: 'planesTelcelUltra',
+      // Opcional: Ordenar por precio ascendente
+      order: ['fields.precio'],
+
+    });
+
+    return entries.items as PlanEntry[];
+  } catch (error) {
+    console.error('Error obteniendo planes de Contentful:', error);
+    return [];
+  }
+}
+
+export async function getPlansInternet(): Promise<PlanEntry[]> {
+  try {
+    const entries = await client.getEntries<PlanFields>({
+      content_type: 'planesInternetLibre',
+      // Opcional: Ordenar por precio ascendente
+      order: ['fields.precio'],
+
+    });
+
+    return entries.items as PlanEntry[];
+  } catch (error) {
+    console.error('Error obteniendo planes de Contentful:', error);
+    return [];
+  }
+}
+
+export async function getInternetEnTuCasaLibre(): Promise<PlanEntry[]> {
+  try {
+    const entries = await client.getEntries<PlanFields>({
+      content_type: 'internetEnTuCasaLibre',
+      // Opcional: Ordenar por precio ascendente
+      order: ['fields.precio'],
+
+    });
+
+    return entries.items as PlanEntry[];
+  } catch (error) {
+    console.error('Error obteniendo planes de Contentful:', error);
+    return [];
+  }
+}
+

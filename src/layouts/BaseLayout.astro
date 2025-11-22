@@ -1,60 +1,136 @@
 ---
 // src/layouts/BaseLayout.astro
-import { Image } from "astro:assets";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FloatingButtons from "../components/FloatingButtons.astro";
-import heroShape1 from "../assets/hero-shape-1.svg";
-import heroShape2 from "../assets/hero-shape-2.svg";
+
+// Nota: He eliminado la importación de Image y heroShapes estáticos.
+// El estilo "Modern Clean" utiliza gradientes CSS (Glows) para un renderizado
+// más suave, responsivo y ligero, eliminando la necesidad de SVGs pesados de fondo.
 
 export interface Props {
-    title: string;
-    description: string;
+  title: string;
+  description: string;
 }
 const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/svg+xml" href="/logo-white.svg" />
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
-        />
-        <script is:inline>
-          // Aplicar el tema antes de que se renderice la página
-          (function() {
-            // Verificar preferencia guardada
-            const savedTheme = localStorage.getItem('theme');
-            
-            // Verificar preferencia del sistema
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            // Aplicar tema guardado o preferencia del sistema
-            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-              document.documentElement.classList.add('dark');
-            } else {
-              document.documentElement.classList.remove('dark');
-            }
-          })();
-        </script>
-    </head>
-    <body
-        class="roboto-mono-family bg-white text-[#0F172A] dark:bg-[#0F172A] dark:text-white transition-colors duration-300"
-        style="background-image: linear-gradient(180deg, rgba(62, 126, 255, 0.3) 0%, rgba(62, 126, 255, 0) 15%);"
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/logo-white.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- Google Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
+    />
+
+    <!-- Pre-render Theme Script: Evita el "Flash of Wrong Theme" -->
+    <script is:inline>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const systemPrefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+
+        if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+  </head>
+
+  <body
+    class="antialiased min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-500 selection:bg-blue-500 selection:text-white"
+  >
+    <!-- === FONDO AMBIENTAL (Design System Core) === -->
+    <!-- 1. Grilla Técnica Sutil (Estilo Linear) -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+      <!-- Patrón de cuadros muy sutil -->
+      <div
+        class="absolute inset-0 opacity-[0.4] dark:opacity-[0.2]"
+        style="background-image: linear-gradient(to right, #80808012 1px, transparent 1px), linear-gradient(to bottom, #80808012 1px, transparent 1px); background-size: 24px 24px;"
+      >
+      </div>
+
+      <!-- Máscara radial para suavizar la grilla hacia los bordes -->
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white dark:from-slate-950 dark:via-transparent dark:to-slate-950"
+      >
+      </div>
+    </div>
+
+    <!-- 2. Glows (Luces) de Ambiente en lugar de imágenes estáticas -->
+    <div
+      class="fixed top-0 left-0 z-0 w-full h-full overflow-hidden pointer-events-none"
     >
-        <Image src={heroShape1} alt="" class="absolute top-0 left-0 z-10" />
-        <Image src={heroShape2} alt="" class="absolute top-0 right-0 z-10" />
-        <Header />
-        <main>
-            <slot />
-        </main>
-        <Footer />
-        <FloatingButtons />
-    </body>
+      <!-- Luz superior izquierda (Cyan/Blue) -->
+      <div
+        class="absolute -top-[10%] -left-[10%] w-[40vw] h-[40vw] rounded-full bg-blue-400/20 blur-[120px] mix-blend-multiply dark:bg-blue-900/20 dark:mix-blend-screen dark:opacity-40"
+      >
+      </div>
+      <!-- Luz superior derecha (Purple/Blue) -->
+      <div
+        class="absolute -top-[10%] -right-[10%] w-[40vw] h-[40vw] rounded-full bg-indigo-400/20 blur-[120px] mix-blend-multiply dark:bg-indigo-900/20 dark:mix-blend-screen dark:opacity-40"
+      >
+      </div>
+    </div>
+
+    <!-- === CONTENIDO === -->
+    <!-- Header Sticky con z-index alto -->
+
+    <Header />
+
+    <!-- Main con flex-grow para empujar el footer siempre abajo -->
+    <main class="relative z-10 flex-grow flex flex-col">
+      <slot />
+    </main>
+
+    <!-- Footer al final del flujo -->
+    <div class="relative z-10 mt-auto">
+      <Footer />
+    </div>
+
+    <FloatingButtons />
+
+    <!-- Style Global Fixes para Tipografía -->
+    <style is:global>
+      /* Aseguramos legibilidad máxima */
+      body {
+        font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      /* Custom Scrollbar para Webkit (Chrome/Safari/Edge) */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 5px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #334155;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background: #475569;
+      }
+    </style>
+  </body>
 </html>

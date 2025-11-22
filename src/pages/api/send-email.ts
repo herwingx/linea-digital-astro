@@ -13,6 +13,7 @@ interface EmailData {
 }
 
 export const POST: APIRoute = async ({ request }) => {
+  // 1. Validación de Headers
   if (!request.headers.get("Content-Type")?.startsWith("application/json")) {
     return new Response(JSON.stringify({ error: "Solicitud no válida" }), {
       status: 400,
@@ -29,7 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const { name, email, message, phone } = data;
 
-    // Validate required fields
+    // 2. Validación de Datos
     if (!name || !email || !message) {
       return new Response(
         JSON.stringify({
@@ -39,11 +40,11 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Configuración del transporte de correo
+    // 3. Configuración de Nodemailer
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: parseInt(process.env.EMAIL_PORT || "587"),
-      secure: process.env.EMAIL_SECURE === 'true', // O usa `true` si tu puerto es 465
+      secure: process.env.EMAIL_SECURE === 'true', 
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -53,27 +54,101 @@ export const POST: APIRoute = async ({ request }) => {
       },
     });
 
-    // Configurar el correo
+    // --- TEMPLATE HTML MEJORADO (CLEAN UI) ---
+    const htmlTemplate = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #F8FAFC; }
+    .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); border: 1px solid #E2E8F0; margin-top: 40px; margin-bottom: 40px; }
+    .header { background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 1px solid #E2E8F0; }
+    .logo-text { color: #1E293B; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+    .logo-accent { color: #2563EB; }
+    .content { padding: 40px 30px; }
+    .label-tag { display: inline-block; background-color: #EFF6FF; color: #2563EB; padding: 6px 12px; border-radius: 50px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+    .main-title { color: #0F172A; font-size: 24px; font-weight: 700; margin: 0 0 20px 0; line-height: 1.2; }
+    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+    .info-row td { padding: 12px 0; border-bottom: 1px solid #F1F5F9; color: #334155; font-size: 15px; }
+    .info-label { font-weight: 600; color: #64748B; width: 120px; }
+    .message-box { background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px; margin-top: 10px; color: #334155; line-height: 1.6; font-size: 15px; white-space: pre-wrap; }
+    .cta-button { display: block; width: fit-content; background-color: #2563EB; color: #ffffff !important; padding: 14px 28px; text-decoration: none; border-radius: 50px; font-weight: 600; text-align: center; margin-top: 30px; margin-bottom: 10px; font-size: 14px; }
+    .footer { background-color: #F1F5F9; padding: 20px; text-align: center; font-size: 12px; color: #94A3B8; }
+    .link-reset { color: #2563EB; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-text">Línea<span class="logo-accent">Digital</span></div>
+    </div>
+
+    <!-- Body -->
+    <div class="content">
+      <span class="label-tag">Nuevo Lead Web</span>
+      <h1 class="main-title">¡Tienes un nuevo mensaje de contacto!</h1>
+      
+      <p style="color: #64748B; margin-bottom: 25px; font-size: 15px;">
+        Un cliente potencial ha completado el formulario de contacto en el sitio web. Aquí están los detalles:
+      </p>
+
+      <!-- Detalles -->
+      <table class="info-table">
+        <tr class="info-row">
+          <td class="info-label">Nombre</td>
+          <td style="font-weight: 600;">${name}</td>
+        </tr>
+        <tr class="info-row">
+          <td class="info-label">Email</td>
+          <td><a href="mailto:${email}" class="link-reset">${email}</a></td>
+        </tr>
+        ${phone ? `
+        <tr class="info-row">
+          <td class="info-label">Teléfono</td>
+          <td><a href="tel:${phone}" class="link-reset" style="color:#334155; text-decoration:none;">${phone}</a></td>
+        </tr>` : ""}
+      </table>
+
+      <!-- Mensaje Box -->
+      <div style="color: #64748B; font-weight: 600; font-size: 14px; margin-bottom: 5px;">Mensaje del cliente:</div>
+      <div class="message-box">
+        "${message.replace(/\n/g, "<br>")}"
+      </div>
+
+      <!-- CTA Button -->
+      <div style="text-align: center;">
+        <a href="mailto:${email}?subject=Respuesta%20a%20su%20consulta%20-%20Línea%20Digital&body=Hola%20${name},%0A%0AHemos%20recibido%20tu%20mensaje..." class="cta-button">
+          Responder Directamente
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      Este es un mensaje automático enviado desde <strong>linea-digital.com</strong>.<br>
+      No es necesario responder a este correo automático.
+    </div>
+
+  </div>
+</body>
+</html>
+    `;
+
+    // 4. Enviar correo
     const mailOptions = {
       from: `"Formulario Web" <${process.env.EMAIL_FROM}>`,
       to: process.env.EMAIL_TO,
       replyTo: `${name} <${email}>`,
-      subject: `Nuevo mensaje de ${name} - Formulario Web`,
-      html: `
-        <h2>Nuevo mensaje del formulario de contacto</h2>
-        <p><strong>Nombre:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        ${phone ? `<p><strong>Teléfono:</strong> ${phone}</p>` : ""}
-        <p><strong>Mensaje:</strong></p>
-        <p>${message.replace(/\n/g, "<br>")}</p>
-        <hr>
-        <p>Este mensaje fue enviado desde el formulario de contacto del sitio web.</p>
-      `,
-      text: `Nuevo mensaje de ${name} (${email})${phone ? ` - Teléfono: ${phone}` : ""
-        }:\n\n${message}`,
+      subject: `✨ Nuevo Contacto: ${name}`, // Subject con emoji para destacar en la bandeja
+      html: htmlTemplate,
+      text: `Nuevo mensaje de ${name} (${email})\n${phone ? `Teléfono: ${phone}\n` : ""}\nMensaje:\n${message}`,
     };
 
-    // Enviar el correo
     await transporter.sendMail(mailOptions);
 
     return new Response(

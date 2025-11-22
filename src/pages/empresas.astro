@@ -1,0 +1,108 @@
+---
+// src/pages/empresas.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PlansOrchestrator from "../components/PlansOrchestrator.astro";
+
+// MOCK DATA FOR ENTERPRISE (Since we don't have a fetch function yet)
+
+const enterpriseMobilePlans = [
+  {
+    titulo: "Empresarial 3000",
+    datosIncluidos: "10 GB",
+    precio: 399,
+    recomendado: false,
+    enlace: "#",
+    redesSociales: ["WhatsApp", "Correo", "Teams"],
+    minutosYSmsIncluidos: "Ilimitados",
+    cashbackTelcel: "N/A",
+  },
+  {
+    titulo: "Empresarial Sin Límite",
+    datosIncluidos: "25 GB",
+    precio: 599,
+    recomendado: true,
+    enlace: "#",
+    redesSociales: ["WhatsApp", "Correo", "Teams", "Zoom"],
+    minutosYSmsIncluidos: "Ilimitados",
+    cashbackTelcel: "N/A",
+  },
+];
+
+const enterpriseUltraPlans = [
+  {
+    titulo: "Empresarial Ultra 5G",
+    datosIncluidos: "50 GB",
+    precio: 899,
+    recomendado: true,
+    enlace: "#",
+    redesSociales: ["Todo Incluido"],
+    minutosYSmsIncluidos: "Ilimitados",
+    cashbackTelcel: "N/A",
+  },
+];
+
+const enterpriseInternet = [
+  {
+    titulo: "Internet Negocio Básico",
+    velocidad: "50 Mbps",
+    precio: 499,
+    recomendado: false,
+    enlace: "#",
+    descripcion: "Conexión estable para pequeños negocios y puntos de venta.",
+  },
+  {
+    titulo: "Internet Negocio Pro",
+    velocidad: "200 Mbps",
+    precio: 899,
+    recomendado: true,
+    enlace: "#",
+    descripcion:
+      "Alta velocidad para oficinas con múltiples equipos conectados.",
+  },
+];
+---
+
+<BaseLayout
+  title="Soluciones Empresariales | Grupo Linea Digital"
+  description="Planes corporativos y soluciones de conectividad para tu empresa."
+>
+  <!-- Hero Section Empresarial (Más sobrio) -->
+  <section
+    class="relative pt-32 pb-12 overflow-hidden bg-slate-50 dark:bg-slate-950"
+  >
+    <div class="absolute inset-0 -z-10">
+      <div
+        class="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-900/10 blur-[100px] rounded-full dark:bg-indigo-900/20"
+      >
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 text-center">
+      <span
+        class="inline-block py-1 px-3 rounded-full bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-widest mb-6 border border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
+      >
+        Para Empresas
+      </span>
+      <h1
+        class="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight"
+      >
+        Impulsa tu <span class="text-indigo-600">Negocio</span>
+      </h1>
+      <p
+        class="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed"
+      >
+        Soluciones de conectividad robustas y escalables. Mantén a tu equipo
+        conectado y productivo con la red más confiable.
+      </p>
+    </div>
+  </section>
+
+  <!-- Orchestrator Component -->
+  <PlansOrchestrator
+    mobilePlansLibre={enterpriseMobilePlans}
+    mobilePlansUltra={enterpriseUltraPlans}
+    homeInternet={enterpriseInternet}
+    title="Catálogo Empresarial"
+    subtitle="Selecciona la solución que tu empresa necesita"
+  />
+</BaseLayout>

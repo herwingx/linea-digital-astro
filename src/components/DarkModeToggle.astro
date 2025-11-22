@@ -1,74 +1,117 @@
-<div class="mr-4">
+<!-- src/components/DarkModeToggle.astro -->
+<div class="flex items-center justify-center">
   <label
     for="darkToggler"
-    class="flex h-11 w-20 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-[#0F172A]"
+    class="relative inline-flex h-9 w-16 cursor-pointer items-center rounded-full border border-slate-200 bg-slate-100 p-1 shadow-inner transition-colors duration-300 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:border-blue-200 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600"
+    aria-label="Alternar modo oscuro"
   >
     <input
       type="checkbox"
       name="darkToggler"
       id="darkToggler"
-      class="sr-only"
-      aria-label="darkToggler"
+      class="peer sr-only"
     />
-    <span
-      class="flex items-center justify-center w-8 h-8 text-white rounded-full bg-blue-700 dark:bg-transparent dark:text-slate-400"
-    >
-      <svg width="16" height="16" viewBox="0 0 16 16" class="fill-current">
-        <path
-          d="M4.50663 3.2267L3.30663 2.03337L2.36663 2.97337L3.55996 4.1667L4.50663 3.2267ZM2.66663 7.00003H0.666626V8.33337H2.66663V7.00003ZM8.66663 0.366699H7.33329V2.33337H8.66663V0.366699ZM13.6333 2.97337L12.6933 2.03337L11.5 3.2267L12.44 4.1667L13.6333 2.97337ZM11.4933 12.1067L12.6866 13.3067L13.6266 12.3667L12.4266 11.1734L11.4933 12.1067ZM13.3333 7.00003V8.33337H15.3333V7.00003H13.3333ZM7.99996 3.6667C5.79329 3.6667 3.99996 5.46003 3.99996 7.6667C3.99996 9.87337 5.79329 11.6667 7.99996 11.6667C10.2066 11.6667 12 9.87337 12 7.6667C12 5.46003 10.2066 3.6667 7.99996 3.6667ZM7.33329 14.9667H8.66663V13H7.33329V14.9667ZM2.36663 12.36L3.30663 13.3L4.49996 12.1L3.55996 11.16L2.36663 12.36Z"
-        ></path>
-      </svg>
+    
+    <!-- TRACK BACKGROUND ICONS (Decorativos y sutiles) -->
+    <span class="absolute left-2.5 text-[10px] text-slate-300 dark:text-slate-600">
+        <!-- Sun placeholder outline for track -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="5"></circle></svg>
     </span>
-    <span
-      class="flex items-center justify-center w-8 h-8 bg-transparent rounded-full text-slate-400 dark:bg-blue-700 dark:text-white"
-    >
-      <svg width="13" height="15" viewBox="0 0 13 15" class="fill-current">
-        <path
-          d="M10.6111 12.855C11.591 12.1394 12.3151 11.1979 12.7723 10.1623C10.4824 10.4065 8.1342 9.46314 6.67948 7.47109C5.22476 5.47905 5.04093 2.95516 5.97054 0.848179C4.84491 0.968503 3.72768 1.37162 2.74781 2.08719C-0.224105 4.25747 -0.874706 8.43084 1.29558 11.4028C3.46586 14.3747 7.63923 15.0253 10.6111 12.855Z"
-        ></path>
-      </svg>
+    <span class="absolute right-2.5 text-[10px] text-slate-300 dark:text-slate-600">
+         <!-- Moon placeholder outline for track -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
     </span>
+
+    <!-- KNOB (La pieza que se desliza) -->
+    <!-- El knob se mueve usando peer-checked:translate-x -->
+    <div
+      class="relative z-10 flex h-7 w-7 transform items-center justify-center rounded-full bg-white text-blue-600 shadow-md ring-1 ring-black/5 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] peer-checked:translate-x-7 dark:bg-slate-700 dark:text-blue-300 dark:ring-white/10"
+    >
+      <!-- SUN ICON (Visible in Light) -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="absolute h-4 w-4 transform transition-all duration-500 peer-checked:rotate-90 peer-checked:scale-0 opacity-100 rotate-0 dark:scale-0 dark:opacity-0"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+
+      <!-- MOON ICON (Visible in Dark) -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="absolute h-4 w-4 transform transition-all duration-500 scale-0 -rotate-90 opacity-0 dark:scale-100 dark:rotate-0 dark:opacity-100"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </div>
   </label>
 </div>
 
 <script is:inline>
-  function initDarkMode() {
-    const darkToggler = document.getElementById("darkToggler");
-    const htmlElement = document.documentElement;
+  (function() {
+    // Función aislada para evitar colisiones
+    function setupTheme() {
+        const toggler = document.getElementById("darkToggler");
+        const html = document.documentElement;
+        
+        // 1. Obtener Preferencia Actual
+        const getTheme = () => {
+             if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                 return localStorage.getItem('theme');
+             }
+             if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                 return 'dark';
+             }
+             return 'light';
+        };
 
-    if (!darkToggler) return;
+        // 2. Aplicar Estado Visual al Input y al HTML
+        const updateTheme = (theme) => {
+            if (theme === 'dark') {
+                html.classList.add("dark");
+                if(toggler) toggler.checked = true;
+            } else {
+                html.classList.remove("dark");
+                if(toggler) toggler.checked = false;
+            }
+            localStorage.setItem('theme', theme);
+        };
 
-    // Check for saved theme preference or system preference
-    const savedTheme = localStorage.getItem("theme");
-    const isDark =
-      savedTheme === "dark" ||
-      (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        // Inicializar inmediatamente
+        updateTheme(getTheme());
 
-    // Apply theme
-    if (isDark) {
-      htmlElement.classList.add("dark");
-      darkToggler.checked = true;
-    } else {
-      htmlElement.classList.remove("dark");
-      darkToggler.checked = false;
+        // 3. Escuchar Eventos (si el DOM ya cargó el input)
+        if(toggler) {
+            toggler.addEventListener("change", (e) => {
+                const newTheme = e.target.checked ? 'dark' : 'light';
+                updateTheme(newTheme);
+            });
+        }
     }
-
-    // Listen for changes
-    darkToggler.addEventListener("change", () => {
-      if (darkToggler.checked) {
-        htmlElement.classList.add("dark");
-        localStorage.setItem("theme", "dark");
-      } else {
-        htmlElement.classList.remove("dark");
-        localStorage.setItem("theme", "light");
-      }
-    });
-  }
-
-  // Execute immediately if DOM is ready, otherwise wait
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initDarkMode);
-  } else {
-    initDarkMode();
-  }
+    
+    // Ejecutar Setup
+    setupTheme();
+    
+    // Opcional: Re-ejecutar en 'astro:after-swap' si usas ViewTransitions en el futuro
+    document.addEventListener('astro:after-swap', setupTheme);
+  })();
 </script>

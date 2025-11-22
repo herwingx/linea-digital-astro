@@ -1,0 +1,823 @@
+---
+// src/components/PlansOrchestrator.astro
+import PlanLibreCard from "./PlanTelcelLibreCard.astro";
+import PlanUltraCard from "./PlanTelcelUltraCard.astro";
+import PlanInternetCard from "./PlanTelcelInternetCard.astro";
+import InternetEnCasaPlanCard from "./InternetEnCasaPlanCard.astro"; // We'll create this next
+
+interface PlanLibre {
+  titulo: string;
+  datosIncluidos: string;
+  precio: number;
+  recomendado?: boolean;
+  enlace: string;
+  redesSociales: string[];
+  minutosYSmsIncluidos: string;
+  cashbackTelcel?: string;
+}
+
+interface PlanUltra {
+  titulo: string;
+  datosIncluidos: string;
+  precio: number;
+  recomendado?: boolean;
+  enlace: string;
+  redesSociales: string[];
+  minutosYSmsIncluidos: string;
+}
+
+interface PlanInternet {
+  titulo: string;
+  datosIncluidos: string;
+  precio: number;
+  recomendado?: boolean;
+  enlace: string;
+  redesSociales: string[];
+  minutosYSmsIncluidos: string;
+}
+
+interface InternetEnCasaPlan {
+  titulo: string;
+  datosIncluidos: string;
+  politicasDeUso: string;
+  velocidadDeNavegacion: string;
+  cashbackTelcel?: string;
+  precio: number;
+  recomendado?: boolean;
+  enlace: string;
+}
+
+interface Props {
+  mobilePlansLibre: PlanLibre[];
+  mobilePlansUltra: PlanUltra[];
+  mobilePlansInternet: PlanInternet[];
+  internetPlans: InternetEnCasaPlan[];
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  mobilePlansLibre = [],
+  mobilePlansUltra = [],
+  mobilePlansInternet = [],
+  internetPlans = [],
+  title = "Elige tu Conectividad",
+  subtitle = "Planes diseñados para ti y tu hogar",
+} = Astro.props;
+
+// Calculate initial slide for Libre (find recommended or default to 0)
+const initialSlideLibre =
+  mobilePlansLibre.findIndex((p) => p.recomendado) !== -1
+    ? mobilePlansLibre.findIndex((p) => p.recomendado)
+    : 0;
+
+// Calculate initial slide for Ultra
+const initialSlideUltra =
+  mobilePlansUltra.findIndex((p) => p.recomendado) !== -1
+    ? mobilePlansUltra.findIndex((p) => p.recomendado)
+    : 0;
+
+// Calculate initial slide for Internet
+const initialSlideInternet =
+  mobilePlansInternet.findIndex((p) => p.recomendado) !== -1
+    ? mobilePlansInternet.findIndex((p) => p.recomendado)
+    : 0;
+
+// Calculate initial slide for Home Internet
+const initialSlideHomeInternet =
+  internetPlans.findIndex((p) => p.recomendado) !== -1
+    ? internetPlans.findIndex((p) => p.recomendado)
+    : 0;
+---
+
+<section class="py-12 pb-24 w-full overflow-hidden" id="planes-section">
+  <div class="container mx-auto px-4">
+    <!-- HEADER -->
+    <div class="text-center mb-12">
+      <h2
+        class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
+      >
+        {title}
+      </h2>
+      <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+        {subtitle}
+      </p>
+    </div>
+
+    <!-- 1. NIVEL CATEGORÍA (Tabs Estilo Pill Flotante) -->
+    <div class="flex justify-center mb-12">
+      <div
+        class="inline-flex p-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-inner relative"
+      >
+        <!-- Fondo animado que se mueve (el "Glider") -->
+        <div
+          id="glider"
+          class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-full bg-white dark:bg-slate-700 shadow-sm transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]"
+        >
+        </div>
+
+        <button
+          onclick="switchCategory('movil')"
+          class="cat-btn relative z-10 px-6 md:px-8 py-2.5 text-sm font-bold uppercase tracking-widest text-blue-600 dark:text-white transition-colors duration-300 w-[140px] md:w-[160px]"
+          id="btn-movil"
+        >
+          Telefonía
+        </button>
+        <button
+          onclick="switchCategory('internet')"
+          class="cat-btn relative z-10 px-6 md:px-8 py-2.5 text-sm font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-700 transition-colors duration-300 w-[140px] md:w-[160px]"
+          id="btn-internet"
+        >
+          Internet
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. NIVEL CONTENIDO (Transición suave) -->
+    <div class="relative min-h-[600px]">
+      <!-- CONTENEDOR TELEFONÍA -->
+      <div
+        id="view-movil"
+        class="absolute inset-0 transition-all duration-500 opacity-100 translate-x-0 scale-100 z-10"
+      >
+        <!-- Sub-Filtro (Libre vs Ultra) -->
+        <div class="flex justify-center mb-10 gap-6">
+          <label
+            class="cursor-pointer flex items-center gap-2 group select-none"
+          >
+            <input
+              type="radio"
+              name="plan-type"
+              value="libre"
+              checked
+              class="peer sr-only"
+              onchange="toggleSubPlan('libre')"
+            />
+            <span
+              class="h-5 w-5 rounded-full border-2 border-slate-300 peer-checked:border-blue-500 peer-checked:bg-blue-500 transition-all flex items-center justify-center"
+            >
+              <span
+                class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"
+              ></span>
+            </span>
+            <span
+              class="text-sm font-bold text-slate-500 peer-checked:text-slate-900 dark:text-slate-400 dark:peer-checked:text-white transition-colors"
+              >Planes Libre</span
+            >
+          </label>
+          <label
+            class="cursor-pointer flex items-center gap-2 group select-none"
+          >
+            <input
+              type="radio"
+              name="plan-type"
+              value="ultra"
+              class="peer sr-only"
+              onchange="toggleSubPlan('ultra')"
+            />
+            <span
+              class="h-5 w-5 rounded-full border-2 border-slate-300 peer-checked:border-blue-500 peer-checked:bg-blue-500 transition-all flex items-center justify-center"
+            >
+              <span
+                class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"
+              ></span>
+            </span>
+            <span
+              class="text-sm font-bold text-slate-500 peer-checked:text-slate-900 dark:text-slate-400 dark:peer-checked:text-white transition-colors"
+              >Planes Ultra</span
+            >
+          </label>
+          <label
+            class="cursor-pointer flex items-center gap-2 group select-none"
+          >
+            <input
+              type="radio"
+              name="plan-type"
+              value="internet"
+              class="peer sr-only"
+              onchange="toggleSubPlan('internet')"
+            />
+            <span
+              class="h-5 w-5 rounded-full border-2 border-slate-300 peer-checked:border-blue-500 peer-checked:bg-blue-500 transition-all flex items-center justify-center"
+            >
+              <span
+                class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"
+              ></span>
+            </span>
+            <span
+              class="text-sm font-bold text-slate-500 peer-checked:text-slate-900 dark:text-slate-400 dark:peer-checked:text-white transition-colors"
+              >Planes Internet</span
+            >
+          </label>
+        </div>
+
+        <!-- Carousel Planes Libre -->
+        <div id="container-libre" class="relative">
+          <!-- Navigation Buttons -->
+          <button
+            class="libre-prev absolute left-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -ml-6 lg:-ml-12"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"></path></svg
+            >
+          </button>
+          <button
+            class="libre-next absolute right-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -mr-6 lg:-mr-12"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"></path></svg
+            >
+          </button>
+
+          <div
+            class="swiper swiper-libre !overflow-visible px-4"
+            data-initial-slide={initialSlideLibre}
+          >
+            <div class="swiper-wrapper items-stretch">
+              {
+                mobilePlansLibre.length > 0 ? (
+                  mobilePlansLibre.map((plan) => (
+                    <div class="swiper-slide h-auto">
+                      <PlanLibreCard
+                        titulo={plan.titulo}
+                        datosIncluidos={plan.datosIncluidos}
+                        precio={plan.precio}
+                        recommended={plan.recomendado}
+                        enlace={plan.enlace}
+                        redesSociales={plan.redesSociales}
+                        minutosYSms={plan.minutosYSmsIncluidos}
+                        cashbackTelcel={plan.cashbackTelcel}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div class="w-full text-center p-8 text-slate-400 border border-dashed border-slate-300 rounded-xl">
+                    No hay planes Libre disponibles en este momento.
+                  </div>
+                )
+              }
+            </div>
+            <div class="swiper-pagination !bottom-[-2rem]"></div>
+          </div>
+        </div>
+
+        <!-- Carousel Planes Ultra (Oculto por defecto) -->
+        <div
+          id="container-ultra"
+          class="relative transition-all duration-500 hidden opacity-0 translate-y-4"
+        >
+          <!-- Navigation Buttons -->
+          <button
+            class="ultra-prev absolute left-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -ml-6 lg:-ml-12"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"></path></svg
+            >
+          </button>
+          <button
+            class="ultra-next absolute right-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -mr-6 lg:-mr-12"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"></path></svg
+            >
+          </button>
+
+          <div
+            class="swiper swiper-ultra !overflow-visible px-4"
+            data-initial-slide={initialSlideUltra}
+          >
+            <div class="swiper-wrapper items-stretch">
+              {
+                mobilePlansUltra.length > 0 ? (
+                  mobilePlansUltra.map((plan) => (
+                    <div class="swiper-slide h-auto">
+                      <PlanUltraCard
+                        titulo={plan.titulo}
+                        datosIncluidos={plan.datosIncluidos}
+                        precio={plan.precio}
+                        recommended={plan.recomendado}
+                        enlace={plan.enlace}
+                        redesSociales={plan.redesSociales}
+                        minutosYSms={plan.minutosYSmsIncluidos}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div class="w-full p-12 text-center bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl">
+                    <p class="text-blue-600 dark:text-blue-400 font-bold mb-2">
+                      Próximamente: Planes Ultra 5G
+                    </p>
+                    <p class="text-sm text-blue-400 dark:text-blue-500">
+                      Estamos actualizando nuestro catálogo para ofrecerte la
+                      máxima velocidad.
+                    </p>
+                  </div>
+                )
+              }
+            </div>
+            <div class="swiper-pagination !bottom-[-2rem]"></div>
+          </div>
+        </div>
+
+        <div
+          id="container-internet"
+          class="relative transition-all duration-500 hidden opacity-0 translate-y-4"
+        >
+          <!-- Navigation Buttons -->
+          <button
+            class="internet-prev absolute left-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -ml-6 lg:-ml-12"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"></path></svg
+            >
+          </button>
+          <button
+            class="internet-next absolute right-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -mr-6 lg:-mr-12"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"></path></svg
+            >
+          </button>
+
+          <div
+            class="swiper swiper-internet !overflow-visible px-4"
+            data-initial-slide={initialSlideInternet}
+          >
+            <div class="swiper-wrapper items-stretch">
+              {
+                mobilePlansInternet.length > 0 ? (
+                  mobilePlansInternet.map((plan) => (
+                    <div class="swiper-slide h-auto">
+                      <PlanInternetCard
+                        titulo={plan.titulo}
+                        datosIncluidos={plan.datosIncluidos}
+                        precio={plan.precio}
+                        recommended={plan.recomendado}
+                        enlace={plan.enlace}
+                        redesSociales={plan.redesSociales}
+                        minutosYSms={plan.minutosYSmsIncluidos}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div class="w-full p-12 text-center bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl">
+                    <p class="text-blue-600 dark:text-blue-400 font-bold mb-2">
+                      Próximamente: Planes Internet Telcel
+                    </p>
+                    <p class="text-sm text-blue-400 dark:text-blue-500">
+                      Estamos actualizando nuestro catálogo para ofrecerte la
+                      mejor conexión.
+                    </p>
+                  </div>
+                )
+              }
+            </div>
+            <div class="swiper-pagination !bottom-[-2rem]"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENEDOR INTERNET -->
+      <div
+        id="view-internet"
+        class="absolute inset-0 transition-all duration-500 opacity-0 translate-x-20 scale-95 z-0 pointer-events-none"
+      >
+        <div class="text-center mb-10">
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
+            Internet para tu Hogar
+          </h3>
+          <p class="text-slate-500 dark:text-slate-400 mt-2">
+            Conéctate sin cables y sin instalación complicada.
+          </p>
+        </div>
+
+        <!-- Grid Internet -->
+        <!-- Carousel Internet en Casa -->
+        <div class="relative max-w-6xl mx-auto">
+          <!-- Navigation Buttons -->
+          <button
+            class="home-internet-prev absolute left-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -ml-6 lg:-ml-12"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"></path></svg
+            >
+          </button>
+          <button
+            class="home-internet-next absolute right-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -mr-6 lg:-mr-12"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"></path></svg
+            >
+          </button>
+
+          <div
+            class="swiper swiper-home-internet !overflow-visible px-4"
+            data-initial-slide={initialSlideHomeInternet}
+          >
+            <div class="swiper-wrapper items-stretch">
+              {
+                internetPlans.length > 0 ? (
+                  internetPlans.map((plan) => (
+                    <div class="swiper-slide h-auto">
+                      <InternetEnCasaPlanCard
+                        titulo={plan.titulo}
+                        datosIncluidos={plan.datosIncluidos}
+                        politicasDeUso={plan.politicasDeUso}
+                        velocidadDeNavegacion={plan.velocidadDeNavegacion}
+                        cashbackTelcel={plan.cashbackTelcel}
+                        precio={plan.precio}
+                        recomendado={plan.recomendado}
+                        enlace={plan.enlace}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div class="w-full p-12 text-center bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl">
+                    <p class="text-blue-600 dark:text-blue-400 font-bold mb-2">
+                      Próximamente: Internet para tu Hogar
+                    </p>
+                    <p class="text-sm text-blue-400 dark:text-blue-500">
+                      Estamos actualizando nuestro catálogo para ofrecerte la
+                      mejor conexión.
+                    </p>
+                  </div>
+                )
+              }
+            </div>
+            <div class="swiper-pagination !bottom-[-2rem]"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import Swiper from "swiper";
+  import { Navigation, Pagination } from "swiper/modules";
+  import "swiper/css";
+  import "swiper/css/navigation";
+  import "swiper/css/pagination";
+
+  // Declare global types for window
+  declare global {
+    interface Window {
+      switchCategory: (category: string) => void;
+      toggleSubPlan: (type: string) => void;
+    }
+  }
+
+  // Lógica de Interacción UX
+  // 1. Switch Móvil vs Internet (Tabs Superiores)
+  window.switchCategory = (category: string) => {
+    const glider = document.getElementById("glider");
+    const btnMovil = document.getElementById("btn-movil");
+    const btnInternet = document.getElementById("btn-internet");
+
+    const viewMovil = document.getElementById("view-movil");
+    const viewInternet = document.getElementById("view-internet");
+
+    if (!glider || !btnMovil || !btnInternet || !viewMovil || !viewInternet)
+      return;
+
+    if (category === "movil") {
+      // Mover Glider a la izquierda
+      glider.style.transform = "translateX(0)";
+
+      // Actualizar Texto Colores
+      btnMovil.classList.add("text-blue-600", "dark:text-white");
+      btnMovil.classList.remove("text-slate-500", "dark:text-slate-400");
+      btnInternet.classList.add("text-slate-500", "dark:text-slate-400");
+      btnInternet.classList.remove("text-blue-600", "dark:text-white");
+
+      // Animar Vistas (Crossfade + Slide)
+      viewInternet.classList.add(
+        "opacity-0",
+        "translate-x-20",
+        "scale-95",
+        "pointer-events-none",
+        "z-0",
+      );
+      viewInternet.classList.remove(
+        "opacity-100",
+        "translate-x-0",
+        "scale-100",
+        "pointer-events-auto",
+        "z-10",
+      );
+
+      setTimeout(() => {
+        viewMovil.classList.remove(
+          "opacity-0",
+          "-translate-x-20",
+          "scale-95",
+          "pointer-events-none",
+          "z-0",
+        );
+        viewMovil.classList.add(
+          "opacity-100",
+          "translate-x-0",
+          "scale-100",
+          "pointer-events-auto",
+          "z-10",
+        );
+      }, 50);
+    } else {
+      // Mover Glider a la derecha
+      glider.style.transform = "translateX(100%) translateX(8px)";
+
+      // Actualizar Texto
+      btnInternet.classList.add("text-blue-600", "dark:text-white");
+      btnInternet.classList.remove("text-slate-500", "dark:text-slate-400");
+      btnMovil.classList.add("text-slate-500", "dark:text-slate-400");
+      btnMovil.classList.remove("text-blue-600", "dark:text-white");
+
+      // Animar Vistas
+      viewMovil.classList.add(
+        "opacity-0",
+        "-translate-x-20",
+        "scale-95",
+        "pointer-events-none",
+        "z-0",
+      );
+      viewMovil.classList.remove(
+        "opacity-100",
+        "translate-x-0",
+        "scale-100",
+        "pointer-events-auto",
+        "z-10",
+      );
+
+      setTimeout(() => {
+        viewInternet.classList.remove(
+          "opacity-0",
+          "translate-x-20",
+          "scale-95",
+          "pointer-events-none",
+          "z-0",
+        );
+        viewInternet.classList.add(
+          "opacity-100",
+          "translate-x-0",
+          "scale-100",
+          "pointer-events-auto",
+          "z-10",
+        );
+      }, 50);
+    }
+  };
+
+  // 2. Toggle Sub-planes (Libre vs Ultra)
+  window.toggleSubPlan = (type: string) => {
+    const gridLibre = document.getElementById("container-libre");
+    const gridUltra = document.getElementById("container-ultra");
+    const gridInternet = document.getElementById("container-internet");
+
+    if (!gridLibre || !gridUltra || !gridInternet) return;
+
+    if (type === "libre") {
+      gridUltra.classList.add("opacity-0", "translate-y-4");
+      gridInternet.classList.add("opacity-0", "translate-y-4");
+      setTimeout(() => {
+        gridUltra.classList.add("hidden");
+        gridInternet.classList.add("hidden");
+        gridLibre.classList.remove("hidden");
+        // Force reflow
+        void gridLibre.offsetWidth;
+        gridLibre.classList.remove("opacity-0", "translate-y-4");
+
+        const swiperEl = gridLibre.querySelector(".swiper") as any;
+        if (swiperEl && swiperEl.swiper) {
+          swiperEl.swiper.update();
+        }
+      }, 300);
+    } else if (type === "ultra") {
+      gridLibre.classList.add("opacity-0", "translate-y-4");
+      gridInternet.classList.add("opacity-0", "translate-y-4");
+      setTimeout(() => {
+        gridLibre.classList.add("hidden");
+        gridInternet.classList.add("hidden");
+        gridUltra.classList.remove("hidden");
+        void gridUltra.offsetWidth;
+        gridUltra.classList.remove("opacity-0", "translate-y-4");
+
+        const swiperEl = gridUltra.querySelector(".swiper") as any;
+        if (swiperEl && swiperEl.swiper) {
+          swiperEl.swiper.update();
+        }
+      }, 300);
+    } else {
+      // Internet
+      gridLibre.classList.add("opacity-0", "translate-y-4");
+      gridUltra.classList.add("opacity-0", "translate-y-4");
+      setTimeout(() => {
+        gridLibre.classList.add("hidden");
+        gridUltra.classList.add("hidden");
+        gridInternet.classList.remove("hidden");
+        void gridInternet.offsetWidth;
+        gridInternet.classList.remove("opacity-0", "translate-y-4");
+
+        // Force Swiper Update
+        const swiperEl = gridInternet.querySelector(".swiper") as any;
+        if (swiperEl && swiperEl.swiper) {
+          swiperEl.swiper.update();
+        }
+      }, 300);
+    }
+  };
+
+  // 3. Initialize Swiper
+  function initSwipers() {
+    const commonConfig = {
+      modules: [Navigation, Pagination],
+      slidesPerView: 1.2, // Slightly more than 1 to show next slide
+      spaceBetween: 15,
+      centeredSlides: true,
+      loop: true, // Infinite scroll
+      observer: true,
+      observeParents: true,
+      breakpoints: {
+        640: { slidesPerView: 1.5, spaceBetween: 30 },
+        1024: { slidesPerView: 2.5, spaceBetween: 40, centeredSlides: true },
+        1280: { slidesPerView: 3, spaceBetween: 50, centeredSlides: true },
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        dynamicBullets: true,
+      },
+      grabCursor: true,
+    };
+
+    // Libre Swiper
+    const libreEl = document.querySelector(".swiper-libre") as HTMLElement;
+    if (libreEl) {
+      const initialSlide = parseInt(libreEl.dataset.initialSlide || "0");
+      new Swiper(libreEl, {
+        ...commonConfig,
+        initialSlide,
+        navigation: {
+          nextEl: ".libre-next",
+          prevEl: ".libre-prev",
+        },
+      });
+    }
+
+    // Ultra Swiper
+    const ultraEl = document.querySelector(".swiper-ultra") as HTMLElement;
+    if (ultraEl) {
+      const initialSlide = parseInt(ultraEl.dataset.initialSlide || "0");
+      new Swiper(ultraEl, {
+        ...commonConfig,
+        initialSlide,
+        navigation: {
+          nextEl: ".ultra-next",
+          prevEl: ".ultra-prev",
+        },
+      });
+    }
+
+    // Internet Swiper
+    const internetEl = document.querySelector(
+      ".swiper-internet",
+    ) as HTMLElement;
+    if (internetEl) {
+      const initialSlide = parseInt(internetEl.dataset.initialSlide || "0");
+      new Swiper(internetEl, {
+        ...commonConfig,
+        initialSlide,
+        navigation: {
+          nextEl: ".internet-next",
+          prevEl: ".internet-prev",
+        },
+      });
+    }
+
+    // Home Internet Swiper
+    const homeInternetEl = document.querySelector(
+      ".swiper-home-internet",
+    ) as HTMLElement;
+    if (homeInternetEl) {
+      const initialSlide = parseInt(homeInternetEl.dataset.initialSlide || "0");
+      new Swiper(homeInternetEl, {
+        ...commonConfig,
+        initialSlide,
+        navigation: {
+          nextEl: ".home-internet-next",
+          prevEl: ".home-internet-prev",
+        },
+      });
+    }
+  }
+
+  document.addEventListener("astro:page-load", initSwipers);
+  if (document.readyState === "complete") initSwipers();
+  else document.addEventListener("DOMContentLoaded", initSwipers);
+</script>
+
+<style>
+  /* Pagination Dots Customization */
+  :global(.swiper-pagination-bullet) {
+    background-color: #cbd5e1;
+    opacity: 1;
+    transition: all 0.3s ease;
+    width: 8px;
+    height: 8px;
+  }
+  :global(.swiper-pagination-bullet-active) {
+    background-color: #2563eb;
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  /* --- EFECTO FOCUS --- */
+  @media (min-width: 1024px) {
+    .swiper-slide {
+      transform: scale(0.92);
+      opacity: 0.6;
+      filter: blur(1px);
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+
+    .swiper-slide-active {
+      transform: scale(1);
+      opacity: 1;
+      filter: blur(0);
+      z-index: 10;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .swiper-slide {
+      transform: scale(0.98);
+    }
+    .swiper-slide-active {
+      transform: scale(1);
+    }
+  }
+</style>

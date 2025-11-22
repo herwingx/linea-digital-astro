@@ -5,7 +5,9 @@
   ],
   "include": [
     ".astro/types.d.ts",
-    "**/*"
+    "src/**/*.astro",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "dist"

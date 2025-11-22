@@ -5,72 +5,100 @@ interface Props {
   prefix?: string;
   suffix?: string;
   duration?: number;
+  class?: string; // Permite recibir clases externas (colores, tamaños)
 }
 
-const { end, prefix = '', suffix = '', duration = 2000 } = Astro.props;
-
-// Ensure we have valid numbers
-const safeEnd = Number(end) || 0;
-const safeDuration = Number(duration) || 2000;
-
-// Generate a unique ID for this counter
-const counterId = `counter-${Math.random().toString(36).substr(2, 9)}`;
+const { 
+  end, 
+  prefix = '', 
+  suffix = '', 
+  duration = 2000, 
+  class: className = '' 
+} = Astro.props;
 ---
 
-<div id={counterId} class="counter" data-end={safeEnd}>
+<span
+  class:list={["animated-counter tabular-nums tracking-tight", className]}
+  data-end={end}
+  data-prefix={prefix}
+  data-suffix={suffix}
+  data-duration={duration}
+>
+  {/* Valor inicial para SEO y SSR */}
   {prefix}0{suffix}
-</div>
+</span>
 
-<script define:vars={{ counterId, safeEnd, prefix, suffix, safeDuration }}>
-  // Client-side script that runs when the component mounts
-  (() => {
-    const element = document.getElementById(counterId);
-    if (!element) return;
+<script>
+  // Función para animar un solo elemento
+  const animateValue = (obj: HTMLElement) => {
+    // Evitamos re-animar si ya terminó
+    if (obj.hasAttribute('data-animated')) return;
+    
+    const end = parseFloat(obj.dataset.end || "0");
+    const duration = parseInt(obj.dataset.duration || "2000");
+    const prefix = obj.dataset.prefix || "";
+    const suffix = obj.dataset.suffix || "";
+    
+    // Usamos Intl.NumberFormat para formateo nativo y performante (localización MX/US automática)
+    const formatter = new Intl.NumberFormat('es-MX'); 
+    
+    let startTimestamp: number | null = null;
 
-    let start = 0;
-    const end = safeEnd;
-    const duration = safeDuration;
-    const startTime = performance.now();
-
-    function formatNumber(num) {
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    function animate(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
       
-      // Ease-out cubic for smooth deceleration
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-      const currentValue = Math.floor(start + (end - start) * easeProgress);
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       
-      element.innerHTML = `${prefix}${formatNumber(currentValue)}${suffix}`;
+      // Easing: easeOutQuart (más suave y "moderno" que cubic)
+      const easeProgress = 1 - Math.pow(1 - progress, 4);
+      
+      const current = Math.floor(easeProgress * end);
+      
+      // Renderizado
+      obj.textContent = `${prefix}${formatter.format(current)}${suffix}`;
       
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        window.requestAnimationFrame(step);
       } else {
-        // Ensure we end exactly on the target value
-        element.innerHTML = `${prefix}${formatNumber(end)}${suffix}`;
+        obj.textContent = `${prefix}${formatter.format(end)}${suffix}`;
+        obj.setAttribute('data-animated', 'true'); // Marca para no repetir
       }
-    }
+    };
 
-    // Start animation when the element is in viewport
+    window.requestAnimationFrame(step);
+  };
+
+  // Función de inicialización (patrón Astro moderno)
+  const initCounters = () => {
+    const counters = document.querySelectorAll<HTMLElement>('.animated-counter');
+    
+    if (counters.length === 0) return;
+
+    // Un solo IntersectionObserver para todos los contadores (Mejora de Performance)
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          requestAnimationFrame(animate);
-          observer.disconnect();
+          animateValue(entry.target as HTMLElement);
+          observer.unobserve(entry.target); // Dejar de observar una vez animado
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.2 });
 
-    observer.observe(element);
-  })();
+    counters.forEach((counter) => observer.observe(counter));
+  };
+
+  // Ejecutar en carga inicial y en navegaciones (View Transitions)
+  document.addEventListener('astro:page-load', initCounters);
+  // Fallback para primera carga si no se usa view transitions
+  document.addEventListener('DOMContentLoaded', initCounters); 
 </script>
 
 <style>
-.counter {
-  display: inline-block;
-  min-width: 60px; /* Adjust based on your needs */
-}
+  /* "tabular-nums" es CRUCIAL para Clean UI.
+     Hace que todos los números (1, 7, 9) ocupen el mismo ancho,
+     evitando que el texto vibre o salte mientras cuenta. */
+  .tabular-nums {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+  }
 </style>

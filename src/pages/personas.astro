@@ -1,0 +1,149 @@
+---
+// src/pages/personas.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PlansOrchestrator from "../components/PlansOrchestrator.astro";
+import {
+  getPlansLibre,
+  getPlansUltra,
+  getPlansInternet,
+  getInternetEnTuCasaLibre,
+} from "../services/contentful";
+
+// 1. Fetch Real Data (Libre Plans)
+const rawPlans = await getPlansLibre();
+const mobilePlansLibre = rawPlans
+  .map((p) => ({
+    titulo: p.fields.titulo as string,
+    datosIncluidos: p.fields.datosIncluidos as string,
+    precio: p.fields.precio as number,
+    recomendado: p.fields.recomendado as boolean | undefined,
+    enlace: (p.fields.enlace as string) || "#",
+    redesSociales: (p.fields.redesSociales as string[]) || [],
+    minutosYSmsIncluidos: p.fields.minutosYSmsIncluidos as string,
+    cashbackTelcel: p.fields.cashbackTelcel as string,
+  }))
+  .sort((a, b) => (a.precio as number) - (b.precio as number));
+
+// 2. Mock Data (Ultra Plans - Placeholder)
+const rawPlansUltra = await getPlansUltra();
+const mobilePlansUltra = rawPlansUltra
+  .map((p) => ({
+    titulo: p.fields.titulo as string,
+    datosIncluidos: p.fields.datosIncluidos as string,
+    precio: p.fields.precio as number,
+    recomendado: p.fields.recomendado as boolean | undefined,
+    enlace: (p.fields.enlace as string) || "#",
+    redesSociales: (p.fields.redesSociales as string[]) || [],
+    minutosYSmsIncluidos: p.fields.minutosYSmsIncluidos as string,
+  }))
+  .sort((a, b) => (a.precio as number) - (b.precio as number));
+
+// 2. Fetch Real Data (Internet Plans)
+const rawPlansInternet = await getPlansInternet();
+const mobilePlansInternet = rawPlansInternet
+  .map((p) => ({
+    titulo: p.fields.titulo as string,
+    datosIncluidos: p.fields.datosIncluidos as string,
+    precio: p.fields.precio as number,
+    recomendado: p.fields.recomendado as boolean | undefined,
+    enlace: (p.fields.enlace as string) || "#",
+    redesSociales: (p.fields.redesSociales as string[]) || [],
+    minutosYSmsIncluidos: p.fields.minutosYSmsIncluidos as string,
+  }))
+  .sort((a, b) => (a.precio as number) - (b.precio as number));
+
+// 2. Fetch Real Data (Internet Plans)
+const rawPlansInternetEnTuCasaLibre = await getInternetEnTuCasaLibre();
+const internetPlans = rawPlansInternetEnTuCasaLibre
+  .map((p) => ({
+    titulo: p.fields.titulo as string,
+    datosIncluidos: p.fields.datosIncluidos as string,
+    precio: p.fields.precio as number,
+    recomendado: p.fields.recomendado as boolean | undefined,
+    enlace: (p.fields.enlace as string) || "#",
+    redesSociales: (p.fields.redesSociales as string[]) || [],
+    minutosYSmsIncluidos: p.fields.minutosYSmsIncluidos as string,
+    politicasDeUso:
+      (p.fields.politicasDeUso as string) || "Política de uso justo aplica",
+    velocidadDeNavegacion:
+      (p.fields.velocidadDeNavegacion as string) || "10 Mbps",
+  }))
+  .sort((a, b) => (a.precio as number) - (b.precio as number));
+
+// 3. Mock Data (Home Internet - Placeholder)
+const homeInternet = [
+  {
+    titulo: "Internet en Casa 1",
+    velocidad: "20 Mbps",
+    precio: 399,
+    recomendado: false,
+    enlace: "#",
+    descripcion: "Ideal para navegar en redes sociales y ver videos en HD.",
+  },
+  {
+    titulo: "Internet en Casa 2",
+    velocidad: "50 Mbps",
+    precio: 549,
+    recomendado: true,
+    enlace: "#",
+    descripcion:
+      "Perfecto para streaming 4K y múltiples dispositivos conectados.",
+  },
+  {
+    titulo: "Internet en Casa 3",
+    velocidad: "100 Mbps",
+    precio: 799,
+    recomendado: false,
+    enlace: "#",
+    descripcion:
+      "Máxima velocidad para gaming y trabajo remoto sin interrupciones.",
+  },
+];
+---
+
+<BaseLayout
+  title="Planes para Personas | Grupo Linea Digital"
+  description="Encuentra el plan ideal para ti. Telefonía móvil 5G e Internet para tu hogar sin plazos forzosos."
+>
+  <!-- Hero Section Minimalista -->
+  <section class="relative pt-32 pb-12 overflow-hidden">
+    <div class="absolute inset-0 -z-10">
+      <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-400/20 blur-[120px] rounded-full mix-blend-multiply dark:bg-blue-900/20 dark:mix-blend-screen"
+      >
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 text-center">
+      <span
+        class="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
+      >
+        Para Personas
+      </span>
+      <h1
+        class="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight"
+      >
+        Conecta tu <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500"
+          >Mundo</span
+        >
+      </h1>
+      <p
+        class="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed"
+      >
+        Disfruta de la red con mayor cobertura y velocidad. Ya sea en tu celular
+        o en tu casa, tenemos un plan diseñado para tu estilo de vida.
+      </p>
+    </div>
+  </section>
+
+  <!-- Orchestrator Component -->
+  <PlansOrchestrator
+    mobilePlansLibre={mobilePlansLibre}
+    mobilePlansUltra={mobilePlansUltra}
+    mobilePlansInternet={mobilePlansInternet}
+    internetPlans={internetPlans}
+    title="Explora nuestros planes"
+    subtitle="Cambia entre Telefonía e Internet para ver las opciones disponibles"
+  />
+</BaseLayout>

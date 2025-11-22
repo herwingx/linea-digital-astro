@@ -3,141 +3,147 @@ import { Image } from "astro:assets";
 import logoWhite from "../assets/logo-white.svg";
 import logoDark from "../assets/logo-dark.svg";
 import DarkModeToggle from "./DarkModeToggle.astro";
+
+// Props para indicar estado activo si se desea implementar (opcional)
+const { currentPath } = Astro.props; 
 ---
 
-<header class="relative z-[9999]">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- 
-      IMPORTANTE: Agregamos 'relative' aquí. 
-      Esto convierte al NAV en el punto de referencia para el menú desplegable.
-    -->
+<!-- 
+  HEADER WRAPPER
+  Sticky + Backdrop Blur + Borde sutil inferior
+-->
+<header class="sticky top-0 z-[999] w-full border-b border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md transition-colors duration-500 supports-[backdrop-filter]:bg-white/60">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <nav class="relative flex items-center justify-between h-20 lg:h-24">
-      <!-- 1. LOGO -->
-      <div class="flex-shrink-0 z-50">
-        <a href="/" class="block">
-          <Image src={logoWhite} alt="Logo" class="mt-4 w-32 sm:w-40 md:w-48 h-auto hidden dark:block" />
-          <Image src={logoDark} alt="Logo" class="mt-4 w-32 sm:w-40 md:w-48 h-auto dark:hidden" />
+      
+      <!-- 1. LOGO AREA -->
+      <div class="flex-shrink-0 z-50 transition-transform hover:scale-105 duration-300">
+        <a href="/" class="block" aria-label="Ir al inicio">
+          <!-- Efecto: Pequeño drop-shadow para dar profundidad al logo -->
+          <Image 
+            src={logoWhite} 
+            alt="Grupo Linea Digital Logo" 
+            class="w-32 sm:w-36 md:w-44 h-auto hidden dark:block drop-shadow-lg" 
+            loading="eager"
+          />
+          <Image 
+            src={logoDark} 
+            alt="Grupo Linea Digital Logo" 
+            class="w-32 sm:w-36 md:w-44 h-auto dark:hidden" 
+            loading="eager"
+          />
         </a>
       </div>
 
       <!-- 2. MENÚ DESKTOP (CENTRADO) -->
-      <!-- Absolute + Translate para centrado perfecto matemático -->
-      <div
-        class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-      >
-        <ul class="flex items-center space-x-8">
-          <li>
-            <a
-              href="/nosotros"
-              class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors"
-            >
-              Nosotros
-            </a>
-          </li>
-          <li>
-            <a
-              href="/promociones"
-              class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors"
-            >
-              Promociones
-            </a>
-          </li>
-          <li>
-            <a
-              href="/form"
-              class="text-lg font-semibold text-body-color hover:text-blue-600 dark:text-white dark:hover:text-blue-400 transition-colors"
-            >
-              Contacto
-            </a>
-          </li>
+      <!-- Estilo Clean/Minimalista con micro-interacciones de fondo -->
+      <div class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <ul class="flex items-center gap-1">
+          {[
+            { label: 'Personas', href: '/personas' },
+            { label: 'Empresas', href: '/empresas' },
+            { label: 'Nosotros', href: '/nosotros' },
+            { label: 'Asociados', href: '/asociados' },
+            { label: 'Contacto', href: '/form' }
+          ].map(link => (
+            <li>
+              <a
+                href={link.href}
+                class="relative px-5 py-2.5 rounded-full text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/80"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
 
       <!-- 3. ACCIONES DERECHA -->
       <div class="flex items-center gap-3 sm:gap-4 z-50">
-        <!-- Dark Mode -->
+        
+        <!-- Toggle con borde sutil -->
         <div class="flex items-center">
-          <DarkModeToggle />
+          <div class="rounded-full p-1 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+             <DarkModeToggle />
+          </div>
         </div>
 
-        <!-- Botón Mi Telcel (Solo Desktop) -->
+        <!-- Botón Mi Telcel (Estilo Pill Premium) -->
         <a
           target="_blank"
           href="https://www.mitelcel.com/mitelcel/login"
-          class="hidden lg:inline-flex items-center justify-center rounded-md bg-[#0F172A] px-6 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-white/10 dark:hover:bg-white/20 transition-all"
+          class="group hidden lg:inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-2.5 text-center text-sm font-bold text-white shadow-xl shadow-slate-900/20 transition-all duration-300 hover:scale-105 hover:bg-blue-700 dark:bg-white dark:text-slate-900 dark:shadow-white/10 dark:hover:bg-blue-100"
         >
           Mi Telcel
+          <!-- Pequeña flecha o icono (opcional, añade polish) -->
+          <svg class="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
         </a>
 
-        <!-- Botón Hamburguesa (Solo Móvil) -->
+        <!-- Botón Hamburguesa Moderno -->
+        <!-- Aumentamos touch area para móvil -->
         <button
           id="navbarToggler"
-          class="relative block lg:hidden p-2 text-gray-700 dark:text-white focus:outline-none"
+          class="relative block lg:hidden p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-white focus:outline-none transition-colors"
           aria-label="Toggle navigation"
+          aria-expanded="false"
         >
-          <div
-            class="w-6 h-5 flex flex-col justify-between relative overflow-hidden"
-          >
-            <span
-              class="navbar-span w-full h-[2px] bg-current transition-all duration-300"
-            ></span>
-            <span
-              class="navbar-span w-full h-[2px] bg-current transition-all duration-300"
-            ></span>
-            <span
-              class="navbar-span w-full h-[2px] bg-current transition-all duration-300"
-            ></span>
+          <div class="w-5 h-4 flex flex-col justify-between relative overflow-hidden">
+            <!-- Barras con bordes redondeados -->
+            <span class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-left"></span>
+            <span class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300"></span>
+            <span class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-left"></span>
           </div>
         </button>
       </div>
 
       <!-- 
-         4. MENÚ MÓVIL DESPLEGABLE (Estilo Tarjeta Flotante)
-         - absolute: Se sale del flujo normal.
-         - top-full: Se pone justo debajo del NAV.
-         - right-0: SE ALINEA A LA DERECHA (Justo debajo del hamburguesa).
-         - mt-4: Un pequeño espacio hacia abajo.
-         - w-64: Ancho fijo estilo tarjeta.
+         4. MENÚ MÓVIL DESPLEGABLE (Modern Clean Card)
       -->
       <div
         id="navbarCollapse"
-        class="hidden absolute top-full right-0 mt-4 w-64 rounded-xl bg-white dark:bg-[#0f172a] shadow-2xl py-4 px-4 lg:hidden origin-top-right transition-all duration-200 ease-out z-[10000]"
+        class="hidden absolute top-full right-0 mt-4 w-72 lg:hidden origin-top-right z-[10000]"
       >
-        <ul class="flex flex-col space-y-2">
-          <li>
-            <a
-              href="/nosotros"
-              class="block px-4 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-white/5 hover:text-blue-600 transition-colors"
-            >
-              Nosotros
-            </a>
-          </li>
-          <li>
-            <a
-              href="/promociones"
-              class="block px-4 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-white/5 hover:text-blue-600 transition-colors"
-            >
-              Promociones
-            </a>
-          </li>
-          <li>
-            <a
-              href="/form"
-              class="block px-4 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-white/5 hover:text-blue-600 transition-colors"
-            >
-              Contacto
-            </a>
-          </li>
-          <li class="pt-2 border-t border-gray-100 dark:border-gray-700 mt-2">
-            <a
-              target="_blank"
-              href="https://www.mitelcel.com/mitelcel/login"
-              class="flex items-center justify-center w-full bg-[#0F172A] text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors dark:bg-white/10 dark:hover:bg-white/20"
-            >
-              Mi Telcel
-            </a>
-          </li>
-        </ul>
+        <!-- 
+            Card Wrapper:
+            - backdrop-blur-xl (Vidrio fuerte)
+            - rounded-[2rem] (Geometría solicitada)
+            - border-slate-200 (Línea sutil)
+            - shadow-2xl (Profundidad)
+        -->
+        <div class="rounded-[2rem] border border-slate-200/80 bg-white/95 dark:bg-slate-900/95 dark:border-slate-700 p-3 shadow-2xl shadow-blue-900/10 backdrop-blur-xl">
+           
+           <ul class="flex flex-col space-y-1">
+              {[
+                { label: 'Personas', href: '/personas' },
+                { label: 'Empresas', href: '/empresas' },
+                { label: 'Nosotros', href: '/nosotros' },
+                { label: 'Asociados', href: '/asociados' },
+                { label: 'Contacto', href: '/form' }
+              ].map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="flex items-center w-full px-5 py-3.5 rounded-3xl text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-300 transition-colors group"
+                  >
+                    {link.label}
+                    <!-- Chevrón sutil a la derecha en hover -->
+                    <svg class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                  </a>
+                </li>
+              ))}
+
+              <li class="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800">
+                <a
+                  target="_blank"
+                  href="https://www.mitelcel.com/mitelcel/login"
+                  class="flex items-center justify-center w-full bg-slate-900 text-white px-4 py-3.5 rounded-[1.5rem] font-bold text-sm shadow-lg shadow-slate-900/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 dark:bg-white dark:text-slate-900"
+                >
+                  Ingresar a Mi Telcel
+                </a>
+              </li>
+           </ul>
+
+        </div>
       </div>
     </nav>
   </div>
@@ -148,62 +154,92 @@ function initNavbar() {
   const navbarToggler = document.getElementById("navbarToggler");
   const navbarCollapse = document.getElementById("navbarCollapse");
   const navbarSpans = document.querySelectorAll(".navbar-span");
-  
-  // Seleccionamos los links dentro del menú para cerrar al hacer click
   const navLinks = navbarCollapse ? navbarCollapse.querySelectorAll("a") : [];
 
   if (!navbarToggler || !navbarCollapse) return;
 
-  // --- LÓGICA DEL BOTÓN (TOGGLE) ---
-  navbarToggler.addEventListener("click", () => {
-    navbarCollapse.classList.toggle("hidden");
-
-    // Línea Superior: Rota 45 grados y baja 9px al centro
-    if (navbarSpans[0]) {
-      navbarSpans[0].classList.toggle("rotate-45");
-      navbarSpans[0].classList.toggle("translate-y-[9px]");
+  // --- LÓGICA DEL BOTÓN (ANIMACIÓN HAMBURGUESA MEJORADA) ---
+  navbarToggler.addEventListener("click", (e) => {
+    e.stopPropagation(); // Evitar cierre inmediato
+    const isClosed = navbarCollapse.classList.contains("hidden");
+    
+    // Toggle Menu Display
+    if(isClosed) {
+        navbarCollapse.classList.remove("hidden");
+        // Tiny animation entrance logic can go here via CSS animation classes if wanted
+        navbarToggler.setAttribute('aria-expanded', 'true');
+    } else {
+        navbarCollapse.classList.add("hidden");
+        navbarToggler.setAttribute('aria-expanded', 'false');
     }
 
-    // Línea del Medio: Desaparece
-    if (navbarSpans[1]) {
-      navbarSpans[1].classList.toggle("opacity-0");
-    }
+    // Animación Icono X (Usando la lógica existente + mejoras visuales)
+    // span[0] -> Rotate 45
+    // span[1] -> Fade Out
+    // span[2] -> Rotate -45
+    
+    if (navbarSpans.length === 3) {
+        // Modern approach using CSS classes defined by style, but manipulating via JS classes
+        navbarSpans[0].classList.toggle("rotate-45");
+        // Translate ajuste fino para centrar la X (depende del width del icono)
+        // Para un width de icono estándar, un translate pequeño funciona.
+        // En este caso, usaremos rotación pura sobre el origin-left para mantener limpieza
+        // o simplemente las clases anteriores:
+        
+        // RESETEAR transformaciones manuales anteriores para usar lógica limpia:
+        // Si quieres una X perfecta:
+        if(isClosed) { // Se va a ABRIIR
+             navbarSpans[0].style.transform = 'rotate(45deg) translate(5px, -5px)';
+             navbarSpans[1].style.opacity = '0';
+             navbarSpans[2].style.transform = 'rotate(-45deg) translate(-5px, 5px) ';
+             // Ajustamos origins para que crucen en el centro visualmente si es necesario
+             navbarSpans[0].style.transformOrigin = 'center'; 
+             navbarSpans[2].style.transformOrigin = 'center';
+             
+             // O, usando la lógica previa simple (ajustando pixel values para el nuevo icono)
+             navbarSpans[0].classList.remove('rotate-45'); // Reset previos
+             setTimeout(() => {
+                 navbarSpans[0].classList.add("rotate-45", "translate-y-[6px]", "translate-x-[2px]");
+                 navbarSpans[1].classList.add("opacity-0");
+                 navbarSpans[2].classList.add("-rotate-45", "-translate-y-[6px]", "translate-x-[2px]");
+             }, 10);
 
-    // Línea Inferior: Rota -45 grados y sube 9px al centro
-    if (navbarSpans[2]) {
-      navbarSpans[2].classList.toggle("-rotate-45");
-      navbarSpans[2].classList.toggle("-translate-y-[9px]");
+        } else { // Se va a CERRAR
+             navbarSpans[0].classList.remove("rotate-45", "translate-y-[6px]", "translate-x-[2px]");
+             navbarSpans[1].classList.remove("opacity-0");
+             navbarSpans[2].classList.remove("-rotate-45", "-translate-y-[6px]", "translate-x-[2px]");
+             
+             // Limpiar estilos inline si los hubiera
+             navbarSpans.forEach(s => s.style = '');
+        }
     }
   });
 
-  // --- LÓGICA PARA CERRAR AL DAR CLICK EN ENLACE ---
+  // --- CERRAR AL DAR CLICK EN ENLACE ---
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
-      navbarCollapse.classList.add("hidden");
-
-      // Reseteamos las clases manualmente (remove)
-      if (navbarSpans[0]) {
-        navbarSpans[0].classList.remove("rotate-45", "translate-y-[9px]");
-      }
-      if (navbarSpans[1]) {
-        navbarSpans[1].classList.remove("opacity-0");
-      }
-      if (navbarSpans[2]) {
-        navbarSpans[2].classList.remove("-rotate-45", "-translate-y-[9px]");
-      }
+      closeMenu();
     });
   });
   
-  // OPCIONAL: Cerrar si das click fuera del menú
+  // --- CERRAR CLICK OUTSIDE ---
   document.addEventListener('click', (e) => {
       if (!navbarCollapse.contains(e.target) && !navbarToggler.contains(e.target) && !navbarCollapse.classList.contains('hidden')) {
-        navbarCollapse.classList.add("hidden");
-        if (navbarSpans[0]) navbarSpans[0].classList.remove("rotate-45", "translate-y-[9px]");
-        if (navbarSpans[1]) navbarSpans[1].classList.remove("opacity-0");
-        if (navbarSpans[2]) navbarSpans[2].classList.remove("-rotate-45", "-translate-y-[9px]");
+        closeMenu();
       }
   });
+
+  function closeMenu() {
+      navbarCollapse.classList.add("hidden");
+      navbarToggler.setAttribute('aria-expanded', 'false');
+      
+      // Reset Icon Animation
+      navbarSpans.forEach(s => {
+         s.classList.remove("rotate-45", "translate-y-[6px]", "translate-x-[2px]", "opacity-0", "-rotate-45", "-translate-y-[6px]");
+         s.style = '';
+      });
+  }
 }
 
-  document.addEventListener("DOMContentLoaded", initNavbar);
+document.addEventListener("DOMContentLoaded", initNavbar);
 </script>

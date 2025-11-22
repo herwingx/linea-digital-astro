@@ -1,0 +1,119 @@
+---
+// src/components/InternetPlanCard.astro
+
+export interface Props {
+  titulo: string;
+  datosIncluidos: string;
+  politicasDeUso: string;
+  velocidadDeNavegacion: string;
+  cashbackTelcel?: string;
+  precio: number;
+  recomendado?: boolean;
+  enlace: string;
+}
+
+const {
+  titulo,
+  datosIncluidos,
+  politicasDeUso,
+  velocidadDeNavegacion,
+  cashbackTelcel,
+  precio,
+  recomendado = false,
+  enlace = "#",
+} = Astro.props;
+
+const formattedPrice = new Intl.NumberFormat("es-MX", {
+  style: "currency",
+  currency: "MXN",
+  maximumFractionDigits: 0,
+}).format(precio);
+
+// Lógica WhatsApp
+const SALES_NUMBER = "5219612113829";
+const rawMessage = `Hola, me interesa el servicio de Internet *${titulo}* de *${velocidadDeNavegacion}* por *${formattedPrice}* al mes.`;
+const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(rawMessage)}`;
+---
+
+<div class="relative w-full h-full group">
+  <div
+    class:list={[
+      "relative flex flex-col h-full overflow-hidden rounded-[2rem] transition-all duration-300",
+      recomendado
+        ? "bg-white dark:bg-slate-800 border-2 border-blue-500 shadow-xl shadow-blue-900/10"
+        : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg",
+    ]}
+  >
+    {
+      recomendado && (
+        <div class="absolute top-4 right-4 z-10">
+          <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+            Más Vendido
+          </span>
+        </div>
+      )
+    }
+
+    <div class="p-8 flex flex-col h-full">
+      <!-- ICONO -->
+      <div
+        class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
+      >
+        <svg
+          class="h-7 w-7"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"
+          ></path></svg
+        >
+      </div>
+
+      <!-- TITULO -->
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
+        {titulo}
+      </h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 line-clamp-2">
+        {datosIncluidos}
+      </p>
+
+      <!-- VELOCIDAD -->
+      <div class="mb-8">
+        <span
+          class="block text-sm font-semibold text-slate-400 uppercase tracking-wider"
+          >Velocidad</span
+        >
+        <div class="flex items-baseline gap-1">
+          <span class="text-4xl font-extrabold text-slate-900 dark:text-white"
+            >{velocidadDeNavegacion}</span
+          >
+        </div>
+      </div>
+
+      <!-- PRECIO -->
+      <div class="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <span class="block text-xs text-slate-400">Precio Mensual</span>
+            <span class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+              >{formattedPrice}</span
+            >
+          </div>
+        </div>
+
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-sm font-bold text-white transition-transform active:scale-95 dark:bg-white dark:text-slate-900 hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white"
+        >
+          Contratar Ahora
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
