@@ -1,519 +1,111 @@
 ---
-// src/components/PlansOrchestrator.astro
-import PlanLibreCard from "./PlanTelcelLibreCard.astro";
-import PlanUltraCard from "./PlanTelcelUltraCard.astro";
-import PlanInternetCard from "./PlanTelcelInternetCard.astro";
-import InternetEnCasaPlanCard from "./InternetEnCasaPlanCard.astro"; // We'll create this next
-
-interface PlanLibre {
-  titulo: string;
-  datosIncluidos: string;
-  precio: number;
-  recomendado?: boolean;
-  enlace: string;
-  redesSociales: string[];
-  minutosYSmsIncluidos: string;
-  cashbackTelcel?: string;
-}
-
-interface PlanUltra {
-  titulo: string;
-  datosIncluidos: string;
-  precio: number;
-  recomendado?: boolean;
-  enlace: string;
-  redesSociales: string[];
-  minutosYSmsIncluidos: string;
-}
-
-interface PlanInternet {
-  titulo: string;
-  datosIncluidos: string;
-  precio: number;
-  recomendado?: boolean;
-  enlace: string;
-  redesSociales: string[];
-  minutosYSmsIncluidos: string;
-}
-
-interface InternetEnCasaPlan {
-  titulo: string;
-  datosIncluidos: string;
-  politicasDeUso: string;
-  velocidadDeNavegacion: string;
-  cashbackTelcel?: string;
-  precio: number;
-  recomendado?: boolean;
-  enlace: string;
-}
+import GenericPlanCarousel from "./GenericPlanCarousel.astro";
 
 interface Props {
-  mobilePlansLibre: PlanLibre[];
-  mobilePlansUltra: PlanUltra[];
-  mobilePlansInternet: PlanInternet[];
-  internetPlans: InternetEnCasaPlan[];
+  mobilePlansLibre: any[];
+  mobilePlansUltra: any[];
+  mobilePlansInternet: any[];
+  internetPlans: any[];
   title?: string;
   subtitle?: string;
 }
 
 const {
-  mobilePlansLibre = [],
-  mobilePlansUltra = [],
-  mobilePlansInternet = [],
-  internetPlans = [],
-  title = "Elige tu Conectividad",
-  subtitle = "Planes diseñados para ti y tu hogar",
+  mobilePlansLibre,
+  mobilePlansUltra,
+  mobilePlansInternet,
+  internetPlans,
+  title,
+  subtitle,
 } = Astro.props;
-
-// Calculate initial slide for Libre (find recommended or default to 0)
-const initialSlideLibre =
-  mobilePlansLibre.findIndex((p) => p.recomendado) !== -1
-    ? mobilePlansLibre.findIndex((p) => p.recomendado)
-    : 0;
-
-// Calculate initial slide for Ultra
-const initialSlideUltra =
-  mobilePlansUltra.findIndex((p) => p.recomendado) !== -1
-    ? mobilePlansUltra.findIndex((p) => p.recomendado)
-    : 0;
-
-// Calculate initial slide for Internet
-const initialSlideInternet =
-  mobilePlansInternet.findIndex((p) => p.recomendado) !== -1
-    ? mobilePlansInternet.findIndex((p) => p.recomendado)
-    : 0;
-
-// Calculate initial slide for Home Internet
-const initialSlideHomeInternet =
-  internetPlans.findIndex((p) => p.recomendado) !== -1
-    ? internetPlans.findIndex((p) => p.recomendado)
-    : 0;
 ---
 
-<section class="w-full overflow-hidden" id="planes-section">
-  <div class="container mx-auto px-4 max-w-7xl">
-    <!-- HEADER -->
-    <div class="text-center mb-12">
+<section class="w-full py-16 bg-white dark:bg-transparent overflow-hidden">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <!-- Header -->
+    <div class="text-center mb-10">
       <h2
-        class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
+        class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4"
       >
         {title}
       </h2>
-      <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-        {subtitle}
-      </p>
+      <p class="text-lg text-slate-500 dark:text-slate-400">{subtitle}</p>
     </div>
 
-    <!-- 1. NIVEL CATEGORÍA (Tabs Estilo Pill Flotante) -->
+    <!-- Main Tabs -->
     <div class="flex justify-center mb-12">
       <div
-        class="inline-flex p-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-inner relative"
+        class="relative inline-flex p-1 bg-slate-100 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700/50"
       >
-        <!-- Fondo animado que se mueve (el "Glider") -->
         <div
-          id="glider"
-          class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-full bg-white dark:bg-slate-700 shadow-sm transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]"
+          id="main-glider"
+          class="absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-white dark:bg-slate-700 rounded-full shadow transition-transform duration-300 ease-out"
         >
         </div>
-
         <button
-          onclick="switchCategory('movil')"
-          class="cat-btn relative z-10 px-6 md:px-8 py-2.5 text-sm font-bold uppercase tracking-widest text-blue-600 dark:text-white transition-colors duration-300 w-[140px] md:w-[160px]"
-          id="btn-movil"
+          onclick="switchMain('movil')"
+          id="tab-movil"
+          class="relative z-10 w-32 py-2 text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-white"
+          >Telefonía</button
         >
-          Telefonía
-        </button>
         <button
-          onclick="switchCategory('internet')"
-          class="cat-btn relative z-10 px-6 md:px-8 py-2.5 text-sm font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-700 transition-colors duration-300 w-[140px] md:w-[160px]"
-          id="btn-internet"
+          onclick="switchMain('hogar')"
+          id="tab-hogar"
+          class="relative z-10 w-32 py-2 text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-slate-700"
+          >Internet</button
         >
-          Internet
-        </button>
       </div>
     </div>
 
-    <!-- 2. NIVEL CONTENIDO (Transición suave de altura y opacidad) -->
-    <div
-      id="plans-wrapper"
-      class="relative overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
-    >
-      <!-- CONTENEDOR TELEFONÍA -->
+    <div id="planes-content" class="relative min-h-[600px]">
+      <!-- MOVIL VIEW -->
       <div
         id="view-movil"
-        class="relative w-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-100 translate-x-0 z-10 pb-24"
+        class="absolute w-full transition-all duration-500 opacity-100 z-10"
       >
-        <!-- Sub-Filtro (Libre vs Ultra) -->
-        <div class="flex justify-center mb-10 gap-6">
-          <label
-            class="cursor-pointer flex items-center gap-2 group select-none"
-          >
-            <input
-              type="radio"
-              name="plan-type"
-              value="libre"
-              checked
-              class="peer sr-only"
-              onchange="toggleSubPlan('libre')"
-            />
-            <span
-              class="h-5 w-5 rounded-full border-2 border-slate-300 peer-checked:border-blue-500 peer-checked:bg-blue-500 transition-all flex items-center justify-center"
-            >
-              <span
-                class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"
-              ></span>
-            </span>
-            <span
-              class="text-sm font-bold text-slate-500 peer-checked:text-slate-900 dark:text-slate-400 dark:peer-checked:text-white transition-colors"
-              >Planes Libre</span
-            >
-          </label>
-          <label
-            class="cursor-pointer flex items-center gap-2 group select-none"
-          >
-            <input
-              type="radio"
-              name="plan-type"
-              value="ultra"
-              class="peer sr-only"
-              onchange="toggleSubPlan('ultra')"
-            />
-            <span
-              class="h-5 w-5 rounded-full border-2 border-slate-300 peer-checked:border-blue-500 peer-checked:bg-blue-500 transition-all flex items-center justify-center"
-            >
-              <span
-                class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"
-              ></span>
-            </span>
-            <span
-              class="text-sm font-bold text-slate-500 peer-checked:text-slate-900 dark:text-slate-400 dark:peer-checked:text-white transition-colors"
-              >Planes Ultra</span
-            >
-          </label>
-          <label
-            class="cursor-pointer flex items-center gap-2 group select-none"
-          >
-            <input
-              type="radio"
-              name="plan-type"
-              value="internet"
-              class="peer sr-only"
-              onchange="toggleSubPlan('internet')"
-            />
-            <span
-              class="h-5 w-5 rounded-full border-2 border-slate-300 peer-checked:border-blue-500 peer-checked:bg-blue-500 transition-all flex items-center justify-center"
-            >
-              <span
-                class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"
-              ></span>
-            </span>
-            <span
-              class="text-sm font-bold text-slate-500 peer-checked:text-slate-900 dark:text-slate-400 dark:peer-checked:text-white transition-colors"
-              >Planes Internet</span
-            >
-          </label>
+        <!-- Subtabs -->
+        <div class="flex justify-center gap-3 mb-8">
+          {
+            ["libre", "ultra", "internet"].map((type, idx) => (
+              <button
+                onclick={`switchSub('${type}')`}
+                data-type={type}
+                class={`sub-tab px-5 py-2 rounded-full border text-xs font-bold uppercase transition-all ${idx === 0 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300 shadow-sm scale-105" : "border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+              >
+                {type === "libre"
+                  ? "Planes Libre"
+                  : type === "ultra"
+                    ? "Ultra 5G"
+                    : "Internet Móvil"}
+              </button>
+            ))
+          }
         </div>
 
-        <!-- Carousel Planes Libre -->
-        <div id="container-libre" class="relative">
-          <!-- Navigation Buttons -->
-          <button
-            class="libre-prev absolute left-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 19l-7-7 7-7"></path></svg
-            >
-          </button>
-          <button
-            class="libre-next absolute right-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 5l7 7-7 7"></path></svg
-            >
-          </button>
-
-          <div
-            class="swiper swiper-libre !overflow-visible px-4"
-            data-initial-slide={initialSlideLibre}
-          >
-            <div class="swiper-wrapper items-stretch">
-              {
-                mobilePlansLibre.length > 0 ? (
-                  mobilePlansLibre.map((plan) => (
-                    <div class="swiper-slide h-auto">
-                      <PlanLibreCard
-                        titulo={plan.titulo}
-                        datosIncluidos={plan.datosIncluidos}
-                        precio={plan.precio}
-                        recommended={plan.recomendado}
-                        enlace={plan.enlace}
-                        redesSociales={plan.redesSociales}
-                        minutosYSms={plan.minutosYSmsIncluidos}
-                        cashbackTelcel={plan.cashbackTelcel}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div class="w-full text-center p-8 text-slate-400 border border-dashed border-slate-300 rounded-xl">
-                    No hay planes Libre disponibles en este momento.
-                  </div>
-                )
-              }
-            </div>
-            <div class="swiper-pagination !bottom-[-2rem]"></div>
-          </div>
-        </div>
-
-        <!-- Carousel Planes Ultra (Oculto por defecto) -->
-        <div
-          id="container-ultra"
-          class="relative transition-all duration-500 hidden opacity-0 translate-y-4"
-        >
-          <!-- Navigation Buttons -->
-          <button
-            class="ultra-prev absolute left-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 19l-7-7 7-7"></path></svg
-            >
-          </button>
-          <button
-            class="ultra-next absolute right-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 5l7 7-7 7"></path></svg
-            >
-          </button>
-
-          <div
-            class="swiper swiper-ultra !overflow-visible px-4"
-            data-initial-slide={initialSlideUltra}
-          >
-            <div class="swiper-wrapper items-stretch">
-              {
-                mobilePlansUltra.length > 0 ? (
-                  mobilePlansUltra.map((plan) => (
-                    <div class="swiper-slide h-auto">
-                      <PlanUltraCard
-                        titulo={plan.titulo}
-                        datosIncluidos={plan.datosIncluidos}
-                        precio={plan.precio}
-                        recommended={plan.recomendado}
-                        enlace={plan.enlace}
-                        redesSociales={plan.redesSociales}
-                        minutosYSms={plan.minutosYSmsIncluidos}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div class="w-full p-12 text-center bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl">
-                    <p class="text-blue-600 dark:text-blue-400 font-bold mb-2">
-                      Próximamente: Planes Ultra 5G
-                    </p>
-                    <p class="text-sm text-blue-400 dark:text-blue-500">
-                      Estamos actualizando nuestro catálogo para ofrecerte la
-                      máxima velocidad.
-                    </p>
-                  </div>
-                )
-              }
-            </div>
-            <div class="swiper-pagination !bottom-[-2rem]"></div>
-          </div>
-        </div>
-
-        <div
-          id="container-internet"
-          class="relative transition-all duration-500 hidden opacity-0 translate-y-4"
-        >
-          <!-- Navigation Buttons -->
-          <button
-            class="internet-prev absolute left-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 19l-7-7 7-7"></path></svg
-            >
-          </button>
-          <button
-            class="internet-next absolute right-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 5l7 7-7 7"></path></svg
-            >
-          </button>
-
-          <div
-            class="swiper swiper-internet !overflow-visible px-4"
-            data-initial-slide={initialSlideInternet}
-          >
-            <div class="swiper-wrapper items-stretch">
-              {
-                mobilePlansInternet.length > 0 ? (
-                  mobilePlansInternet.map((plan) => (
-                    <div class="swiper-slide h-auto">
-                      <PlanInternetCard
-                        titulo={plan.titulo}
-                        datosIncluidos={plan.datosIncluidos}
-                        precio={plan.precio}
-                        recommended={plan.recomendado}
-                        enlace={plan.enlace}
-                        redesSociales={plan.redesSociales}
-                        minutosYSms={plan.minutosYSmsIncluidos}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div class="w-full p-12 text-center bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl">
-                    <p class="text-blue-600 dark:text-blue-400 font-bold mb-2">
-                      Próximamente: Planes Internet Telcel
-                    </p>
-                    <p class="text-sm text-blue-400 dark:text-blue-500">
-                      Estamos actualizando nuestro catálogo para ofrecerte la
-                      mejor conexión.
-                    </p>
-                  </div>
-                )
-              }
-            </div>
-            <div class="swiper-pagination !bottom-[-2rem]"></div>
-          </div>
-        </div>
+        <GenericPlanCarousel id="libre" plans={mobilePlansLibre} />
+        <GenericPlanCarousel
+          id="ultra"
+          plans={mobilePlansUltra}
+          isHidden={true}
+        />
+        <GenericPlanCarousel
+          id="internet"
+          plans={mobilePlansInternet}
+          isHidden={true}
+        />
       </div>
 
-      <!-- CONTENEDOR INTERNET -->
+      <!-- HOGAR VIEW -->
       <div
-        id="view-internet"
-        class="absolute top-0 left-0 w-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-0 translate-x-20 scale-95 z-0 pointer-events-none pb-24"
+        id="view-hogar"
+        class="absolute w-full transition-all duration-500 opacity-0 translate-x-12 pointer-events-none z-0"
       >
-        <div class="text-center mb-10">
-          <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
-            Internet para tu Hogar
-          </h3>
-          <p class="text-slate-500 dark:text-slate-400 mt-2">
-            Conéctate sin cables y sin instalación complicada.
-          </p>
+        <div class="text-center mb-8 opacity-60">
+          <span class="text-xs font-bold uppercase tracking-widest"
+            >Internet Residencial 4G/5G</span
+          >
         </div>
-
-        <!-- Grid Internet -->
-        <!-- Carousel Internet en Casa -->
-        <div class="relative max-w-6xl mx-auto">
-          <!-- Navigation Buttons -->
-          <button
-            class="home-internet-prev absolute left-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 19l-7-7 7-7"></path></svg
-            >
-          </button>
-          <button
-            class="home-internet-next absolute right-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 5l7 7-7 7"></path></svg
-            >
-          </button>
-
-          <div
-            class="swiper swiper-home-internet !overflow-visible px-4"
-            data-initial-slide={initialSlideHomeInternet}
-          >
-            <div class="swiper-wrapper items-stretch">
-              {
-                internetPlans.length > 0 ? (
-                  internetPlans.map((plan) => (
-                    <div class="swiper-slide h-auto">
-                      <InternetEnCasaPlanCard
-                        titulo={plan.titulo}
-                        datosIncluidos={plan.datosIncluidos}
-                        politicasDeUso={plan.politicasDeUso}
-                        velocidadDeNavegacion={plan.velocidadDeNavegacion}
-                        cashbackTelcel={plan.cashbackTelcel}
-                        precio={plan.precio}
-                        recomendado={plan.recomendado}
-                        enlace={plan.enlace}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div class="w-full p-12 text-center bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl">
-                    <p class="text-blue-600 dark:text-blue-400 font-bold mb-2">
-                      Próximamente: Internet para tu Hogar
-                    </p>
-                    <p class="text-sm text-blue-400 dark:text-blue-500">
-                      Estamos actualizando nuestro catálogo para ofrecerte la
-                      mejor conexión.
-                    </p>
-                  </div>
-                )
-              }
-            </div>
-            <div class="swiper-pagination !bottom-[-2rem]"></div>
-          </div>
-        </div>
+        <GenericPlanCarousel id="hogar" plans={internetPlans} />
       </div>
     </div>
   </div>
@@ -521,327 +113,273 @@ const initialSlideHomeInternet =
 
 <script>
   import Swiper from "swiper";
-  import { Navigation, Pagination } from "swiper/modules";
+  import { Navigation, Pagination, EffectCoverflow } from "swiper/modules";
   import "swiper/css";
   import "swiper/css/navigation";
   import "swiper/css/pagination";
 
-  // Declare global types for window
+  // GLOBAL TYPES
   declare global {
     interface Window {
-      switchCategory: (category: string) => void;
-      toggleSubPlan: (type: string) => void;
+      switchMain: (c: string) => void;
+      switchSub: (t: string) => void;
+    }
+    interface HTMLElement {
+      swiper?: Swiper;
     }
   }
 
-  // Lógica de Interacción UX
-  // 1. Switch Móvil vs Internet (Tabs Superiores)
-  window.switchCategory = (category: string) => {
-    const glider = document.getElementById("glider");
-    const btnMovil = document.getElementById("btn-movil");
-    const btnInternet = document.getElementById("btn-internet");
-    const wrapper = document.getElementById("plans-wrapper");
+  // STATE
+  let currMain = "movil";
+  let currSub = "libre";
 
-    const viewMovil = document.getElementById("view-movil");
-    const viewInternet = document.getElementById("view-internet");
+  window.switchMain = (cat) => {
+    if (currMain === cat) return;
+    currMain = cat;
 
-    if (
-      !glider ||
-      !btnMovil ||
-      !btnInternet ||
-      !viewMovil ||
-      !viewInternet ||
-      !wrapper
-    )
-      return;
+    const glider = document.getElementById("main-glider");
+    const movil = document.getElementById("view-movil");
+    const hogar = document.getElementById("view-hogar");
+    const tm = document.getElementById("tab-movil");
+    const th = document.getElementById("tab-hogar");
 
-    // 1. Fijar altura actual para evitar salto brusco
-    const currentHeight = wrapper.offsetHeight;
-    wrapper.style.height = `${currentHeight}px`;
+    if (!glider || !movil || !hogar) return;
 
-    if (category === "movil") {
-      // --- CAMBIO A MÓVIL ---
+    if (cat === "movil") {
       glider.style.transform = "translateX(0)";
-
-      // Colores Botones
-      btnMovil.classList.add("text-blue-600", "dark:text-white");
-      btnMovil.classList.remove("text-slate-500", "dark:text-slate-400");
-      btnInternet.classList.add("text-slate-500", "dark:text-slate-400");
-      btnInternet.classList.remove("text-blue-600", "dark:text-white");
-
-      // 1. Sacar Internet (Absolute + Fade Out)
-      viewInternet.classList.add(
-        "absolute",
-        "top-0",
-        "left-0",
-        "opacity-0",
-        "translate-x-20",
-        "scale-95",
-        "pointer-events-none",
-        "z-0",
-      );
-      viewInternet.classList.remove(
-        "relative",
-        "opacity-100",
-        "translate-x-0",
-        "scale-100",
-        "pointer-events-auto",
-        "z-10",
-      );
-
-      // 2. Preparar Movil (Relative pero invisible para medir)
-      viewMovil.classList.remove("absolute", "hidden");
-      viewMovil.classList.add("relative", "opacity-0", "-translate-x-20");
-
-      // Forzar reflow para que el navegador calcule la nueva altura
-      void viewMovil.offsetWidth;
-
-      // 3. Calcular nueva altura objetivo
-      const targetHeight = viewMovil.offsetHeight;
-
-      // 4. Animar altura del wrapper
-      wrapper.style.height = `${targetHeight}px`;
-
-      // 5. Animar entrada de Movil
-      requestAnimationFrame(() => {
-        viewMovil.classList.remove("opacity-0", "-translate-x-20", "scale-95");
-        viewMovil.classList.add(
-          "opacity-100",
-          "translate-x-0",
-          "scale-100",
-          "pointer-events-auto",
-          "z-10",
-        );
-      });
-
-      // 6. Limpieza después de la transición
-      setTimeout(() => {
-        wrapper.style.height = ""; // Volver a auto
-      }, 500);
+      setColors(tm, true);
+      setColors(th, false);
+      crossfade(hogar, movil);
+      refreshSwiper(currSub);
     } else {
-      // --- CAMBIO A INTERNET ---
       glider.style.transform = "translateX(100%) translateX(8px)";
+      setColors(tm, false);
+      setColors(th, true);
+      crossfade(movil, hogar);
+      refreshSwiper("hogar");
+    }
+  };
 
-      // Colores Botones
-      btnInternet.classList.add("text-blue-600", "dark:text-white");
-      btnInternet.classList.remove("text-slate-500", "dark:text-slate-400");
-      btnMovil.classList.add("text-slate-500", "dark:text-slate-400");
-      btnMovil.classList.remove("text-blue-600", "dark:text-white");
+  window.switchSub = (type) => {
+    if (currSub === type) return;
+    const old = currSub;
+    currSub = type;
 
-      // 1. Sacar Movil (Absolute + Fade Out)
-      viewMovil.classList.add(
-        "absolute",
-        "top-0",
-        "left-0",
+    document.querySelectorAll(".sub-tab").forEach((b) => {
+      const t = b.getAttribute("data-type");
+      if (t === type)
+        b.className =
+          "sub-tab px-5 py-2 rounded-full border text-xs font-bold uppercase transition-all bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300 shadow-sm scale-105";
+      else
+        b.className =
+          "sub-tab px-5 py-2 rounded-full border text-xs font-bold uppercase transition-all border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800";
+    });
+
+    const cOld = document.getElementById(`container-${old}`);
+    const cNew = document.getElementById(`container-${type}`);
+
+    if (cOld && cNew) {
+      cOld.classList.add("hidden", "opacity-0");
+      cOld.classList.remove("relative", "opacity-100");
+
+      cNew.classList.remove(
+        "hidden",
         "opacity-0",
-        "-translate-x-20",
-        "scale-95",
-        "pointer-events-none",
-        "z-0",
+        "absolute",
+        "translate-y-12",
       );
-      viewMovil.classList.remove(
-        "relative",
-        "opacity-100",
-        "translate-x-0",
-        "scale-100",
-        "pointer-events-auto",
-        "z-10",
-      );
+      cNew.classList.add("relative", "opacity-100", "translate-y-0");
 
-      // 2. Preparar Internet (Relative pero invisible para medir)
-      viewInternet.classList.remove("absolute", "hidden");
-      viewInternet.classList.add("relative", "opacity-0", "translate-x-20");
-
-      // Forzar reflow
-      void viewInternet.offsetWidth;
-
-      // 3. Calcular nueva altura objetivo
-      const targetHeight = viewInternet.offsetHeight;
-
-      // 4. Animar altura del wrapper
-      wrapper.style.height = `${targetHeight}px`;
-
-      // 5. Animar entrada de Internet
-      requestAnimationFrame(() => {
-        viewInternet.classList.remove(
-          "opacity-0",
-          "translate-x-20",
-          "scale-95",
-        );
-        viewInternet.classList.add(
-          "opacity-100",
-          "translate-x-0",
-          "scale-100",
-          "pointer-events-auto",
-          "z-10",
-        );
-      });
-
-      // 6. Limpieza
-      setTimeout(() => {
-        wrapper.style.height = "";
-      }, 500);
+      refreshSwiper(type);
     }
   };
 
-  // 2. Toggle Sub-planes (Libre vs Ultra)
-  window.toggleSubPlan = (type: string) => {
-    const gridLibre = document.getElementById("container-libre");
-    const gridUltra = document.getElementById("container-ultra");
-    const gridInternet = document.getElementById("container-internet");
-
-    if (!gridLibre || !gridUltra || !gridInternet) return;
-
-    if (type === "libre") {
-      gridUltra.classList.add("opacity-0", "translate-y-4");
-      gridInternet.classList.add("opacity-0", "translate-y-4");
-      setTimeout(() => {
-        gridUltra.classList.add("hidden");
-        gridInternet.classList.add("hidden");
-        gridLibre.classList.remove("hidden");
-        // Force reflow
-        void gridLibre.offsetWidth;
-        gridLibre.classList.remove("opacity-0", "translate-y-4");
-
-        const swiperEl = gridLibre.querySelector(".swiper") as any;
-        if (swiperEl && swiperEl.swiper) {
-          swiperEl.swiper.update();
-        }
-      }, 300);
-    } else if (type === "ultra") {
-      gridLibre.classList.add("opacity-0", "translate-y-4");
-      gridInternet.classList.add("opacity-0", "translate-y-4");
-      setTimeout(() => {
-        gridLibre.classList.add("hidden");
-        gridInternet.classList.add("hidden");
-        gridUltra.classList.remove("hidden");
-        void gridUltra.offsetWidth;
-        gridUltra.classList.remove("opacity-0", "translate-y-4");
-
-        const swiperEl = gridUltra.querySelector(".swiper") as any;
-        if (swiperEl && swiperEl.swiper) {
-          swiperEl.swiper.update();
-        }
-      }, 300);
-    } else {
-      // Internet
-      gridLibre.classList.add("opacity-0", "translate-y-4");
-      gridUltra.classList.add("opacity-0", "translate-y-4");
-      setTimeout(() => {
-        gridLibre.classList.add("hidden");
-        gridUltra.classList.add("hidden");
-        gridInternet.classList.remove("hidden");
-        void gridInternet.offsetWidth;
-        gridInternet.classList.remove("opacity-0", "translate-y-4");
-
-        // Force Swiper Update
-        const swiperEl = gridInternet.querySelector(".swiper") as any;
-        if (swiperEl && swiperEl.swiper) {
-          swiperEl.swiper.update();
-        }
-      }, 300);
-    }
-  };
-
-  // 3. Initialize Swiper
-  function initSwipers() {
-    const commonConfig = {
-      modules: [Navigation, Pagination],
-      slidesPerView: 1.2, // Slightly more than 1 to show next slide
-      spaceBetween: 15,
-      centeredSlides: true,
-      loopedSlides: 4, // Asegura suficientes duplicados para evitar glitches visuales
-      observer: true,
-      observeParents: true,
-      breakpoints: {
-        640: { slidesPerView: 1.5, spaceBetween: 30 },
-        1024: { slidesPerView: 2, spaceBetween: 40, centeredSlides: true },
-        1280: { slidesPerView: 3, spaceBetween: 50, centeredSlides: true },
-      },
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-        dynamicBullets: true,
-      },
-      grabCursor: true,
-    };
-
-    const initInstance = (selector: string, prev: string, next: string) => {
-      const el = document.querySelector(selector) as HTMLElement;
-      if (el) {
-        const slideCount = el.querySelectorAll(".swiper-slide").length;
-        // Reactivamos loop para > 1 elemento para evitar espacios vacíos con centeredSlides.
-        // Con loopedSlides: 4, Swiper maneja correctamente los duplicados incluso con pocos items.
-        const shouldLoop = slideCount > 1;
-
-        const initialSlide = parseInt(el.dataset.initialSlide || "0");
-
-        new Swiper(el, {
-          ...commonConfig,
-          loop: shouldLoop,
-          initialSlide,
-          navigation: {
-            nextEl: next,
-            prevEl: prev,
-          },
-        });
-      }
-    };
-
-    initInstance(".swiper-libre", ".libre-prev", ".libre-next");
-    initInstance(".swiper-ultra", ".ultra-prev", ".ultra-next");
-    initInstance(".swiper-internet", ".internet-prev", ".internet-next");
-    initInstance(
-      ".swiper-home-internet",
-      ".home-internet-prev",
-      ".home-internet-next",
-    );
+  // HELPERS
+  function setColors(el: HTMLElement | null, active: boolean) {
+    if (!el) return;
+    el.className = active
+      ? "relative z-10 w-32 py-2 text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-white transition-colors"
+      : "relative z-10 w-32 py-2 text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-slate-700 transition-colors";
   }
 
-  document.addEventListener("astro:page-load", initSwipers);
-  if (document.readyState === "complete") initSwipers();
-  else document.addEventListener("DOMContentLoaded", initSwipers);
+  function crossfade(outEl: HTMLElement, inEl: HTMLElement) {
+    outEl.style.opacity = "0";
+    outEl.style.transform = "translateX(50px)";
+    outEl.style.pointerEvents = "none";
+    outEl.style.zIndex = "0"; // Bajar z-index al salir
+
+    setTimeout(() => {
+      outEl.classList.add("absolute");
+      outEl.classList.remove("relative");
+
+      inEl.classList.remove("absolute", "translate-x-12");
+      inEl.classList.add("relative");
+      // Reflow force
+      void inEl.offsetWidth;
+      inEl.style.opacity = "1";
+      inEl.style.transform = "translateX(0)";
+      inEl.style.pointerEvents = "auto";
+      inEl.style.zIndex = "20"; // Subir z-index al entrar
+    }, 300);
+  }
+
+  function refreshSwiper(id: string) {
+    setTimeout(() => {
+      const el = document.querySelector(
+        `#container-${id} .swiper`,
+      ) as HTMLElement;
+      if (el) {
+        // DESTRUIR Y RECREAR: La solución definitiva para glitches de loop
+        if ((el as any).swiper) {
+          (el as any).swiper.destroy(true, true);
+        }
+        init(el);
+      }
+    }, 50);
+  }
+
+  // INIT
+  function init(specificEl?: HTMLElement) {
+    const elements = specificEl
+      ? [specificEl]
+      : document.querySelectorAll(".swiper");
+
+    elements.forEach((el) => {
+      if ((el as any).swiper) return; // Ya inicializado
+
+      const id = el.getAttribute("data-config-id");
+      const startIdx = parseInt(el.getAttribute("data-initial-slide") || "0");
+
+      new Swiper(el as HTMLElement, {
+        modules: [Navigation, Pagination, EffectCoverflow],
+        loop: true,
+        centeredSlides: true,
+        initialSlide: startIdx,
+        slidesPerView: "auto",
+        spaceBetween: 0,
+        speed: 600,
+        observer: true,
+        observeParents: true,
+
+        breakpoints: {
+          320: { spaceBetween: 16 },
+          640: { spaceBetween: 12 },
+          1024: { spaceBetween: 0 },
+        },
+
+        navigation: { nextEl: `.next-${id}`, prevEl: `.prev-${id}` },
+        pagination: { el: ".swiper-pagination", clickable: true },
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", () => init());
+  document.addEventListener("DOMContentLoaded", () => init());
 </script>
 
 <style>
-  /* Pagination Dots Customization */
-  :global(.swiper-pagination-bullet) {
-    background-color: #cbd5e1;
+  /* --- STYLE INJECTION PARA EL EFECTO FOCUS REAL --- */
+
+  /* CONTROL DE ANCHO DE SLIDES */
+  /* Esto asegura que solo se vean 3 elementos máximo */
+  :global(.swiper-slide) {
+    width: 300px !important; /* Ancho fijo para mobile */
+    max-width: 300px;
+  }
+
+  @media (min-width: 640px) {
+    :global(.swiper-slide) {
+      width: 360px !important; /* Ancho para tablet */
+      max-width: 360px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :global(.swiper) {
+      max-width: 1050px; /* 350px * 3 = Exactamente 3 tarjetas */
+      margin: 0 auto;
+    }
+    :global(.swiper-slide) {
+      width: 350px !important; /* Ajustado para que quepan 3 perfectos con aire */
+      max-width: 350px;
+    }
+  }
+
+  /* 1. BASE (INACTIVO - LATERALES) */
+  /* Aplicamos opacidad y blur a todo, EXCEPTO al activo */
+  :global(.swiper-slide .plan-card-inner) {
+    transform: scale(0.85);
+    filter: blur(2px) grayscale(60%);
+    opacity: 0.6;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-color: transparent;
+  }
+
+  /* Botón y Badge ocultos/apagados en inactivos */
+  :global(.swiper-slide:not(.swiper-slide-active) .card-badge) {
+    opacity: 0;
+  }
+  :global(.swiper-slide:not(.swiper-slide-active) .card-btn) {
+    background-color: #f1f5f9 !important; /* Slate 100 */
+    color: #94a3b8 !important;
+    cursor: default;
+    pointer-events: none; /* No click */
+    box-shadow: none;
+  }
+
+  /* 2. ACTIVE (CENTRAL) */
+  :global(.swiper-slide-active) {
+    z-index: 20;
+  }
+
+  :global(.swiper-slide-active .plan-card-inner) {
+    transform: scale(1.05) translateY(-10px);
+    filter: blur(0) grayscale(0);
     opacity: 1;
-    transition: all 0.3s ease;
+    background-color: white;
+    border-color: #3b82f6; /* Blue 500 */
+    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);
+  }
+
+  /* Mostrar elementos del activo */
+  :global(.swiper-slide-active .card-glow) {
+    opacity: 1;
+  }
+  :global(.swiper-slide-active .card-badge) {
+    opacity: 1;
+    transition-delay: 0.2s;
+  }
+
+  /* Colorear partes internas al activar */
+  :global(.swiper-slide-active .card-icon) {
+    background-color: #eff6ff; /* Blue 50 */
+    color: #2563eb;
+  }
+
+  :global(.swiper-slide-active .card-btn) {
+    background-color: #2563eb;
+    color: white;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  /* DARK MODE OVERRIDES (Usando :global(.dark ...)) */
+  :global(.dark .swiper-slide-active .plan-card-inner) {
+    background-color: #1e293b; /* Slate 800 */
+    border-color: #3b82f6;
+    box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.4);
+  }
+
+  /* Pagination Styling */
+  :global(.swiper-pagination-bullet) {
     width: 8px;
     height: 8px;
+    opacity: 0.4;
   }
   :global(.swiper-pagination-bullet-active) {
-    background-color: #2563eb;
+    background: #2563eb;
     width: 24px;
     border-radius: 4px;
-  }
-
-  /* --- EFECTO FOCUS --- */
-  @media (min-width: 1024px) {
-    .swiper-slide {
-      transform: scale(0.92);
-      opacity: 0.6;
-      filter: blur(1px);
-      z-index: 1;
-      transition: all 0.3s ease;
-    }
-
-    .swiper-slide-active {
-      transform: scale(1);
-      opacity: 1;
-      filter: blur(0);
-      z-index: 10;
-    }
-  }
-
-  @media (max-width: 1023px) {
-    .swiper-slide {
-      transform: scale(0.98);
-    }
-    .swiper-slide-active {
-      transform: scale(1);
-    }
+    opacity: 1;
   }
 </style>

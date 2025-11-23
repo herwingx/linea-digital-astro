@@ -9,141 +9,98 @@ import {
   getInternetEnTuCasaLibre,
 } from "../services/contentful";
 
-// --- Lógica de Seguridad (Helper) ---
-// Convierte datos crudos a props seguras y evita crashes por campos faltantes
-const safeMapPlans = (plans: any[], type = "mobile") => {
+// --- Helper para mapear datos seguros ---
+const safeMap = (plans: any[], category: "movil" | "casa") => {
   if (!Array.isArray(plans)) return [];
-
-  return (
-    plans
-      .map((p) => {
-        const f = p.fields || {};
-        return {
-          titulo: (f.titulo as string) || "Plan Telcel",
-          datosIncluidos: (f.datosIncluidos as string) || "Consúltanos",
-          precio: Number(f.precio) || 0,
-          recomendado: f.recomendado as boolean,
-          enlace: (f.enlace as string) || "#",
-          redesSociales: (f.redesSociales as string[]) || [],
-          minutosYSmsIncluidos:
-            (f.minutosYSmsIncluidos as string) || "Ilimitados",
-          cashbackTelcel: f.cashbackTelcel as string,
-          // Campos exclusivos de Internet Hogar
-          politicasDeUso:
-            (f.politicasDeUso as string) || "Política de uso justo",
-          velocidadDeNavegacion:
-            (f.velocidadDeNavegacion as string) || "Alta Velocidad",
-        };
-      })
-      // Filtrar planes sin precio válido para no romper el sort
-      .filter((p) => p.precio > 0)
-      .sort((a, b) => a.precio - b.precio)
-  );
+  return plans
+    .map((p) => {
+      const f = p.fields || {};
+      return {
+        titulo: (f.titulo as string) || "Plan",
+        datosIncluidos: (f.datosIncluidos as string) || "Datos",
+        precio: Number(f.precio) || 0,
+        recomendado: (f.recomendado as boolean) || false,
+        enlace: (f.enlace as string) || "#",
+        // Campos específicos mapeados a props universales
+        redesSociales: (f.redesSociales as string[]) || [],
+        minutosYSms: f.minutosYSmsIncluidos as string, // Unificar nombre prop
+        cashbackTelcel: f.cashbackTelcel as string,
+        velocidadDeNavegacion: f.velocidadDeNavegacion as string,
+        politicasDeUso: f.politicasDeUso as string,
+      };
+    })
+    .filter((p) => p.precio > 0)
+    .sort((a, b) => a.precio - b.precio);
 };
 
-// 1. Obtención de Datos con Fallbacks
-const rawLibre = await getPlansLibre().catch((e) => []);
-const rawUltra = await getPlansUltra().catch((e) => []);
-const rawMovilInternet = await getPlansInternet().catch((e) => []);
-const rawHomeInternet = await getInternetEnTuCasaLibre().catch((e) => []);
+// Fetch Paralelo para velocidad
+const [rawLibre, rawUltra, rawMovilInt, rawCasaInt] = await Promise.all([
+  getPlansLibre().catch(() => []),
+  getPlansUltra().catch(() => []),
+  getPlansInternet().catch(() => []),
+  getInternetEnTuCasaLibre().catch(() => []),
+]);
 
-// 2. Procesamiento Seguro
-const mobilePlansLibre = safeMapPlans(rawLibre);
-const mobilePlansUltra = safeMapPlans(rawUltra);
-const mobilePlansInternet = safeMapPlans(rawMovilInternet);
-
-// 3. Lógica especial para Internet Casa (Mezcla API + Mock)
-// Si la API falla o trae vacío, usamos tus datos Mock para que NO se vea vacío.
-const apiHomePlans = safeMapPlans(rawHomeInternet);
-
-// Tus datos manuales como respaldo seguro:
-const mockHomeInternet = [
-  {
-    titulo: "Internet Básico",
-    datosIncluidos: "Uso doméstico",
-    politicasDeUso: "Política de uso justo",
-    velocidadDeNavegacion: "20 Mbps",
-    precio: 399,
-    recomendado: false,
-    enlace: "#",
-    redesSociales: [], // Requerido por tipos
-    minutosYSmsIncluidos: "", // Requerido por tipos
-  },
-  {
-    titulo: "Internet Familiar",
-    datosIncluidos: "Streaming HD",
-    politicasDeUso: "Política de uso justo",
-    velocidadDeNavegacion: "50 Mbps",
-    precio: 549,
-    recomendado: true,
-    enlace: "#",
-    redesSociales: [],
-    minutosYSmsIncluidos: "",
-  },
-  {
-    titulo: "Internet Gamer",
-    datosIncluidos: "Gaming & 4K",
-    politicasDeUso: "Política de uso justo",
-    velocidadDeNavegacion: "100 Mbps",
-    precio: 799,
-    recomendado: false,
-    enlace: "#",
-    redesSociales: [],
-    minutosYSmsIncluidos: "",
-  },
-];
-
-// Usamos la API, si está vacía, usamos el Mock
-const internetPlans = apiHomePlans.length > 0 ? apiHomePlans : mockHomeInternet;
+const librePlans = safeMap(rawLibre, "movil");
+const ultraPlans = safeMap(rawUltra, "movil");
+const movilInternetPlans = safeMap(rawMovilInt, "movil");
+// Fallback Manual por si API vacía (Demo)
+const homePlans =
+  rawCasaInt.length > 0
+    ? safeMap(rawCasaInt, "casa")
+    : [
+        {
+          titulo: "Básico",
+          velocidadDeNavegacion: "20 Mbps",
+          precio: 399,
+          datosIncluidos: "Uso doméstico",
+          recomendado: false,
+        },
+        {
+          titulo: "Familiar",
+          velocidadDeNavegacion: "50 Mbps",
+          precio: 549,
+          datosIncluidos: "HD Streaming",
+          recomendado: true,
+        },
+      ];
 ---
 
 <BaseLayout
-  title="Planes para Personas | Grupo Linea Digital"
-  description="Encuentra el plan ideal para ti. Telefonía móvil 5G e Internet para tu hogar sin plazos forzosos."
+  title="Planes Personales | Grupo Linea Digital"
+  description="Conectividad móvil y para el hogar con la mejor red de México."
 >
-  <!-- Hero Section con padding responsivo correcto -->
-  <section class="relative pt-32 pb-12 px-6 overflow-hidden">
-    <!-- Decoración de fondo para que no se vea "pelado" -->
-    <div
-      class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-500/5 rounded-full blur-3xl -z-10 pointer-events-none"
+  <!-- HERO -->
+  <section class="relative pt-8 pb-8 md:pt-16 px-4 text-center overflow-hidden">
+    <!-- Glow BG -->
+    <!--   <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 w-[100vh] h-[50vh] bg-blue-500/10 rounded-full blur-3xl -z-10"
     >
-    </div>
+    </div> -->
 
-    <div class="container mx-auto text-center relative z-10">
-      <div class="animate-fade-up inline-block mb-6">
-        <span
-          class="px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[10px] md:text-xs font-bold uppercase tracking-widest dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
-        >
-          Catálogo Personal
-        </span>
-      </div>
-
-      <h1
-        class="animate-fade-up text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight leading-tight"
-        style="animation-duration: 0.8s;"
-      >
-        Conecta tu <span class="text-blue-600 dark:text-blue-400">Mundo</span>
-      </h1>
-
-      <p
-        class="animate-fade-up text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed font-light"
-        style="animation-duration: 1s;"
-      >
-        Ya sea para tu smartphone o para llenar tu casa de velocidad 5G. <br
-          class="hidden md:block"
-        />
-        Descubre planes sin plazos forzosos y con instalación inmediata.
-      </p>
-    </div>
+    <span
+      class="inline-block mb-4 px-4 py-1 rounded-full bg-blue-100/50 text-blue-600 font-bold text-[10px] tracking-[0.2em] uppercase border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800 animate-fade-up"
+    >
+      Para Personas
+    </span>
+    <h1
+      class="text-5xl md:text-7xl font-bold tracking-tighter text-slate-900 dark:text-white mb-6 animate-fade-up"
+      style="animation-delay: 100ms"
+    >
+      Conecta tu <span class="text-blue-600">Mundo</span>
+    </h1>
+    <p
+      class="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto animate-fade-up"
+      style="animation-delay: 200ms"
+    >
+      Soluciones flexibles para tu smartphone y tu hogar. Sin letras chiquitas.
+    </p>
   </section>
 
-  <!-- Pasamos los datos garantizados al Orchestrator -->
   <PlansOrchestrator
-    mobilePlansLibre={mobilePlansLibre}
-    mobilePlansUltra={mobilePlansUltra}
-    mobilePlansInternet={mobilePlansInternet}
-    internetPlans={internetPlans}
-    title="Elige tu Libertad"
-    subtitle="Selecciona la categoría que mejor se adapte a tus necesidades"
+    mobilePlansLibre={librePlans}
+    mobilePlansUltra={ultraPlans}
+    mobilePlansInternet={movilInternetPlans}
+    internetPlans={homePlans}
   />
 </BaseLayout>

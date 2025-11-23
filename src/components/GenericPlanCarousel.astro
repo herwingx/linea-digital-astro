@@ -1,0 +1,104 @@
+---
+import PlanCard from "./PlanCard.astro";
+
+interface Props {
+  id: string;
+  plans: any[];
+  isHidden?: boolean;
+}
+
+const { id, plans, isHidden = false } = Astro.props;
+
+// 1. ESTRATEGIA DE RELLENO (SMART FILL):
+// Para que el loop infinito se vea bien siempre (incluso con 2 planes),
+// aseguramos un mínimo de 6 elementos duplicando los originales.
+let renderedPlans = [...plans];
+while (renderedPlans.length > 0 && renderedPlans.length < 12) {
+  renderedPlans = [...renderedPlans, ...plans];
+}
+
+// 2. ÍNDICE RECOMENDADO CENTRADO
+// Buscamos el índice base en el array original.
+const originalRecIndex = plans.findIndex((p) => p.recomendado);
+const baseIndex =
+  originalRecIndex !== -1 ? originalRecIndex : Math.floor(plans.length / 2);
+
+// Calculamos el índice equivalente en la "repetición del medio" de nuestros planes renderizados
+// para tener buffer a izquierda y derecha.
+const repetitions = renderedPlans.length / plans.length;
+const middleRepetition = Math.floor(repetitions / 2);
+// Si plans.length es 0, evitamos NaN
+const initialSlideIndex =
+  plans.length > 0 ? baseIndex + plans.length * middleRepetition : 0;
+
+// Validamos si no hay planes
+const hasPlans = plans.length > 0;
+---
+
+<div
+  id={`container-${id}`}
+  class={`
+    w-full relative transition-all duration-500
+    ${isHidden ? "absolute top-0 left-0 opacity-0 pointer-events-none hidden" : "relative opacity-100 z-10"}
+  `}
+>
+  <!-- Flechas Navegación -->
+  <div
+    class="pointer-events-none absolute inset-y-0 left-0 w-full flex items-center justify-between px-2 lg:-ml-12 lg:-mr-12 lg:w-[calc(100%+96px)] z-30"
+  >
+    <button
+      class={`prev-${id} pointer-events-auto hidden h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-slate-800 shadow-xl text-slate-400 hover:text-blue-600 hover:scale-110 transition-all border border-slate-100 dark:border-white/10 md:flex`}
+    >
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+        ><path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 19l-7-7 7-7"></path></svg
+      >
+    </button>
+    <button
+      class={`next-${id} pointer-events-auto hidden h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-slate-800 shadow-xl text-slate-400 hover:text-blue-600 hover:scale-110 transition-all border border-slate-100 dark:border-white/10 md:flex`}
+    >
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+        ><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"
+        ></path></svg
+      >
+    </button>
+  </div>
+
+  <div
+    class="swiper overflow-hidden !pb-10 !pt-4"
+    data-config-id={id}
+    data-initial-slide={initialSlideIndex}
+  >
+    <div class="swiper-wrapper">
+      {
+        hasPlans ? (
+          renderedPlans.map((plan) => (
+            <div class="swiper-slide h-auto">
+              <PlanCard {...plan} />
+            </div>
+          ))
+        ) : (
+          <div class="swiper-slide w-full flex justify-center">
+            <div class="h-40 w-full max-w-sm rounded-3xl bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 flex items-center justify-center text-slate-400 font-bold">
+              Sin Planes
+            </div>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="swiper-pagination !bottom-0"></div>
+  </div>
+</div>
