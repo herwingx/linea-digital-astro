@@ -497,6 +497,13 @@ import Testimonials from "../components/Testimonials.astro";
 
   <!-- LOGICA UX MEJORADA -->
   <script>
+    // TypeScript: Extend Window interface to include our custom function
+    declare global {
+      interface Window {
+        showMap: (location: string) => void;
+      }
+    }
+
     // Gestión de Estado de Interfaz (UI State)
     let activeLocation = "tuxtla";
 
