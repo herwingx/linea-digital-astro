@@ -52,17 +52,16 @@ const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(raw
 
   <!-- CARD BODY -->
   <div
-    class:list={[
-      "relative flex h-full flex-col overflow-hidden rounded-[2.5rem] transition-all duration-500",
-      // RECOMENDADO: Border azul suave, sombra profunda azulada, escala ligeramente mayor
-      recommended
-        ? "border-2 border-blue-500/30 bg-white shadow-2xl shadow-blue-900/15 ring-4 ring-blue-500/5 z-10 dark:bg-slate-800 dark:border-blue-400/30 dark:shadow-blue-900/40"
-        : // ESTÁNDAR: Borde muy sutil, fondo blanco o dark
-          "border border-slate-100 bg-white/50 hover:border-blue-200 dark:bg-slate-900/80 dark:border-white/5 dark:hover:border-white/20",
-    ]}
+    class="plan-card relative flex h-full flex-col overflow-hidden rounded-[2.5rem] transition-all duration-500 border border-slate-100 bg-white/50 dark:bg-slate-900/80 dark:border-white/5"
   >
+    <!-- Glow Gradient Background (Sutil - Visible solo en active) -->
+    <div
+      class="active-glow pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl dark:bg-blue-500/10 opacity-0 transition-opacity duration-500"
+    >
+    </div>
+
     <!-- CARD PADDING (Reduced) -->
-    <div class="flex flex-col h-full p-6 lg:p-8 pt-10 lg:pt-12">
+    <div class="flex flex-col h-full p-6 lg:p-8 pt-10 lg:pt-12 relative z-10">
       <!-- HEADER -->
       <div class="text-center mb-6">
         <h3
@@ -89,7 +88,7 @@ const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(raw
         <!-- 1. DATOS -->
         <div class="flex items-start gap-4 group">
           <div
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 dark:bg-blue-500/10 dark:text-blue-400"
+            class="icon-box flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 dark:bg-blue-500/10 dark:text-blue-400"
           >
             <svg
               class="w-5 h-5"
@@ -116,7 +115,7 @@ const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(raw
         <!-- 2. REDES SOCIALES -->
         <div class="flex items-start gap-4 group">
           <div
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 dark:bg-indigo-500/10 dark:text-indigo-400"
+            class="icon-box flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 dark:bg-indigo-500/10 dark:text-indigo-400"
           >
             <svg
               class="w-5 h-5"
@@ -132,7 +131,9 @@ const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(raw
             >
           </div>
           <div class="w-full">
-            <p class="mb-1 text-xs font-bold text-slate-900 dark:text-white">
+            <p
+              class="text-base font-bold text-slate-900 dark:text-white leading-tight"
+            >
               Redes Incluidas
             </p>
             <div class="flex flex-wrap gap-2">
@@ -157,7 +158,7 @@ const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(raw
         <!-- 3. LLAMADAS/SMS -->
         <div class="flex items-start gap-4 group">
           <div
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition-transform duration-300 group-hover:scale-110 dark:bg-emerald-500/10 dark:text-emerald-400"
+            class="icon-box flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition-transform duration-300 group-hover:scale-110 dark:bg-emerald-500/10 dark:text-emerald-400"
           >
             <svg
               class="w-5 h-5"
@@ -179,7 +180,7 @@ const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(raw
               {minutosYSms}
             </p>
             <p class="text-xs text-slate-500 dark:text-slate-400">
-              Comunicación
+              Llamadas y Mensajes incluidos
             </p>
           </div>
         </div>
@@ -189,13 +190,7 @@ const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(raw
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class:list={[
-              "flex w-full items-center justify-center gap-2 rounded-full py-3 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
-              // Style Switcher based on recommendation
-              recommended
-                ? "bg-green-600 text-white shadow-lg shadow-green-600/30 hover:bg-green-500 hover:shadow-green-500/40"
-                : "bg-slate-100 text-slate-700 hover:bg-green-500 hover:text-white dark:bg-slate-800 dark:text-white dark:hover:bg-green-600",
-            ]}
+            class="cta-btn flex w-full items-center justify-center gap-2 rounded-full py-3 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:-translate-y-1 hover:shadow-xl bg-slate-100 text-slate-700 hover:bg-green-500 hover:text-white dark:bg-slate-800 dark:text-white dark:hover:bg-green-600"
           >
             <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24"
               ><path
@@ -209,3 +204,18 @@ const whatsappUrl = `https://wa.me/${SALES_NUMBER}?text=${encodeURIComponent(raw
     </div>
   </div>
 </div>
+
+<style>
+  /* ESTILOS ACTIVOS DEL SWIPER */
+  :global(.swiper-slide-active) .plan-card {
+    @apply border-blue-500/30 bg-white shadow-2xl shadow-blue-900/15 ring-4 ring-blue-500/5 z-10 dark:bg-slate-800 dark:border-blue-400/30 dark:shadow-blue-900/40;
+  }
+
+  :global(.swiper-slide-active) .active-glow {
+    @apply opacity-100;
+  }
+
+  :global(.swiper-slide-active) .cta-btn {
+    @apply bg-green-600 text-white shadow-lg shadow-green-600/30 hover:bg-green-500 hover:shadow-green-500/40;
+  }
+</style>

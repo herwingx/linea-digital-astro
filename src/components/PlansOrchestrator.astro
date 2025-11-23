@@ -133,12 +133,15 @@ const initialSlideHomeInternet =
       </div>
     </div>
 
-    <!-- 2. NIVEL CONTENIDO (Transición suave) -->
-    <div class="relative min-h-[600px]">
+    <!-- 2. NIVEL CONTENIDO (Transición suave de altura y opacidad) -->
+    <div
+      id="plans-wrapper"
+      class="relative overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
+    >
       <!-- CONTENEDOR TELEFONÍA -->
       <div
         id="view-movil"
-        class="absolute inset-0 transition-all duration-500 opacity-100 translate-x-0 scale-100 z-10"
+        class="relative w-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-100 translate-x-0 z-10 pb-24"
       >
         <!-- Sub-Filtro (Libre vs Ultra) -->
         <div class="flex justify-center mb-10 gap-6">
@@ -215,7 +218,7 @@ const initialSlideHomeInternet =
         <div id="container-libre" class="relative">
           <!-- Navigation Buttons -->
           <button
-            class="libre-prev absolute left-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -ml-6 lg:-ml-12"
+            class="libre-prev absolute left-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
           >
             <svg
               class="h-6 w-6"
@@ -230,7 +233,7 @@ const initialSlideHomeInternet =
             >
           </button>
           <button
-            class="libre-next absolute right-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -mr-6 lg:-mr-12"
+            class="libre-next absolute right-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
           >
             <svg
               class="h-6 w-6"
@@ -284,7 +287,7 @@ const initialSlideHomeInternet =
         >
           <!-- Navigation Buttons -->
           <button
-            class="ultra-prev absolute left-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -ml-6 lg:-ml-12"
+            class="ultra-prev absolute left-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
           >
             <svg
               class="h-6 w-6"
@@ -299,7 +302,7 @@ const initialSlideHomeInternet =
             >
           </button>
           <button
-            class="ultra-next absolute right-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -mr-6 lg:-mr-12"
+            class="ultra-next absolute right-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
           >
             <svg
               class="h-6 w-6"
@@ -357,7 +360,7 @@ const initialSlideHomeInternet =
         >
           <!-- Navigation Buttons -->
           <button
-            class="internet-prev absolute left-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -ml-6 lg:-ml-12"
+            class="internet-prev absolute left-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
           >
             <svg
               class="h-6 w-6"
@@ -372,7 +375,7 @@ const initialSlideHomeInternet =
             >
           </button>
           <button
-            class="internet-next absolute right-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -mr-6 lg:-mr-12"
+            class="internet-next absolute right-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
           >
             <svg
               class="h-6 w-6"
@@ -428,7 +431,7 @@ const initialSlideHomeInternet =
       <!-- CONTENEDOR INTERNET -->
       <div
         id="view-internet"
-        class="absolute inset-0 transition-all duration-500 opacity-0 translate-x-20 scale-95 z-0 pointer-events-none"
+        class="absolute top-0 left-0 w-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-0 translate-x-20 scale-95 z-0 pointer-events-none pb-24"
       >
         <div class="text-center mb-10">
           <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
@@ -444,7 +447,7 @@ const initialSlideHomeInternet =
         <div class="relative max-w-6xl mx-auto">
           <!-- Navigation Buttons -->
           <button
-            class="home-internet-prev absolute left-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -ml-6 lg:-ml-12"
+            class="home-internet-prev absolute left-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
           >
             <svg
               class="h-6 w-6"
@@ -459,7 +462,7 @@ const initialSlideHomeInternet =
             >
           </button>
           <button
-            class="home-internet-next absolute right-0 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500 -mr-6 lg:-mr-12"
+            class="home-internet-next absolute right-2 top-1/2 z-30 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-blue-300 hover:text-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-white dark:hover:border-blue-500"
           >
             <svg
               class="h-6 w-6"
@@ -537,25 +540,40 @@ const initialSlideHomeInternet =
     const glider = document.getElementById("glider");
     const btnMovil = document.getElementById("btn-movil");
     const btnInternet = document.getElementById("btn-internet");
+    const wrapper = document.getElementById("plans-wrapper");
 
     const viewMovil = document.getElementById("view-movil");
     const viewInternet = document.getElementById("view-internet");
 
-    if (!glider || !btnMovil || !btnInternet || !viewMovil || !viewInternet)
+    if (
+      !glider ||
+      !btnMovil ||
+      !btnInternet ||
+      !viewMovil ||
+      !viewInternet ||
+      !wrapper
+    )
       return;
 
+    // 1. Fijar altura actual para evitar salto brusco
+    const currentHeight = wrapper.offsetHeight;
+    wrapper.style.height = `${currentHeight}px`;
+
     if (category === "movil") {
-      // Mover Glider a la izquierda
+      // --- CAMBIO A MÓVIL ---
       glider.style.transform = "translateX(0)";
 
-      // Actualizar Texto Colores
+      // Colores Botones
       btnMovil.classList.add("text-blue-600", "dark:text-white");
       btnMovil.classList.remove("text-slate-500", "dark:text-slate-400");
       btnInternet.classList.add("text-slate-500", "dark:text-slate-400");
       btnInternet.classList.remove("text-blue-600", "dark:text-white");
 
-      // Animar Vistas (Crossfade + Slide)
+      // 1. Sacar Internet (Absolute + Fade Out)
       viewInternet.classList.add(
+        "absolute",
+        "top-0",
+        "left-0",
         "opacity-0",
         "translate-x-20",
         "scale-95",
@@ -563,6 +581,7 @@ const initialSlideHomeInternet =
         "z-0",
       );
       viewInternet.classList.remove(
+        "relative",
         "opacity-100",
         "translate-x-0",
         "scale-100",
@@ -570,14 +589,22 @@ const initialSlideHomeInternet =
         "z-10",
       );
 
-      setTimeout(() => {
-        viewMovil.classList.remove(
-          "opacity-0",
-          "-translate-x-20",
-          "scale-95",
-          "pointer-events-none",
-          "z-0",
-        );
+      // 2. Preparar Movil (Relative pero invisible para medir)
+      viewMovil.classList.remove("absolute", "hidden");
+      viewMovil.classList.add("relative", "opacity-0", "-translate-x-20");
+
+      // Forzar reflow para que el navegador calcule la nueva altura
+      void viewMovil.offsetWidth;
+
+      // 3. Calcular nueva altura objetivo
+      const targetHeight = viewMovil.offsetHeight;
+
+      // 4. Animar altura del wrapper
+      wrapper.style.height = `${targetHeight}px`;
+
+      // 5. Animar entrada de Movil
+      requestAnimationFrame(() => {
+        viewMovil.classList.remove("opacity-0", "-translate-x-20", "scale-95");
         viewMovil.classList.add(
           "opacity-100",
           "translate-x-0",
@@ -585,19 +612,27 @@ const initialSlideHomeInternet =
           "pointer-events-auto",
           "z-10",
         );
-      }, 50);
+      });
+
+      // 6. Limpieza después de la transición
+      setTimeout(() => {
+        wrapper.style.height = ""; // Volver a auto
+      }, 500);
     } else {
-      // Mover Glider a la derecha
+      // --- CAMBIO A INTERNET ---
       glider.style.transform = "translateX(100%) translateX(8px)";
 
-      // Actualizar Texto
+      // Colores Botones
       btnInternet.classList.add("text-blue-600", "dark:text-white");
       btnInternet.classList.remove("text-slate-500", "dark:text-slate-400");
       btnMovil.classList.add("text-slate-500", "dark:text-slate-400");
       btnMovil.classList.remove("text-blue-600", "dark:text-white");
 
-      // Animar Vistas
+      // 1. Sacar Movil (Absolute + Fade Out)
       viewMovil.classList.add(
+        "absolute",
+        "top-0",
+        "left-0",
         "opacity-0",
         "-translate-x-20",
         "scale-95",
@@ -605,6 +640,7 @@ const initialSlideHomeInternet =
         "z-0",
       );
       viewMovil.classList.remove(
+        "relative",
         "opacity-100",
         "translate-x-0",
         "scale-100",
@@ -612,13 +648,25 @@ const initialSlideHomeInternet =
         "z-10",
       );
 
-      setTimeout(() => {
+      // 2. Preparar Internet (Relative pero invisible para medir)
+      viewInternet.classList.remove("absolute", "hidden");
+      viewInternet.classList.add("relative", "opacity-0", "translate-x-20");
+
+      // Forzar reflow
+      void viewInternet.offsetWidth;
+
+      // 3. Calcular nueva altura objetivo
+      const targetHeight = viewInternet.offsetHeight;
+
+      // 4. Animar altura del wrapper
+      wrapper.style.height = `${targetHeight}px`;
+
+      // 5. Animar entrada de Internet
+      requestAnimationFrame(() => {
         viewInternet.classList.remove(
           "opacity-0",
           "translate-x-20",
           "scale-95",
-          "pointer-events-none",
-          "z-0",
         );
         viewInternet.classList.add(
           "opacity-100",
@@ -627,7 +675,12 @@ const initialSlideHomeInternet =
           "pointer-events-auto",
           "z-10",
         );
-      }, 50);
+      });
+
+      // 6. Limpieza
+      setTimeout(() => {
+        wrapper.style.height = "";
+      }, 500);
     }
   };
 
@@ -697,7 +750,7 @@ const initialSlideHomeInternet =
       slidesPerView: 1.2, // Slightly more than 1 to show next slide
       spaceBetween: 15,
       centeredSlides: true,
-      loop: true, // Infinite scroll
+      loopedSlides: 4, // Asegura suficientes duplicados para evitar glitches visuales
       observer: true,
       observeParents: true,
       breakpoints: {
@@ -713,65 +766,36 @@ const initialSlideHomeInternet =
       grabCursor: true,
     };
 
-    // Libre Swiper
-    const libreEl = document.querySelector(".swiper-libre") as HTMLElement;
-    if (libreEl) {
-      const initialSlide = parseInt(libreEl.dataset.initialSlide || "0");
-      new Swiper(libreEl, {
-        ...commonConfig,
-        initialSlide,
-        navigation: {
-          nextEl: ".libre-next",
-          prevEl: ".libre-prev",
-        },
-      });
-    }
+    const initInstance = (selector: string, prev: string, next: string) => {
+      const el = document.querySelector(selector) as HTMLElement;
+      if (el) {
+        const slideCount = el.querySelectorAll(".swiper-slide").length;
+        // Reactivamos loop para > 1 elemento para evitar espacios vacíos con centeredSlides.
+        // Con loopedSlides: 4, Swiper maneja correctamente los duplicados incluso con pocos items.
+        const shouldLoop = slideCount > 1;
 
-    // Ultra Swiper
-    const ultraEl = document.querySelector(".swiper-ultra") as HTMLElement;
-    if (ultraEl) {
-      const initialSlide = parseInt(ultraEl.dataset.initialSlide || "0");
-      new Swiper(ultraEl, {
-        ...commonConfig,
-        initialSlide,
-        navigation: {
-          nextEl: ".ultra-next",
-          prevEl: ".ultra-prev",
-        },
-      });
-    }
+        const initialSlide = parseInt(el.dataset.initialSlide || "0");
 
-    // Internet Swiper
-    const internetEl = document.querySelector(
-      ".swiper-internet",
-    ) as HTMLElement;
-    if (internetEl) {
-      const initialSlide = parseInt(internetEl.dataset.initialSlide || "0");
-      new Swiper(internetEl, {
-        ...commonConfig,
-        initialSlide,
-        navigation: {
-          nextEl: ".internet-next",
-          prevEl: ".internet-prev",
-        },
-      });
-    }
+        new Swiper(el, {
+          ...commonConfig,
+          loop: shouldLoop,
+          initialSlide,
+          navigation: {
+            nextEl: next,
+            prevEl: prev,
+          },
+        });
+      }
+    };
 
-    // Home Internet Swiper
-    const homeInternetEl = document.querySelector(
+    initInstance(".swiper-libre", ".libre-prev", ".libre-next");
+    initInstance(".swiper-ultra", ".ultra-prev", ".ultra-next");
+    initInstance(".swiper-internet", ".internet-prev", ".internet-next");
+    initInstance(
       ".swiper-home-internet",
-    ) as HTMLElement;
-    if (homeInternetEl) {
-      const initialSlide = parseInt(homeInternetEl.dataset.initialSlide || "0");
-      new Swiper(homeInternetEl, {
-        ...commonConfig,
-        initialSlide,
-        navigation: {
-          nextEl: ".home-internet-next",
-          prevEl: ".home-internet-prev",
-        },
-      });
-    }
+      ".home-internet-prev",
+      ".home-internet-next",
+    );
   }
 
   document.addEventListener("astro:page-load", initSwipers);

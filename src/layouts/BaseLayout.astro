@@ -3,6 +3,7 @@
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FloatingButtons from "../components/FloatingButtons.astro";
+import AmbientBlur from "../components/AmbientBlur.astro";
 
 // Nota: He eliminado la importación de Image y heroShapes estáticos.
 // El estilo "Modern Clean" utiliza gradientes CSS (Glows) para un renderizado
@@ -58,29 +59,10 @@ const { title, description } = Astro.props;
         style="background-image: linear-gradient(to right, #80808012 1px, transparent 1px), linear-gradient(to bottom, #80808012 1px, transparent 1px); background-size: 24px 24px;"
       >
       </div>
-
-      <!-- Máscara radial para suavizar la grilla hacia los bordes -->
-      <div
-        class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white dark:from-slate-950 dark:via-transparent dark:to-slate-950"
-      >
-      </div>
     </div>
 
-    <!-- 2. Glows (Luces) de Ambiente en lugar de imágenes estáticas -->
-    <div
-      class="fixed top-0 left-0 z-0 w-full h-full overflow-hidden pointer-events-none"
-    >
-      <!-- Luz superior izquierda (Cyan/Blue) -->
-      <div
-        class="absolute -top-[10%] -left-[10%] w-[40vw] h-[40vw] rounded-full bg-blue-400/20 blur-[120px] mix-blend-multiply dark:bg-blue-900/20 dark:mix-blend-screen dark:opacity-40"
-      >
-      </div>
-      <!-- Luz superior derecha (Purple/Blue) -->
-      <div
-        class="absolute -top-[10%] -right-[10%] w-[40vw] h-[40vw] rounded-full bg-indigo-400/20 blur-[120px] mix-blend-multiply dark:bg-indigo-900/20 dark:mix-blend-screen dark:opacity-40"
-      >
-      </div>
-    </div>
+    <!-- 2. Blur Ambiental Unificado (Componente Centralizado) -->
+    <AmbientBlur />
 
     <!-- === CONTENIDO === -->
     <!-- Header Sticky con z-index alto -->

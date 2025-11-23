@@ -1,0 +1,120 @@
+---
+// src/components/AmbientBlur.astro
+// Componente centralizado para efectos de blur ambiental
+// Evita el efecto de "cortado" entre secciones
+---
+
+<!-- Contenedor de efectos de blur ambiental --><!-- Fixed para que siga el scroll, z-0 para estar detrás del contenido -->
+<div
+  class="fixed inset-0 z-0 pointer-events-none overflow-hidden"
+  aria-hidden="true"
+>
+  <!-- Blur principal superior - Siempre visible -->
+  <div
+    id="ambient-blur-top"
+    class="absolute left-1/2 -translate-x-1/2 w-[min(100vw,1400px)] h-[500px] md:h-[700px] rounded-full bg-blue-400/20 dark:bg-blue-900/25 blur-[140px] mix-blend-multiply dark:mix-blend-screen transition-all duration-700 ease-out"
+    style="top: -250px;"
+  >
+  </div>
+
+  <!-- Blur secundario izquierdo - Aparece en el scroll -->
+  <div
+    id="ambient-blur-left"
+    class="absolute -left-[10%] w-[min(60vw,800px)] h-[600px] rounded-full bg-indigo-400/15 dark:bg-indigo-900/20 blur-[120px] mix-blend-multiply dark:mix-blend-screen opacity-0 transition-all duration-700 ease-out"
+    style="top: 40vh;"
+  >
+  </div>
+
+  <!-- Blur secundario derecho - Aparece en el scroll -->
+  <div
+    id="ambient-blur-right"
+    class="absolute -right-[10%] w-[min(60vw,800px)] h-[600px] rounded-full bg-purple-400/12 dark:bg-purple-900/18 blur-[120px] mix-blend-multiply dark:mix-blend-screen opacity-0 transition-all duration-700 ease-out"
+    style="top: 60vh;"
+  >
+  </div>
+
+  <!-- Blur inferior - Aparece al final de la página -->
+  <div
+    id="ambient-blur-bottom"
+    class="absolute left-1/2 -translate-x-1/2 w-[min(90vw,1200px)] h-[500px] rounded-full bg-blue-400/18 dark:bg-blue-900/22 blur-[130px] mix-blend-multiply dark:mix-blend-screen opacity-0 transition-all duration-700 ease-out"
+    style="top: 100vh;"
+  >
+  </div>
+</div>
+
+<script>
+  // Efecto parallax suave para los blurs
+  function updateBlurPositions() {
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollProgress = scrollY / Math.max(documentHeight - windowHeight, 1);
+
+    const blurTop = document.getElementById("ambient-blur-top");
+    const blurLeft = document.getElementById("ambient-blur-left");
+    const blurRight = document.getElementById("ambient-blur-right");
+    const blurBottom = document.getElementById("ambient-blur-bottom");
+
+    if (blurTop) {
+      // El blur superior se mueve más lento que el scroll (parallax)
+      const topOffset = -250 + scrollY * 0.4;
+      blurTop.style.top = `${topOffset}px`;
+    }
+
+    if (blurLeft) {
+      // El blur izquierdo aparece gradualmente
+      const leftProgress = Math.max(
+        0,
+        Math.min(1, (scrollProgress - 0.15) / 0.25),
+      );
+      blurLeft.style.opacity = leftProgress.toString();
+      const leftOffset = windowHeight * 0.4 + scrollY * 0.3;
+      blurLeft.style.top = `${leftOffset}px`;
+    }
+
+    if (blurRight) {
+      // El blur derecho aparece gradualmente
+      const rightProgress = Math.max(
+        0,
+        Math.min(1, (scrollProgress - 0.3) / 0.25),
+      );
+      blurRight.style.opacity = rightProgress.toString();
+      const rightOffset = windowHeight * 0.6 + scrollY * 0.35;
+      blurRight.style.top = `${rightOffset}px`;
+    }
+
+    if (blurBottom) {
+      // El blur inferior aparece al final
+      const bottomProgress = Math.max(
+        0,
+        Math.min(1, (scrollProgress - 0.6) / 0.3),
+      );
+      blurBottom.style.opacity = bottomProgress.toString();
+      const bottomOffset =
+        Math.max(documentHeight - windowHeight * 0.5, windowHeight * 1.5) +
+        scrollY * 0.2;
+      blurBottom.style.top = `${bottomOffset}px`;
+    }
+  }
+
+  // Throttle para optimizar performance
+  let ticking = false;
+  function requestTick() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateBlurPositions();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  // Inicializar y escuchar scroll
+  document.addEventListener("DOMContentLoaded", () => {
+    updateBlurPositions();
+    window.addEventListener("scroll", requestTick, { passive: true });
+  });
+
+  // Actualizar en resize
+  window.addEventListener("resize", updateBlurPositions, { passive: true });
+</script>

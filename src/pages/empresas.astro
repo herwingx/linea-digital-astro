@@ -44,20 +44,21 @@ const enterpriseUltraPlans = [
 const enterpriseInternet = [
   {
     titulo: "Internet Negocio Básico",
-    velocidad: "50 Mbps",
+    datosIncluidos: "50 GB",
+    velocidadDeNavegacion: "50 Mbps",
+    politicasDeUso: "Uso comercial permitido",
     precio: 499,
     recomendado: false,
     enlace: "#",
-    descripcion: "Conexión estable para pequeños negocios y puntos de venta.",
   },
   {
     titulo: "Internet Negocio Pro",
-    velocidad: "200 Mbps",
+    datosIncluidos: "200 GB",
+    velocidadDeNavegacion: "200 Mbps",
+    politicasDeUso: "Uso comercial permitido",
     precio: 899,
     recomendado: true,
     enlace: "#",
-    descripcion:
-      "Alta velocidad para oficinas con múltiples equipos conectados.",
   },
 ];
 ---
@@ -68,13 +69,6 @@ const enterpriseInternet = [
 >
   <!-- Hero Section Empresarial (Más sobrio) -->
   <section class="relative pt-8 pb-8 md:pt-16 overflow-hidden">
-    <div class="absolute inset-0 -z-10">
-      <div
-        class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[100px] md:h-[200px] bg-blue-400/20 blur-[80px] rounded-full mix-blend-multiply dark:bg-blue-900/20 dark:mix-blend-screen"
-      >
-      </div>
-    </div>
-
     <div class="container mx-auto px-4 text-center">
       <span
         class="inline-block py-1 px-3 rounded-full bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-widest mb-6 border border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
@@ -99,7 +93,8 @@ const enterpriseInternet = [
   <PlansOrchestrator
     mobilePlansLibre={enterpriseMobilePlans}
     mobilePlansUltra={enterpriseUltraPlans}
-    homeInternet={enterpriseInternet}
+    mobilePlansInternet={[]}
+    internetPlans={enterpriseInternet}
     title="Catálogo Empresarial"
     subtitle="Selecciona la solución que tu empresa necesita"
   />
