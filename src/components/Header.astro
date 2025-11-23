@@ -4,145 +4,190 @@ import logoWhite from "../assets/logo-white.svg";
 import logoDark from "../assets/logo-dark.svg";
 import DarkModeToggle from "./DarkModeToggle.astro";
 
-// Props para indicar estado activo si se desea implementar (opcional)
-const { currentPath } = Astro.props; 
+const { pathname } = Astro.url;
+const isActive = (href: string) => {
+  if (href === "/" && pathname === "/") return true;
+  return href !== "/" && pathname.startsWith(href);
+};
+
+const navLinks = [
+  { label: "Personas", href: "/personas" },
+  { label: "Empresas", href: "/empresas" },
+  { label: "Nosotros", href: "/nosotros" },
+  { label: "Asociados", href: "/asociados" },
+  { label: "Contacto", href: "/form" },
+];
 ---
 
 <!-- 
-  HEADER WRAPPER
-  Sticky + Backdrop Blur + Borde sutil inferior
+  HEADER MEJORADO
+  - Transition suave de altura y fondo al hacer scroll
+  - Glassmorphism premium
 -->
-<header class="sticky top-0 z-[999] w-full border-b border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md transition-colors duration-500 supports-[backdrop-filter]:bg-white/60">
+<header
+  id="main-header"
+  class="fixed top-0 z-[999] w-full transition-all duration-500 border-b border-transparent"
+>
+  <!-- Fondo dinámico (se activa con JS) -->
+  <div
+    id="header-bg"
+    class="absolute inset-0 bg-white/0 dark:bg-slate-950/0 backdrop-blur-[0px] transition-all duration-500 -z-10"
+  >
+  </div>
+
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <nav class="relative flex items-center justify-between h-20 lg:h-24">
-      
+    <nav
+      class="relative flex items-center justify-between h-20 lg:h-24 transition-all duration-500"
+      id="nav-container"
+    >
       <!-- 1. LOGO AREA -->
-      <div class="flex-shrink-0 z-50 transition-transform hover:scale-105 duration-300">
+      <div
+        class="flex-shrink-0 z-50 transition-transform hover:scale-105 duration-300"
+      >
         <a href="/" class="block" aria-label="Ir al inicio">
-          <!-- Efecto: Pequeño drop-shadow para dar profundidad al logo -->
-          <Image 
-            src={logoWhite} 
-            alt="Grupo Linea Digital Logo" 
-            class="w-32 sm:w-36 md:w-44 h-auto hidden dark:block drop-shadow-lg" 
+          <Image
+            src={logoWhite}
+            alt="Grupo Linea Digital Logo"
+            class="w-32 sm:w-36 md:w-40 h-auto hidden dark:block drop-shadow-lg transition-all duration-300"
             loading="eager"
           />
-          <Image 
-            src={logoDark} 
-            alt="Grupo Linea Digital Logo" 
-            class="w-32 sm:w-36 md:w-44 h-auto dark:hidden" 
+          <Image
+            src={logoDark}
+            alt="Grupo Linea Digital Logo"
+            class="w-32 sm:w-36 md:w-40 h-auto dark:hidden transition-all duration-300"
             loading="eager"
           />
         </a>
       </div>
 
-      <!-- 2. MENÚ DESKTOP (CENTRADO) -->
-      <!-- Estilo Clean/Minimalista con micro-interacciones de fondo -->
-      <div class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <ul class="flex items-center gap-1">
-          {[
-            { label: 'Personas', href: '/personas' },
-            { label: 'Empresas', href: '/empresas' },
-            { label: 'Nosotros', href: '/nosotros' },
-            { label: 'Asociados', href: '/asociados' },
-            { label: 'Contacto', href: '/form' }
-          ].map(link => (
-            <li>
-              <a
-                href={link.href}
-                class="relative px-5 py-2.5 rounded-full text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/80"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+      <!-- 2. MENÚ DESKTOP (CENTRADO & FLOTANTE) -->
+      <div
+        class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      >
+        <!-- Pill Container con fondo sutil -->
+        <ul
+          class="flex items-center gap-1 p-1.5 rounded-full bg-white/50 dark:bg-slate-900/30 border border-white/20 dark:border-white/5 backdrop-blur-sm shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/80 dark:hover:bg-slate-900/60"
+        >
+          {
+            navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <li>
+                  <a
+                    href={link.href}
+                    class={`
+                    relative px-5 py-2 rounded-full text-sm font-bold transition-all duration-300
+                    ${
+                      active
+                        ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm"
+                        : "text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-white/50 dark:hover:bg-white/5"
+                    }
+                  `}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              );
+            })
+          }
         </ul>
       </div>
 
       <!-- 3. ACCIONES DERECHA -->
       <div class="flex items-center gap-3 sm:gap-4 z-50">
-        
-        <!-- Toggle con borde sutil -->
-        <div class="flex items-center">
-          <div class="rounded-full p-1 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-             <DarkModeToggle />
-          </div>
+        <!-- Toggle -->
+        <div
+          class="rounded-full p-1 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-colors backdrop-blur-sm"
+        >
+          <DarkModeToggle />
         </div>
 
-        <!-- Botón Mi Telcel (Estilo Pill Premium) -->
+        <!-- Botón Mi Telcel (Glassy Premium) -->
         <a
           target="_blank"
           href="https://www.mitelcel.com/mitelcel/login"
-          class="group hidden lg:inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-2.5 text-center text-sm font-bold text-white shadow-xl shadow-slate-900/20 transition-all duration-300 hover:scale-105 hover:bg-blue-700 dark:bg-white dark:text-slate-900 dark:shadow-white/10 dark:hover:bg-blue-100"
+          class="group hidden lg:inline-flex items-center justify-center rounded-full bg-slate-900/90 dark:bg-white/90 px-6 py-2.5 text-center text-sm font-bold text-white dark:text-slate-900 shadow-lg shadow-slate-900/20 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-blue-600 dark:hover:bg-blue-50 hover:shadow-blue-600/30"
         >
           Mi Telcel
-          <!-- Pequeña flecha o icono (opcional, añade polish) -->
-          <svg class="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          <svg
+            class="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg
+          >
         </a>
 
-        <!-- Botón Hamburguesa Moderno -->
-        <!-- Aumentamos touch area para móvil -->
+        <!-- Botón Hamburguesa -->
         <button
           id="navbarToggler"
-          class="relative block lg:hidden p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-white focus:outline-none transition-colors"
+          class="relative block lg:hidden p-3 rounded-full hover:bg-slate-100/50 dark:hover:bg-slate-800/50 text-slate-700 dark:text-white focus:outline-none transition-colors backdrop-blur-sm"
           aria-label="Toggle navigation"
-          aria-expanded="false"
         >
-          <div class="w-5 h-4 flex flex-col justify-between relative overflow-hidden">
-            <!-- Barras con bordes redondeados -->
-            <span class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-left"></span>
-            <span class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300"></span>
-            <span class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-left"></span>
+          <div class="w-6 h-5 flex flex-col justify-between relative">
+            <span
+              class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-center"
+            ></span>
+            <span
+              class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-center"
+            ></span>
+            <span
+              class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-center"
+            ></span>
           </div>
         </button>
       </div>
 
-      <!-- 
-         4. MENÚ MÓVIL DESPLEGABLE (Modern Clean Card)
-      -->
+      <!-- 4. MENÚ MÓVIL -->
       <div
         id="navbarCollapse"
-        class="hidden absolute top-full right-0 mt-4 w-72 lg:hidden origin-top-right z-[10000]"
+        class="hidden absolute top-full right-0 mt-4 w-80 lg:hidden origin-top-right z-[10000] px-4"
       >
-        <!-- 
-            Card Wrapper:
-            - backdrop-blur-xl (Vidrio fuerte)
-            - rounded-[2rem] (Geometría solicitada)
-            - border-slate-200 (Línea sutil)
-            - shadow-2xl (Profundidad)
-        -->
-        <div class="rounded-[2rem] border border-slate-200/80 bg-white/95 dark:bg-slate-900/95 dark:border-slate-700 p-3 shadow-2xl shadow-blue-900/10 backdrop-blur-xl">
-           
-           <ul class="flex flex-col space-y-1">
-              {[
-                { label: 'Personas', href: '/personas' },
-                { label: 'Empresas', href: '/empresas' },
-                { label: 'Nosotros', href: '/nosotros' },
-                { label: 'Asociados', href: '/asociados' },
-                { label: 'Contacto', href: '/form' }
-              ].map((link) => (
-                <li>
-                  <a
-                    href={link.href}
-                    class="flex items-center w-full px-5 py-3.5 rounded-3xl text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-300 transition-colors group"
-                  >
-                    {link.label}
-                    <!-- Chevrón sutil a la derecha en hover -->
-                    <svg class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                  </a>
-                </li>
-              ))}
-
-              <li class="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800">
-                <a
-                  target="_blank"
-                  href="https://www.mitelcel.com/mitelcel/login"
-                  class="flex items-center justify-center w-full bg-slate-900 text-white px-4 py-3.5 rounded-[1.5rem] font-bold text-sm shadow-lg shadow-slate-900/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 dark:bg-white dark:text-slate-900"
-                >
-                  Ingresar a Mi Telcel
-                </a>
-              </li>
-           </ul>
-
+        <div
+          class="rounded-[2rem] border border-slate-200/80 bg-white/90 dark:bg-slate-900/90 dark:border-slate-700 p-4 shadow-2xl shadow-blue-900/20 backdrop-blur-xl ring-1 ring-black/5"
+        >
+          <ul class="flex flex-col space-y-1">
+            {
+              navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <li>
+                    <a
+                      href={link.href}
+                      class={`
+                        flex items-center w-full px-5 py-4 rounded-2xl text-base font-bold transition-all duration-200
+                        ${
+                          active
+                            ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300"
+                            : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-blue-600"
+                        }
+                      `}
+                    >
+                      {link.label}
+                      {active && (
+                        <div class="ml-auto w-2 h-2 rounded-full bg-blue-500" />
+                      )}
+                    </a>
+                  </li>
+                );
+              })
+            }
+            <li
+              class="pt-4 mt-2 border-t border-slate-100 dark:border-slate-800"
+            >
+              <a
+                target="_blank"
+                href="https://www.mitelcel.com/mitelcel/login"
+                class="flex items-center justify-center w-full bg-slate-900 text-white px-4 py-4 rounded-2xl font-bold text-sm shadow-lg shadow-slate-900/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 dark:bg-white dark:text-slate-900"
+              >
+                Ingresar a Mi Telcel
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
@@ -150,96 +195,99 @@ const { currentPath } = Astro.props;
 </header>
 
 <script is:inline>
-function initNavbar() {
+  // --- SCROLL EFFECT ---
+  const header = document.getElementById("main-header");
+  const headerBg = document.getElementById("header-bg");
+  const navContainer = document.getElementById("nav-container");
+
+  function updateHeader() {
+    if (!header || !headerBg || !navContainer) return;
+
+    if (window.scrollY > 20) {
+      // Scrolled State
+      headerBg.classList.remove(
+        "bg-white/0",
+        "dark:bg-slate-950/0",
+        "backdrop-blur-[0px]",
+      );
+      headerBg.classList.add(
+        "bg-white/80",
+        "dark:bg-slate-950/80",
+        "backdrop-blur-md",
+        "shadow-sm",
+      );
+      header.classList.add("border-slate-200/60", "dark:border-slate-800/60");
+      header.classList.remove("border-transparent");
+
+      // Compact Nav
+      navContainer.classList.remove("h-20", "lg:h-24");
+      navContainer.classList.add("h-16", "lg:h-20");
+    } else {
+      // Top State
+      headerBg.classList.add(
+        "bg-white/0",
+        "dark:bg-slate-950/0",
+        "backdrop-blur-[0px]",
+      );
+      headerBg.classList.remove(
+        "bg-white/80",
+        "dark:bg-slate-950/80",
+        "backdrop-blur-md",
+        "shadow-sm",
+      );
+      header.classList.remove(
+        "border-slate-200/60",
+        "dark:border-slate-800/60",
+      );
+      header.classList.add("border-transparent");
+
+      // Expanded Nav
+      navContainer.classList.add("h-20", "lg:h-24");
+      navContainer.classList.remove("h-16", "lg:h-20");
+    }
+  }
+
+  window.addEventListener("scroll", updateHeader);
+  // Init on load
+  document.addEventListener("DOMContentLoaded", updateHeader);
+
+  // --- MOBILE MENU LOGIC ---
   const navbarToggler = document.getElementById("navbarToggler");
   const navbarCollapse = document.getElementById("navbarCollapse");
   const navbarSpans = document.querySelectorAll(".navbar-span");
-  const navLinks = navbarCollapse ? navbarCollapse.querySelectorAll("a") : [];
 
-  if (!navbarToggler || !navbarCollapse) return;
+  if (navbarToggler && navbarCollapse) {
+    navbarToggler.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isClosed = navbarCollapse.classList.contains("hidden");
 
-  // --- LÓGICA DEL BOTÓN (ANIMACIÓN HAMBURGUESA MEJORADA) ---
-  navbarToggler.addEventListener("click", (e) => {
-    e.stopPropagation(); // Evitar cierre inmediato
-    const isClosed = navbarCollapse.classList.contains("hidden");
-    
-    // Toggle Menu Display
-    if(isClosed) {
+      if (isClosed) {
         navbarCollapse.classList.remove("hidden");
-        // Tiny animation entrance logic can go here via CSS animation classes if wanted
-        navbarToggler.setAttribute('aria-expanded', 'true');
-    } else {
-        navbarCollapse.classList.add("hidden");
-        navbarToggler.setAttribute('aria-expanded', 'false');
-    }
-
-    // Animación Icono X (Usando la lógica existente + mejoras visuales)
-    // span[0] -> Rotate 45
-    // span[1] -> Fade Out
-    // span[2] -> Rotate -45
-    
-    if (navbarSpans.length === 3) {
-        // Modern approach using CSS classes defined by style, but manipulating via JS classes
-        navbarSpans[0].classList.toggle("rotate-45");
-        // Translate ajuste fino para centrar la X (depende del width del icono)
-        // Para un width de icono estándar, un translate pequeño funciona.
-        // En este caso, usaremos rotación pura sobre el origin-left para mantener limpieza
-        // o simplemente las clases anteriores:
-        
-        // RESETEAR transformaciones manuales anteriores para usar lógica limpia:
-        // Si quieres una X perfecta:
-        if(isClosed) { // Se va a ABRIIR
-             navbarSpans[0].style.transform = 'rotate(45deg) translate(5px, -5px)';
-             navbarSpans[1].style.opacity = '0';
-             navbarSpans[2].style.transform = 'rotate(-45deg) translate(-5px, 5px) ';
-             // Ajustamos origins para que crucen en el centro visualmente si es necesario
-             navbarSpans[0].style.transformOrigin = 'center'; 
-             navbarSpans[2].style.transformOrigin = 'center';
-             
-             // O, usando la lógica previa simple (ajustando pixel values para el nuevo icono)
-             navbarSpans[0].classList.remove('rotate-45'); // Reset previos
-             setTimeout(() => {
-                 navbarSpans[0].classList.add("rotate-45", "translate-y-[6px]", "translate-x-[2px]");
-                 navbarSpans[1].classList.add("opacity-0");
-                 navbarSpans[2].classList.add("-rotate-45", "-translate-y-[6px]", "translate-x-[2px]");
-             }, 10);
-
-        } else { // Se va a CERRAR
-             navbarSpans[0].classList.remove("rotate-45", "translate-y-[6px]", "translate-x-[2px]");
-             navbarSpans[1].classList.remove("opacity-0");
-             navbarSpans[2].classList.remove("-rotate-45", "-translate-y-[6px]", "translate-x-[2px]");
-             
-             // Limpiar estilos inline si los hubiera
-             navbarSpans.forEach(s => s.style = '');
+        // Animate Icon to X
+        if (navbarSpans.length === 3) {
+          navbarSpans[0].style.transform = "rotate(45deg) translate(5px, 6px)";
+          navbarSpans[1].style.opacity = "0";
+          navbarSpans[2].style.transform =
+            "rotate(-45deg) translate(5px, -6px)";
         }
-    }
-  });
-
-  // --- CERRAR AL DAR CLICK EN ENLACE ---
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      closeMenu();
-    });
-  });
-  
-  // --- CERRAR CLICK OUTSIDE ---
-  document.addEventListener('click', (e) => {
-      if (!navbarCollapse.contains(e.target) && !navbarToggler.contains(e.target) && !navbarCollapse.classList.contains('hidden')) {
-        closeMenu();
+      } else {
+        navbarCollapse.classList.add("hidden");
+        // Reset Icon
+        navbarSpans.forEach((s) => (s.style.transform = ""));
+        if (navbarSpans[1]) navbarSpans[1].style.opacity = "1";
       }
-  });
+    });
 
-  function closeMenu() {
-      navbarCollapse.classList.add("hidden");
-      navbarToggler.setAttribute('aria-expanded', 'false');
-      
-      // Reset Icon Animation
-      navbarSpans.forEach(s => {
-         s.classList.remove("rotate-45", "translate-y-[6px]", "translate-x-[2px]", "opacity-0", "-rotate-45", "-translate-y-[6px]");
-         s.style = '';
-      });
+    // Close on click outside
+    document.addEventListener("click", (e) => {
+      if (
+        !navbarCollapse.contains(e.target) &&
+        !navbarToggler.contains(e.target)
+      ) {
+        navbarCollapse.classList.add("hidden");
+        navbarSpans.forEach((s) => (s.style.transform = ""));
+        if (navbarSpans[1]) navbarSpans[1].style.opacity = "1";
+      }
+    });
   }
-}
-
-document.addEventListener("DOMContentLoaded", initNavbar);
 </script>
