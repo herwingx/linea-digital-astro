@@ -2,6 +2,8 @@
 // src/pages/empresas.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PlansOrchestrator from "../components/PlansOrchestrator.astro";
+import BenefitsSection from "../components/BenefitsSection.astro";
+import "../styles/user.css";
 
 // MOCK DATA FOR ENTERPRISE (Since we don't have a fetch function yet)
 
@@ -46,7 +48,7 @@ const enterpriseInternet = [
     titulo: "Internet Negocio Básico",
     datosIncluidos: "50 GB",
     velocidadDeNavegacion: "50 Mbps",
-    politicasDeUso: "Uso comercial permitido",
+    politicaDeUsoJusto: "Uso comercial permitido",
     precio: 499,
     recomendado: false,
     enlace: "#",
@@ -55,7 +57,7 @@ const enterpriseInternet = [
     titulo: "Internet Negocio Pro",
     datosIncluidos: "200 GB",
     velocidadDeNavegacion: "200 Mbps",
-    politicasDeUso: "Uso comercial permitido",
+    politicaDeUsoJusto: "Uso comercial permitido",
     precio: 899,
     recomendado: true,
     enlace: "#",
@@ -70,15 +72,27 @@ const enterpriseInternet = [
   <!-- Hero Section Empresarial (Más sobrio) -->
   <section class="relative pt-8 pb-8 md:pt-16 overflow-hidden">
     <div class="container mx-auto px-4 text-center">
-      <span
-        class="inline-block py-1 px-3 rounded-full bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-widest mb-6 border border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
-      >
-        Para Empresas
-      </span>
+      <div class="mb-8 flex justify-center">
+        <span
+          class="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/60 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 backdrop-blur-md transition-all hover:scale-105 hover:bg-white/80 dark:border-blue-500/20 dark:bg-blue-900/20 dark:text-blue-300 cursor-default shadow-sm"
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
+            ></span>
+            <span
+              class="relative inline-flex rounded-full h-2 w-2 bg-blue-500 dark:bg-blue-400"
+            ></span>
+          </span>
+          Para Empresas
+        </span>
+      </div>
       <h1
         class="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight"
       >
-        Impulsa tu <span class="text-blue-600">Negocio</span>
+        Impulsa tu <span class="text-blue-600 dark:text-blue-400 font-bold"
+          >Negocio</span
+        >
       </h1>
       <p
         class="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed"
@@ -98,4 +112,6 @@ const enterpriseInternet = [
     title="Catálogo Empresarial"
     subtitle="Selecciona la solución que tu empresa necesita"
   />
+
+  <BenefitsSection />
 </BaseLayout>

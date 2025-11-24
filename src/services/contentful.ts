@@ -21,9 +21,10 @@ interface PlanFields extends EntrySkeletonType {
   redesSociales?: string[]; // List (Text) - Puede ser undefined si no marcan nada
   recomendado?: boolean;   // Boolean
   enlace?: string;           // Short text (URL)
-  politicasDeUso?: string;   // Long text
+  politicaDeUsoJusto?: string;   // Long text
   velocidadDeNavegacion?: string; // Short text
 }
+
 
 // The entry type that Contentful returns
 type PromoEntry = Entry<PromoFields, undefined, string>;

@@ -2,6 +2,7 @@
 // src/layouts/BaseLayout.astro
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import "../styles/user.css";
 import FloatingButtons from "../components/FloatingButtons.astro";
 import AmbientBlur from "../components/AmbientBlur.astro";
 
@@ -70,7 +71,10 @@ const { title, description } = Astro.props;
     <Header />
 
     <!-- Main con flex-grow para empujar el footer siempre abajo -->
-    <main class="relative z-10 flex-grow flex flex-col">
+    <main
+      class="animate-fade-up relative z-10 flex-grow flex flex-col"
+      style="animation-duration: 0.8s;"
+    >
       <slot />
     </main>
 

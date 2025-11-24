@@ -2,6 +2,8 @@
 // src/pages/personas.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PlansOrchestrator from "../components/PlansOrchestrator.astro";
+import BenefitsSection from "../components/BenefitsSection.astro";
+import "../styles/user.css";
 import {
   getPlansLibre,
   getPlansUltra,
@@ -26,13 +28,14 @@ const safeMap = (plans: any[], category: "movil" | "casa") => {
         minutosYSms: f.minutosYSmsIncluidos as string, // Unificar nombre prop
         cashbackTelcel: f.cashbackTelcel as string,
         velocidadDeNavegacion: f.velocidadDeNavegacion as string,
-        politicasDeUso: f.politicasDeUso as string,
+        politicaDeUsoJusto:
+          ((f.politicaDeUsoJusto as string) || "").trim() ||
+          "Política de uso justo aplica",
       };
     })
     .filter((p) => p.precio > 0)
     .sort((a, b) => a.precio - b.precio);
 };
-
 // Fetch Paralelo para velocidad
 const [rawLibre, rawUltra, rawMovilInt, rawCasaInt] = await Promise.all([
   getPlansLibre().catch(() => []),
@@ -40,6 +43,8 @@ const [rawLibre, rawUltra, rawMovilInt, rawCasaInt] = await Promise.all([
   getPlansInternet().catch(() => []),
   getInternetEnTuCasaLibre().catch(() => []),
 ]);
+
+console.log("DEBUG: rawCasaInt", JSON.stringify(rawCasaInt, null, 2));
 
 const librePlans = safeMap(rawLibre, "movil");
 const ultraPlans = safeMap(rawUltra, "movil");
@@ -55,6 +60,8 @@ const homePlans =
           precio: 399,
           datosIncluidos: "Uso doméstico",
           recomendado: false,
+          politicaDeUsoJusto:
+            "Política de uso justo: 100GB a velocidad best effort.",
         },
         {
           titulo: "Familiar",
@@ -62,6 +69,8 @@ const homePlans =
           precio: 549,
           datosIncluidos: "HD Streaming",
           recomendado: true,
+          politicaDeUsoJusto:
+            "Política de uso justo: 150GB a velocidad best effort.",
         },
       ];
 ---
@@ -72,25 +81,30 @@ const homePlans =
 >
   <!-- HERO -->
   <section class="relative pt-8 pb-2 md:pt-16 px-4 text-center overflow-hidden">
-    <!-- Glow BG -->
-    <!--   <div
-      class="absolute top-0 left-1/2 -translate-x-1/2 w-[100vh] h-[50vh] bg-blue-500/10 rounded-full blur-3xl -z-10"
-    >
-    </div> -->
-
-    <span
-      class="inline-block mb-4 px-4 py-1 rounded-full bg-blue-100/50 text-blue-600 font-bold text-[10px] tracking-[0.2em] uppercase border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800 animate-fade-up"
-    >
-      Para Personas
-    </span>
+    <div class="mb-8 flex justify-center">
+      <span
+        class="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/60 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 backdrop-blur-md transition-all hover:scale-105 hover:bg-white/80 dark:border-blue-500/20 dark:bg-blue-900/20 dark:text-blue-300 cursor-default shadow-sm"
+      >
+        <span class="relative flex h-2 w-2">
+          <span
+            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
+          ></span>
+          <span
+            class="relative inline-flex rounded-full h-2 w-2 bg-blue-500 dark:bg-blue-400"
+          ></span>
+        </span>
+        Para Personas
+      </span>
+    </div>
     <h1
-      class="text-5xl md:text-7xl font-bold tracking-tighter text-slate-900 dark:text-white mb-6 animate-fade-up"
-      style="animation-delay: 100ms"
+      class="text-5xl md:text-7xl font-bold tracking-tighter text-slate-900 dark:text-white mb-6"
     >
-      Conecta tu <span class="text-blue-600">Mundo</span>
+      Conecta tu <span class="text-blue-600 dark:text-blue-400 font-bold"
+        >Mundo</span
+      >
     </h1>
     <p
-      class="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto animate-fade-up"
+      class="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto"
       style="animation-delay: 200ms"
     >
       Soluciones flexibles para tu smartphone y tu hogar. Sin letras chiquitas.
@@ -103,4 +117,6 @@ const homePlans =
     mobilePlansInternet={movilInternetPlans}
     internetPlans={homePlans}
   />
+
+  <BenefitsSection />
 </BaseLayout>
