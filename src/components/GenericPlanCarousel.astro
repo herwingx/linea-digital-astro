@@ -17,11 +17,10 @@ while (renderedPlans.length > 0 && renderedPlans.length < 12) {
   renderedPlans = [...renderedPlans, ...plans];
 }
 
-// 2. ÍNDICE RECOMENDADO CENTRADO
-// Buscamos el índice base en el array original.
-const originalRecIndex = plans.findIndex((p) => p.recomendado);
-const baseIndex =
-  originalRecIndex !== -1 ? originalRecIndex : Math.floor(plans.length / 2);
+// 2. ÍNDICE INICIAL: SIEMPRE EL PRIMERO
+// Simplificamos la lógica para iniciar siempre en el primer elemento,
+// evitando cálculos extra de búsqueda o centrado.
+const baseIndex = 0;
 
 // Calculamos el índice equivalente en la "repetición del medio" de nuestros planes renderizados
 // para tener buffer a izquierda y derecha.
@@ -80,12 +79,15 @@ const hasPlans = plans.length > 0;
     class="swiper overflow-hidden !pb-10 !pt-4"
     data-config-id={id}
     data-initial-slide={initialSlideIndex}
+    data-real-count={plans.length}
   >
     <div class="swiper-wrapper">
       {
         hasPlans ? (
-          renderedPlans.map((plan) => (
-            <div class="swiper-slide h-auto">
+          renderedPlans.map((plan, index) => (
+            <div
+              class={`swiper-slide h-auto ${index === initialSlideIndex ? "initial-active" : ""}`}
+            >
               <PlanCard {...plan} />
             </div>
           ))

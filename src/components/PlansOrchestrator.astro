@@ -20,7 +20,7 @@ const {
 } = Astro.props;
 ---
 
-<section class="w-full pb-24 overflow-hidden">
+<section class="w-full pb-4 lg:pb-16 overflow-hidden">
   <div class="container mx-auto px-4 max-w-6xl">
     <!-- Header -->
     <div class="text-center mb-10">
@@ -82,17 +82,19 @@ const {
           }
         </div>
 
-        <GenericPlanCarousel id="libre" plans={mobilePlansLibre} />
-        <GenericPlanCarousel
-          id="ultra"
-          plans={mobilePlansUltra}
-          isHidden={true}
-        />
-        <GenericPlanCarousel
-          id="internet"
-          plans={mobilePlansInternet}
-          isHidden={true}
-        />
+        <div id="movil-carousels-wrapper" class="relative min-h-[400px]">
+          <GenericPlanCarousel id="libre" plans={mobilePlansLibre} />
+          <GenericPlanCarousel
+            id="ultra"
+            plans={mobilePlansUltra}
+            isHidden={true}
+          />
+          <GenericPlanCarousel
+            id="internet"
+            plans={mobilePlansInternet}
+            isHidden={true}
+          />
+        </div>
       </div>
 
       <!-- HOGAR VIEW -->
@@ -113,7 +115,12 @@ const {
 
 <script>
   import Swiper from "swiper";
-  import { Navigation, Pagination, EffectCoverflow } from "swiper/modules";
+  import {
+    Navigation,
+    Pagination,
+    EffectCoverflow,
+    Keyboard,
+  } from "swiper/modules";
   import "swiper/css";
   import "swiper/css/navigation";
   import "swiper/css/pagination";
@@ -165,6 +172,7 @@ const {
     const old = currSub;
     currSub = type;
 
+    // Actualizar estado visual de los botones (tabs)
     document.querySelectorAll(".sub-tab").forEach((b) => {
       const t = b.getAttribute("data-type");
       if (t === type)
@@ -177,20 +185,80 @@ const {
 
     const cOld = document.getElementById(`container-${old}`);
     const cNew = document.getElementById(`container-${type}`);
+    const wrapper = document.getElementById("movil-carousels-wrapper");
 
-    if (cOld && cNew) {
-      cOld.classList.add("hidden", "opacity-0");
-      cOld.classList.remove("relative", "opacity-100");
+    if (cOld && cNew && wrapper) {
+      // 1. PREPARAR ENTRADA (NEW) - RESETEO VISUAL
+      // Antes de mostrarlo, forzamos el estado "activo" en el slide inicial
+      // para que se vea enfocado inmediatamente, sin esperar a JS.
+      const swiperEl = cNew.querySelector(".swiper");
+      if (swiperEl) {
+        swiperEl.classList.remove("swiper-initialized"); // Permitir que estilos pre-hydration funcionen
+        const initialIdx = parseInt(
+          swiperEl.getAttribute("data-initial-slide") || "0",
+        );
+        const slides = swiperEl.querySelectorAll(".swiper-slide");
 
-      cNew.classList.remove(
-        "hidden",
-        "opacity-0",
+        // Limpiar clases viejas
+        slides.forEach((s) => {
+          s.classList.remove(
+            "swiper-slide-active",
+            "swiper-slide-next",
+            "swiper-slide-prev",
+            "initial-active",
+          );
+        });
+
+        // Activar el target
+        if (slides[initialIdx]) {
+          slides[initialIdx].classList.add("initial-active");
+        }
+      }
+
+      // 2. BLOQUEAR ALTURA DEL PADRE
+      const currentHeight = wrapper.offsetHeight;
+      wrapper.style.height = `${currentHeight}px`;
+
+      // 3. PREPARAR SALIDA (OLD)
+      cOld.classList.remove("relative");
+      cOld.classList.add("absolute", "top-0", "left-0", "w-full", "z-0");
+
+      // 4. MOSTRAR ENTRADA
+      cNew.classList.remove("hidden");
+      cNew.classList.add(
         "absolute",
-        "translate-y-12",
+        "top-0",
+        "left-0",
+        "w-full",
+        "z-10",
+        "opacity-0",
       );
-      cNew.classList.add("relative", "opacity-100", "translate-y-0");
+      cNew.style.transform = "translateX(40px)";
 
-      refreshSwiper(type);
+      // Forzar Reflow
+      void cNew.offsetWidth;
+
+      // 5. ANIMAR (Simultáneo)
+      cOld.style.opacity = "0";
+      cOld.style.transform = "translateX(-40px)";
+
+      cNew.style.opacity = "1";
+      cNew.style.transform = "translateX(0)";
+
+      // 6. LIMPIEZA
+      setTimeout(() => {
+        cOld.classList.add("hidden");
+        cOld.classList.remove("absolute", "z-0");
+        cOld.style.transform = "";
+        cOld.style.opacity = "";
+
+        cNew.classList.remove("absolute", "z-10");
+        cNew.classList.add("relative");
+
+        wrapper.style.height = "";
+
+        refreshSwiper(type);
+      }, 500);
     }
   };
 
@@ -250,16 +318,22 @@ const {
       const id = el.getAttribute("data-config-id");
       const startIdx = parseInt(el.getAttribute("data-initial-slide") || "0");
 
+      const realCount = parseInt(el.getAttribute("data-real-count") || "0");
+
       new Swiper(el as HTMLElement, {
-        modules: [Navigation, Pagination, EffectCoverflow],
+        modules: [Navigation, Pagination, EffectCoverflow, Keyboard],
         loop: true,
         centeredSlides: true,
         initialSlide: startIdx,
         slidesPerView: "auto",
         spaceBetween: 0,
-        speed: 600,
+        speed: 600, // Más rápido para sensación de respuesta inmediata
         observer: true,
         observeParents: true,
+        keyboard: {
+          enabled: true,
+          onlyInViewport: true,
+        },
 
         breakpoints: {
           320: { spaceBetween: 16 },
@@ -268,7 +342,47 @@ const {
         },
 
         navigation: { nextEl: `.next-${id}`, prevEl: `.prev-${id}` },
-        pagination: { el: ".swiper-pagination", clickable: true },
+        // COMENTARIO: Renderizado personalizado de bullets.
+        // Solo mostramos bullets para los planes reales (realCount), ignorando los duplicados
+        // que usamos para el efecto de loop infinito.
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+          renderBullet: function (index, className) {
+            if (realCount > 0 && index >= realCount) return "";
+            return '<span class="' + className + '"></span>';
+          },
+        },
+        on: {
+          // COMENTARIO: Sincronización de estado activo.
+          // Al iniciar, forzamos la actualización para que el bullet correcto se ilumine
+          // incluso si empezamos en un slide duplicado (offset).
+          init: function () {
+            this.emit("slideChange");
+          },
+          // Cada vez que cambia el slide, calculamos cuál es el "plan original" correspondiente.
+          slideChange: function () {
+            if (realCount > 0) {
+              const swiper = this;
+              // realIndex: índice interno de Swiper (0...TotalDuplicados)
+              // visualIndex: índice del plan original (0...RealCount)
+              // Usamos el operador módulo (%) para mapear cualquier duplicado a su original.
+              const visualIndex = swiper.realIndex % realCount;
+
+              if (swiper.pagination && swiper.pagination.bullets) {
+                swiper.pagination.bullets.forEach((bullet, idx) => {
+                  // Aplicamos manualmente la clase activa al bullet correcto
+                  // y la quitamos de los demás.
+                  if (idx === visualIndex) {
+                    bullet.classList.add("swiper-pagination-bullet-active");
+                  } else {
+                    bullet.classList.remove("swiper-pagination-bullet-active");
+                  }
+                });
+              }
+            }
+          },
+        },
       });
     });
   }
@@ -309,10 +423,16 @@ const {
   /* Aplicamos opacidad y blur a todo, EXCEPTO al activo */
   :global(.swiper-slide .plan-card-inner) {
     transform: scale(0.85);
-    filter: blur(2px) grayscale(60%);
+    filter: grayscale(60%); /* Blur removido en mobile para mejor rendimiento */
     opacity: 0.6;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); /* Más suave: 0.5s */
     border-color: transparent;
+  }
+
+  @media (min-width: 640px) {
+    :global(.swiper-slide .plan-card-inner) {
+      filter: blur(2px) grayscale(60%);
+    }
   }
 
   /* Botón y Badge ocultos/apagados en inactivos */
@@ -370,16 +490,79 @@ const {
     box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.4);
   }
 
+  /* --- PRE-HYDRATION ACTIVE STATE (Mejora LCP/CLS) --- */
+  /* Aplica los mismos estilos de "active" al slide inicial ANTES de que Swiper arranque */
+  :global(.swiper:not(.swiper-initialized) .swiper-slide.initial-active) {
+    z-index: 20;
+  }
+  :global(
+      .swiper:not(.swiper-initialized)
+        .swiper-slide.initial-active
+        .plan-card-inner
+    ) {
+    transform: scale(1.05) translateY(-10px);
+    filter: blur(0) grayscale(0);
+    opacity: 1;
+    background-color: white;
+    border-color: #3b82f6;
+    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);
+  }
+  :global(
+      .dark
+        .swiper:not(.swiper-initialized)
+        .swiper-slide.initial-active
+        .plan-card-inner
+    ) {
+    background-color: #1e293b;
+    box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.4);
+  }
+  :global(
+      .swiper:not(.swiper-initialized) .swiper-slide.initial-active .card-glow
+    ),
+  :global(
+      .swiper:not(.swiper-initialized) .swiper-slide.initial-active .card-badge
+    ) {
+    opacity: 1;
+  }
+  :global(
+      .swiper:not(.swiper-initialized) .swiper-slide.initial-active .card-icon
+    ) {
+    background-color: #eff6ff;
+    color: #2563eb;
+  }
+  :global(
+      .swiper:not(.swiper-initialized) .swiper-slide.initial-active .card-btn
+    ) {
+    background-color: #2563eb;
+    color: white;
+  }
+
   /* Pagination Styling */
   :global(.swiper-pagination-bullet) {
-    width: 8px;
-    height: 8px;
-    opacity: 0.4;
-  }
-  :global(.swiper-pagination-bullet-active) {
-    background: #2563eb;
-    width: 24px;
-    border-radius: 4px;
+    width: 10px;
+    height: 10px;
+    background-color: #cbd5e1; /* Slate 300 */
     opacity: 1;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 9999px;
+    margin: 0 6px !important;
+    transform: scale(0.8);
+  }
+
+  :global(.dark .swiper-pagination-bullet) {
+    background-color: #475569; /* Slate 600 */
+  }
+
+  :global(.swiper-pagination-bullet-active) {
+    background-color: #2563eb; /* Blue 600 */
+    width: 32px;
+    border-radius: 999px;
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+  }
+
+  :global(.dark .swiper-pagination-bullet-active) {
+    background-color: #3b82f6; /* Blue 500 */
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
   }
 </style>
