@@ -115,3 +115,67 @@ export async function getInternetEnTuCasaLibre(): Promise<PlanEntry[]> {
   }
 }
 
+export async function getPlansEmpresas(): Promise<PlanEntry[]> {
+  try {
+    const entries = await client.getEntries<PlanFields>({
+      content_type: 'planesTelcelEmpresa',
+      // Opcional: Ordenar por precio ascendente
+      order: ['fields.precio'],
+    });
+
+    return entries.items as PlanEntry[];
+  } catch (error) {
+    console.error('Error obteniendo planes de Contentful:', error);
+    return [];
+  }
+}
+
+export async function getPlansEmpresasUltra(): Promise<PlanEntry[]> {
+  try {
+    const entries = await client.getEntries<PlanFields>({
+      content_type: 'planesTelcelUltraEmpresa',
+      // Opcional: Ordenar por precio ascendente
+      order: ['fields.precio'],
+    });
+
+    return entries.items as PlanEntry[];
+  } catch (error) {
+    console.error('Error obteniendo planes de Contentful:', error);
+    return [];
+  }
+}
+
+
+export async function getPlansInternetEmpresa(): Promise<PlanEntry[]> {
+  try {
+    const entries = await client.getEntries<PlanFields>({
+      content_type: 'planesInternetEmpresa',
+      // Opcional: Ordenar por precio ascendente
+      order: ['fields.precio'],
+
+    });
+
+    return entries.items as PlanEntry[];
+  } catch (error) {
+    console.error('Error obteniendo planes de Contentful:', error);
+    return [];
+  }
+}
+
+export async function getInternetEnTuEmpresa(): Promise<PlanEntry[]> {
+  try {
+    const entries = await client.getEntries<PlanFields>({
+      content_type: 'internetEnTuEmpresa',
+      // Opcional: Ordenar por precio ascendente
+      order: ['fields.precio'],
+
+    });
+
+    return entries.items as PlanEntry[];
+  } catch (error) {
+    console.error('Error obteniendo planes de Contentful:', error);
+    return [];
+  }
+}
+
+

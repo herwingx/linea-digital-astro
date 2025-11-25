@@ -5,64 +5,52 @@ import PlansOrchestrator from "../components/PlansOrchestrator.astro";
 import BenefitsSection from "../components/BenefitsSection.astro";
 import "../styles/user.css";
 
-// MOCK DATA FOR ENTERPRISE (Since we don't have a fetch function yet)
+import {
+  getPlansEmpresas,
+  getPlansInternetEmpresa,
+  getPlansEmpresasUltra,
+  getInternetEnTuEmpresa,
+} from "../services/contentful";
 
-const enterpriseMobilePlans = [
-  {
-    titulo: "Empresarial 3000",
-    datosIncluidos: "10 GB",
-    precio: 399,
-    recomendado: false,
-    enlace: "#",
-    redesSociales: ["WhatsApp", "Correo", "Teams"],
-    minutosYSmsIncluidos: "Ilimitados",
-    cashbackTelcel: "N/A",
-  },
-  {
-    titulo: "Empresarial Sin Límite",
-    datosIncluidos: "25 GB",
-    precio: 599,
-    recomendado: true,
-    enlace: "#",
-    redesSociales: ["WhatsApp", "Correo", "Teams", "Zoom"],
-    minutosYSmsIncluidos: "Ilimitados",
-    cashbackTelcel: "N/A",
-  },
-];
+// --- Helper para mapear datos seguros ---
+const safeMap = (plans: any[], category: "movil" | "casa") => {
+  if (!Array.isArray(plans)) return [];
+  return plans
+    .map((p) => {
+      const f = p.fields || {};
+      return {
+        titulo: (f.titulo as string) || "Plan",
+        datosIncluidos: (f.datosIncluidos as string) || "Datos",
+        precio: Number(f.precio) || 0,
+        recomendado: (f.recomendado as boolean) || false,
+        enlace: (f.enlace as string) || "#",
+        // Campos específicos mapeados a props universales
+        redesSociales: (f.redesSociales as string[]) || [],
+        minutosYSms: f.minutosYSmsIncluidos as string, // Unificar nombre prop
+        cashbackTelcel: f.cashbackTelcel as string,
+        velocidadDeNavegacion: f.velocidadDeNavegacion as string,
+        politicaDeUsoJusto:
+          ((f.politicaDeUsoJusto as string) || "").trim() ||
+          "Política de uso justo aplica",
+      };
+    })
+    .filter((p) => p.precio > 0)
+    .sort((a, b) => a.precio - b.precio);
+};
+// Fetch Paralelo para velocidad
+const [rawLibre, rawUltra, rawMovilInt, rawCasaInt] = await Promise.all([
+  getPlansEmpresas().catch(() => []),
+  getPlansEmpresasUltra().catch(() => []),
+  getPlansInternetEmpresa().catch(() => []),
+  getInternetEnTuEmpresa().catch(() => []),
+]);
 
-const enterpriseUltraPlans = [
-  {
-    titulo: "Empresarial Ultra 5G",
-    datosIncluidos: "50 GB",
-    precio: 899,
-    recomendado: true,
-    enlace: "#",
-    redesSociales: ["Todo Incluido"],
-    minutosYSmsIncluidos: "Ilimitados",
-    cashbackTelcel: "N/A",
-  },
-];
+console.log("DEBUG: rawCasaInt", JSON.stringify(rawCasaInt, null, 2));
 
-const enterpriseInternet = [
-  {
-    titulo: "Internet Negocio Básico",
-    datosIncluidos: "50 GB",
-    velocidadDeNavegacion: "50 Mbps",
-    politicaDeUsoJusto: "Uso comercial permitido",
-    precio: 499,
-    recomendado: false,
-    enlace: "#",
-  },
-  {
-    titulo: "Internet Negocio Pro",
-    datosIncluidos: "200 GB",
-    velocidadDeNavegacion: "200 Mbps",
-    politicaDeUsoJusto: "Uso comercial permitido",
-    precio: 899,
-    recomendado: true,
-    enlace: "#",
-  },
-];
+const libreEmpresas = safeMap(rawLibre, "movil");
+const ultraEmpresas = safeMap(rawUltra, "movil");
+const movilInternetEmpresas = safeMap(rawMovilInt, "movil");
+const internetEmpresas = safeMap(rawCasaInt, "casa");
 ---
 
 <BaseLayout
@@ -105,12 +93,10 @@ const enterpriseInternet = [
 
   <!-- Orchestrator Component -->
   <PlansOrchestrator
-    mobilePlansLibre={enterpriseMobilePlans}
-    mobilePlansUltra={enterpriseUltraPlans}
-    mobilePlansInternet={[]}
-    internetPlans={enterpriseInternet}
-    title="Catálogo Empresarial"
-    subtitle="Selecciona la solución que tu empresa necesita"
+    mobilePlansLibre={libreEmpresas}
+    mobilePlansUltra={ultraEmpresas}
+    mobilePlansInternet={movilInternetEmpresas}
+    internetPlans={internetEmpresas}
   />
 
   <BenefitsSection />

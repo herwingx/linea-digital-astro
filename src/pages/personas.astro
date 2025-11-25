@@ -49,30 +49,7 @@ console.log("DEBUG: rawCasaInt", JSON.stringify(rawCasaInt, null, 2));
 const librePlans = safeMap(rawLibre, "movil");
 const ultraPlans = safeMap(rawUltra, "movil");
 const movilInternetPlans = safeMap(rawMovilInt, "movil");
-// Fallback Manual por si API vacía (Demo)
-const homePlans =
-  rawCasaInt.length > 0
-    ? safeMap(rawCasaInt, "casa")
-    : [
-        {
-          titulo: "Básico",
-          velocidadDeNavegacion: "20 Mbps",
-          precio: 399,
-          datosIncluidos: "Uso doméstico",
-          recomendado: false,
-          politicaDeUsoJusto:
-            "Política de uso justo: 100GB a velocidad best effort.",
-        },
-        {
-          titulo: "Familiar",
-          velocidadDeNavegacion: "50 Mbps",
-          precio: 549,
-          datosIncluidos: "HD Streaming",
-          recomendado: true,
-          politicaDeUsoJusto:
-            "Política de uso justo: 150GB a velocidad best effort.",
-        },
-      ];
+const homePlans = safeMap(rawCasaInt, "casa");
 ---
 
 <BaseLayout
