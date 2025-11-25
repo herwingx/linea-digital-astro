@@ -355,10 +355,20 @@ const {
         },
         on: {
           // COMENTARIO: Sincronización de estado activo.
-          // Al iniciar, forzamos la actualización para que el bullet correcto se ilumine
-          // incluso si empezamos en un slide duplicado (offset).
+          // Al iniciar, forzamos la actualización para que el bullet correcto se ilumine.
+          // Además, limpiamos la clase 'initial-active' después de un breve delay
+          // para asegurar que Swiper ya haya aplicado sus clases y no haya parpadeo.
           init: function () {
+            const swiper = this;
             this.emit("slideChange");
+
+            setTimeout(() => {
+              if (swiper.el) {
+                swiper.el.querySelectorAll(".initial-active").forEach((el) => {
+                  el.classList.remove("initial-active");
+                });
+              }
+            }, 200); // 200ms de solapamiento para asegurar transición invisible
           },
           // Cada vez que cambia el slide, calculamos cuál es el "plan original" correspondiente.
           slideChange: function () {
@@ -491,15 +501,12 @@ const {
   }
 
   /* --- PRE-HYDRATION ACTIVE STATE (Mejora LCP/CLS) --- */
-  /* Aplica los mismos estilos de "active" al slide inicial ANTES de que Swiper arranque */
-  :global(.swiper:not(.swiper-initialized) .swiper-slide.initial-active) {
+  /* Aplica los mismos estilos de "active" al slide inicial SIEMPRE que tenga la clase,
+     hasta que JS la quite. Esto evita el parpadeo durante la inicialización. */
+  :global(.swiper-slide.initial-active) {
     z-index: 20;
   }
-  :global(
-      .swiper:not(.swiper-initialized)
-        .swiper-slide.initial-active
-        .plan-card-inner
-    ) {
+  :global(.swiper-slide.initial-active .plan-card-inner) {
     transform: scale(1.05) translateY(-10px);
     filter: blur(0) grayscale(0);
     opacity: 1;
@@ -507,32 +514,19 @@ const {
     border-color: #3b82f6;
     box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);
   }
-  :global(
-      .dark
-        .swiper:not(.swiper-initialized)
-        .swiper-slide.initial-active
-        .plan-card-inner
-    ) {
+  :global(.dark .swiper-slide.initial-active .plan-card-inner) {
     background-color: #1e293b;
     box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.4);
   }
-  :global(
-      .swiper:not(.swiper-initialized) .swiper-slide.initial-active .card-glow
-    ),
-  :global(
-      .swiper:not(.swiper-initialized) .swiper-slide.initial-active .card-badge
-    ) {
+  :global(.swiper-slide.initial-active .card-glow),
+  :global(.swiper-slide.initial-active .card-badge) {
     opacity: 1;
   }
-  :global(
-      .swiper:not(.swiper-initialized) .swiper-slide.initial-active .card-icon
-    ) {
+  :global(.swiper-slide.initial-active .card-icon) {
     background-color: #eff6ff;
     color: #2563eb;
   }
-  :global(
-      .swiper:not(.swiper-initialized) .swiper-slide.initial-active .card-btn
-    ) {
+  :global(.swiper-slide.initial-active .card-btn) {
     background-color: #2563eb;
     color: white;
   }

@@ -1,0 +1,293 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Página no encontrada | Línea Digital"
+  description="La página que buscas no está disponible."
+>
+  <section>
+    <div
+      class="container min-h-screen px-6 py-12 mx-auto lg:flex lg:items-center lg:gap-16"
+    >
+      <div class="w-full lg:w-1/2">
+        <!-- Badge de Error -->
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 mb-6"
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"
+            ></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"
+            ></span>
+          </span>
+          <span
+            class="text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400"
+          >
+            Error 404
+          </span>
+        </div>
+
+        <!-- Título -->
+        <h1
+          class="text-4xl font-black tracking-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl"
+        >
+          Señal <span class="text-blue-600 dark:text-blue-400">Perdida</span>
+        </h1>
+
+        <!-- Descripción -->
+        <p
+          class="mt-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl"
+        >
+          Lo sentimos, la página que buscas no está disponible o ha sido movida.
+          Te sugerimos algunos enlaces útiles:
+        </p>
+
+        <!-- Botones de Acción -->
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center mt-8 gap-4"
+        >
+          <a
+            href="/"
+            class="group inline-flex items-center justify-center px-6 py-3 text-sm font-bold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all hover:scale-105 shadow-lg shadow-blue-600/20 gap-2"
+          >
+            <svg
+              class="w-5 h-5 transition-transform group-hover:-translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              ></path>
+            </svg>
+            <span>Ir al Inicio</span>
+          </a>
+
+          <button
+            onclick="history.back()"
+            class="inline-flex items-center justify-center px-6 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full hover:bg-slate-50 dark:hover:bg-slate-700 transition-all gap-2"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Volver Atrás</span>
+          </button>
+        </div>
+
+        <!-- Enlaces Rápidos -->
+        <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+          <p
+            class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4"
+          >
+            Enlaces útiles:
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="/empresas"
+              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              Empresas
+            </a>
+            <a
+              href="/asociados"
+              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              Asociados
+            </a>
+            <a
+              href="/nosotros"
+              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              Nosotros
+            </a>
+            <a
+              href="/contacto"
+              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              Contacto
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ilustración SVG -->
+      <div class="relative w-full mt-16 lg:w-1/2 lg:mt-0">
+        <div class="relative">
+          <!-- Glow effect -->
+          <div
+            class="absolute inset-0 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl"
+          >
+          </div>
+
+          <svg
+            width="514"
+            height="164"
+            viewBox="0 0 514 164"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-full max-w-lg lg:mx-auto relative z-10 opacity-60 dark:opacity-40"
+          >
+            <circle
+              cx="101"
+              cy="22"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <circle
+              cx="101"
+              cy="142"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <circle
+              cx="21"
+              cy="102"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <circle
+              cx="141"
+              cy="102"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <circle
+              cx="193"
+              cy="82"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-blue-400 dark:text-blue-600"></circle>
+            <circle
+              cx="313"
+              cy="82"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-blue-400 dark:text-blue-600"></circle>
+            <circle
+              cx="253"
+              cy="22"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <circle
+              cx="253"
+              cy="142"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <path
+              d="M1 102C1 90.9543 9.9543 82 21 82H141C152.046 82 161 90.9543 161 102C161 113.046 152.046 122 141 122H21C9.9543 122 1 113.046 1 102Z"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></path>
+            <path
+              d="M101 162C89.9543 162 81 153.046 81 142L81 22C81 10.9543 89.9543 2 101 2C112.046 2 121 10.9543 121 22L121 142C121 153.046 112.046 162 101 162Z"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></path>
+            <path
+              d="M7.14214 115.995C-0.668351 108.184 -0.668351 95.5211 7.14214 87.7106L86.7107 8.1421C94.5212 0.331614 107.184 0.331607 114.995 8.14209C122.805 15.9526 122.805 28.6159 114.995 36.4264L35.4264 115.995C27.6159 123.805 14.9526 123.805 7.14214 115.995Z"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></path>
+            <circle
+              cx="453"
+              cy="22"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <circle
+              cx="453"
+              cy="142"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <circle
+              cx="373"
+              cy="102"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <circle
+              cx="493"
+              cy="102"
+              r="20"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></circle>
+            <path
+              d="M353 102C353 90.9543 361.954 82 373 82H493C504.046 82 513 90.9543 513 102C513 113.046 504.046 122 493 122H373C361.954 122 353 113.046 353 102Z"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></path>
+            <path
+              d="M453 162C441.954 162 433 153.046 433 142L433 22C433 10.9543 441.954 2 453 2C464.046 2 473 10.9543 473 22L473 142C473 153.046 464.046 162 453 162Z"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></path>
+            <path
+              d="M359.142 115.995C351.332 108.184 351.332 95.5211 359.142 87.7106L438.711 8.1421C446.521 0.331614 459.184 0.331607 466.995 8.14209C474.805 15.9526 474.805 28.6159 466.995 36.4264L387.426 115.995C379.616 123.805 366.953 123.805 359.142 115.995Z"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></path>
+            <circle
+              cx="253"
+              cy="82"
+              r="80"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-blue-500 dark:text-blue-600 animate-pulse"></circle>
+            <circle
+              cx="253"
+              cy="82"
+              r="40"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-blue-600 dark:text-blue-500"></circle>
+            <line
+              x1="8.74228e-08"
+              y1="1"
+              x2="513"
+              y2="1.00004"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></line>
+            <line
+              x1="-8.74228e-08"
+              y1="163"
+              x2="513"
+              y2="163"
+              stroke="currentColor"
+              stroke-width="2"
+              class="text-slate-300 dark:text-slate-700"></line>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
