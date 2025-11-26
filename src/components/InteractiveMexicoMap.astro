@@ -6,11 +6,10 @@ interface Office {
     name: string;
     city: string;
     phone: string;
-    x: number; // Coordenada SVG X relativa
-    y: number; // Coordenada SVG Y relativa
+    x: number;
+    y: number;
 }
 
-// Coordenadas calculadas basadas en tu viewBox (0 0 5877 4000) y el path de Chiapas
 const locations: Office[] = [
     {
         id: "tuxtla",
@@ -31,11 +30,14 @@ const locations: Office[] = [
 ];
 ---
 
-<div
-    class="relative w-full aspect-[5877/4000] max-w-6xl mx-auto select-none group/map p-4"
+<!-- ✅ Pasar datos via data-attributes -->
+<div 
     id="map-wrapper"
+    class="relative w-full aspect-[5877/4000] max-w-6xl mx-auto select-none group/map p-4"
+    data-locations={JSON.stringify(locations)}
 >
-    <!-- SVG PRINCIPAL -->
+    <!-- SVG y resto del contenido... -->
+         <!-- SVG PRINCIPAL -->
     <svg
         viewBox="0 0 5877 4000"
         fill="none"
@@ -363,123 +365,126 @@ const locations: Office[] = [
         </g>
 
     <!-- 3. MARCADORES DE OFICINAS -->
-    <g id="offices-layer">
-      {locations.map((office) => (
-        <g class="office-group" transform={`translate(${office.x}, ${office.y})`}>
-            <!-- Anillo de Pulso (Radar Effect) -->
-            <circle r="20" class="pulse-ring animate-ping fill-cyan-900/50 dark:fill-blue-400/50 pointer-events-none" />
-            <circle r="60" class="pulse-ring-delayed animate-ping fill-cyan-900/30 dark:fill-blue-400/30 pointer-events-none" />
-            
-            <!-- Pin de Ubicación (Icono Personalizado Rojo) -->
-            <!-- Ajuste de centro: Punta en (32, 64). Escala 2.5. Offset X: -32*2.5 = -80. Offset Y: -64*2.5 = -160 -->
-            <g transform="translate(-80, -160) scale(2.5)">
-              <path 
-                fill="#ff4747" 
-                d="M32,0C18.746,0,8,10.746,8,24c0,5.219,1.711,10.008,4.555,13.93c0.051,0.094,0.059,0.199,0.117,0.289l16,24 C29.414,63.332,30.664,64,32,64s2.586-0.668,3.328-1.781l16-24c0.059-0.09,0.066-0.195,0.117-0.289C54.289,34.008,56,29.219,56,24 C56,10.746,45.254,0,32,0z M32,32c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8S36.418,32,32,32z"
-                class="office-dot drop-shadow-2xl filter hover:brightness-110 transition-all duration-300"
-              />
-            </g>
-            
-            <!-- Área de Hover Invisible (Hit Area) -->
-            <circle r="100" fill="transparent" class="cursor-pointer hover-trigger group/pin" 
-                    data-tooltip-id={`tooltip-${office.id}`}
-            />
-        </g>
-      ))}
-    </g>
-  </svg>
 
-  <!-- TOOLTIP CONTAINER (Fixed para salir del overflow hidden) -->
-  <div id="tooltip-container" class="fixed pointer-events-none transition-opacity duration-300 opacity-0 z-50 w-40 md:w-64 top-0 left-0">
-      <div class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-4 rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 text-sm transform transition-transform duration-300 scale-95" id="tooltip-content">
-          <h4 class="font-bold text-slate-900 dark:text-white text-xs md:text-lg mb-1" id="tt-name">Oficina</h4>
-          <div class="h-px w-full bg-slate-100 dark:bg-slate-700 my-2"></div>
-          <p class="text-slate-500 dark:text-slate-400 flex items-center gap-2 text-xs md:text-sm">
-              <span class="text-blue-500">📍</span>
-              <span id="tt-city">Ciudad</span>
-          </p>
-          <a href="" id="tt-phone" class="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-blue-50 py-2 text-blue-600 font-bold text-xs hover:bg-blue-100 transition-colors pointer-events-auto">
-              📞 <span id="tt-phone-text">Llamar</span>
-          </a>
-      </div>
-  </div>
+ 
+    
+   
+
+        <!-- Marcadores -->
+        <g id="offices-layer">
+            {locations.map((office, index) => (
+                <g 
+                    class="office-group" 
+                    transform={`translate(${office.x}, ${office.y})`}
+                    data-index={index}
+                >
+                    <!-- Anillo de Pulso -->
+                    <circle r="20" class="pulse-ring animate-ping fill-cyan-900/50" />
+                    
+                    <!-- Pin -->
+                    <g transform="translate(-80, -160) scale(2.5)">
+                        <path 
+                            fill="#ff4747" 
+                            d="M32,0C18.746,0,8,10.746,8,24c0,5.219,1.711,10.008,4.555,13.93c0.051,0.094,0.059,0.199,0.117,0.289l16,24 C29.414,63.332,30.664,64,32,64s2.586-0.668,3.328-1.781l16-24c0.059-0.09,0.066-0.195,0.117-0.289C54.289,34.008,56,29.219,56,24 C56,10.746,45.254,0,32,0z M32,32c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8S36.418,32,32,32z"
+                            class="office-dot drop-shadow-2xl"
+                        />
+                    </g>
+                    
+                    <!-- Área de Hover -->
+                    <circle r="100" fill="transparent" class="cursor-pointer hover-trigger" />
+                </g>
+            ))}
+        </g>
+    </svg>
+
+    <!-- Tooltip -->
+    <div id="tooltip-container" class="fixed pointer-events-none opacity-0 z-50">
+        <div class="bg-white dark:bg-slate-900 backdrop-blur-xl p-4 rounded-2xl shadow-2xl" id="tooltip-content">
+            <h4 class="font-bold text-lg mb-1" id="tt-name"></h4>
+            <div class="h-px bg-slate-200 dark:bg-slate-700 my-2"></div>
+            <p class="text-slate-500 flex items-center gap-2 text-sm">
+                <span class="text-blue-500">📍</span>
+                <span id="tt-city"></span>
+            </p>
+            <a href="" id="tt-phone" class="mt-3 flex items-center justify-center gap-2 rounded-full bg-blue-50 py-2 text-blue-600 font-bold text-xs hover:bg-blue-100 pointer-events-auto">
+                📞 <span id="tt-phone-text"></span>
+            </a>
+        </div>
+    </div>
 </div>
 
-<!-- Datos pasados al cliente de forma segura -->
-<script define:vars={{ locations }}>
-    // Lógica de Tooltips con Performance (RequestAnimationFrame)
+<!-- ✅ Script sin define:vars (mejor para bundling) -->
+<script>
     document.addEventListener("astro:page-load", () => {
-        const pins = document.querySelectorAll(".group\\/pin"); // Escape selector for /
-        const tooltip = document.getElementById("tooltip-container");
-        const content = document.getElementById("tooltip-content");
+        // Leer datos del DOM
+        const mapWrapper = document.getElementById("map-wrapper");
+        const locationsData = mapWrapper?.dataset.locations;
         
-        // Mover tooltip al body para evitar clipping por overflow:hidden de contenedores padres
-        if (tooltip && tooltip.parentElement !== document.body) {
+        if (!locationsData) {
+            console.error("No se encontraron datos de ubicaciones");
+            return;
+        }
+
+        const locations = JSON.parse(locationsData);
+        
+        // Tooltips
+        const pins = document.querySelectorAll(".hover-trigger");
+        const tooltip = document.getElementById("tooltip-container");
+        
+        if (!tooltip) {
+            console.error("No se encontró el contenedor del tooltip");
+            return;
+        }
+        
+        if (tooltip.parentElement !== document.body) {
             document.body.appendChild(tooltip);
         }
 
-        // Referencias DOM internas del tooltip
         const ttName = document.getElementById("tt-name");
         const ttCity = document.getElementById("tt-city");
-        const ttPhone = document.getElementById("tt-phone");
+        const ttPhone = document.getElementById("tt-phone") as HTMLAnchorElement;
         const ttPhoneText = document.getElementById("tt-phone-text");
 
-        if (!pins || !tooltip) return;
+        // Verificar que todos los elementos del tooltip existen
+        if (!ttName || !ttCity || !ttPhone || !ttPhoneText) {
+            console.error("No se encontraron todos los elementos del tooltip");
+            return;
+        }
 
         pins.forEach((pin, index) => {
             const locData = locations[index];
+            
+            // Verificar que los datos existen para este índice
+            if (!locData) {
+                console.warn(`No hay datos para el pin en el índice ${index}`);
+                return;
+            }
 
-            // Mouse Enter
-            pin.addEventListener("mouseenter", (e) => {
-                // 1. Popular Datos
+            pin.addEventListener("mouseenter", () => {
                 ttName.innerText = locData.name;
                 ttCity.innerText = locData.city;
                 ttPhoneText.innerText = locData.phone;
                 ttPhone.href = `tel:${locData.phone.replace(/\s/g, "")}`;
 
-                // 2. Calcular Posición (Fixed relative to Viewport)
                 const rect = pin.getBoundingClientRect();
-                
-                // Centro del pin
                 const centerX = rect.left + rect.width / 2;
                 const topY = rect.top;
 
-                // Mover Tooltip
                 tooltip.style.left = `${centerX}px`;
-                tooltip.style.top = `${topY - 10}px`; // Un poco arriba del pin
-                tooltip.style.transform = "translate(-50%, -100%)"; // Centrado horizontal, arriba vertical
+                tooltip.style.top = `${topY - 10}px`;
+                tooltip.style.transform = "translate(-50%, -100%)";
 
-                // 3. Mostrar
                 tooltip.classList.remove("opacity-0");
-                content.classList.remove("scale-95");
-                content.classList.add("scale-100");
             });
 
-            // Mouse Leave
             pin.addEventListener("mouseleave", () => {
                 tooltip.classList.add("opacity-0");
-                content.classList.remove("scale-100");
-                content.classList.add("scale-95");
             });
         });
     });
-
-    // Fallback inicial
-    document.dispatchEvent(new Event("astro:page-load"));
 </script>
 
 <style>
-    /* ANIMACIONES CUSTOM OPTIMIZADAS */
-
-    .radar-ping {
-        transform-origin: center;
-        animation: radarWave 3s cubic-bezier(0, 0, 0.2, 1) infinite;
-    }
-
-    .delay-300 {
-        animation-delay: 1s;
-    }
-
     @keyframes radarWave {
         0% {
             transform: scale(0.1);
