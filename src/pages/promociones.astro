@@ -1,0 +1,155 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionTitle from "../components/ui/SectionTitle.astro";
+
+// Datos de ejemplo para las promociones (esto podría venir de una CMS o archivo de configuración)
+const promociones = [
+  {
+    id: 1,
+    titulo: "Doble de Gigas por 12 meses",
+    descripcion: "Contrata o renueva tu Plan Telcel Plus y recibe el doble de Gigas durante todo un año.",
+    imagen: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=2070&auto=format&fit=crop", // Imagen placeholder de alta calidad
+    vigencia: "Válido hasta el 30 de Noviembre",
+    tipo: "Plan Tarifario",
+    destacado: true,
+  },
+  {
+    id: 2,
+    titulo: "Equipos con 50% de Descuento",
+    descripcion: "Llévate seleccionados modelos Samsung y Xiaomi a mitad de precio al contratar un plan desde $499.",
+    imagen: "https://images.unsplash.com/photo-1598327105666-5b89351aff23?q=80&w=2027&auto=format&fit=crop",
+    vigencia: "Hasta agotar existencias",
+    tipo: "Equipos",
+    destacado: false,
+  },
+  {
+    id: 3,
+    titulo: "Internet en Casa sin Plazo Forzoso",
+    descripcion: "Prueba nuestro internet residencial sin compromisos a largo plazo. Instalación gratis esta semana.",
+    imagen: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=2071&auto=format&fit=crop",
+    vigencia: "Solo por tiempo limitado",
+    tipo: "Internet",
+    destacado: false,
+  }
+];
+---
+
+<BaseLayout
+  title="Promociones | Línea Digital del Sureste"
+  description="Descubre las mejores ofertas y promociones en planes Telcel, equipos y accesorios en Chiapas."
+>
+  <!-- Hero Section -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-900 opacity-10 pattern-grid-lg"></div>
+    <div class="container mx-auto px-4 relative z-10 text-center">
+      <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-sm font-bold mb-4 animate-fade-down">
+        🔥 Ofertas por tiempo limitado
+      </span>
+      <h1 class="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 animate-fade-up">
+        Promociones Especiales
+      </h1>
+      <p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-8 animate-fade-up animation-delay-100">
+        Aprovecha descuentos exclusivos en equipos, planes con más gigas y beneficios únicos para ti.
+      </p>
+    </div>
+  </section>
+
+  <!-- Grid de Promociones -->
+  <section class="py-12 pb-24">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {promociones.map((promo, index) => (
+          <article 
+            class={`group relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-slate-100 dark:border-slate-700 flex flex-col ${promo.destacado ? 'md:col-span-2 lg:col-span-2' : ''}`}
+            style={`animation-delay: ${index * 100}ms`}
+          >
+            <!-- Badge de Tipo -->
+            <div class="absolute top-4 left-4 z-20">
+              <span class="px-3 py-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm">
+                {promo.tipo}
+              </span>
+            </div>
+
+            {promo.destacado && (
+              <div class="absolute top-4 right-4 z-20">
+                <span class="px-3 py-1 bg-yellow-400 text-yellow-900 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  Destacado
+                </span>
+              </div>
+            )}
+
+            <!-- Imagen -->
+            <div class={`relative overflow-hidden ${promo.destacado ? 'h-64 md:h-full md:w-1/2 md:absolute md:right-0 md:top-0 md:bottom-0' : 'h-56'}`}>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 md:hidden"></div>
+              <img 
+                src={promo.imagen} 
+                alt={promo.titulo} 
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+            </div>
+
+            <!-- Contenido -->
+            <div class={`p-6 flex flex-col flex-1 relative z-10 ${promo.destacado ? 'md:w-1/2 md:py-12 md:px-10' : ''}`}>
+              <div class="flex-1">
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {promo.titulo}
+                </h3>
+                <p class="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
+                  {promo.descripcion}
+                </p>
+              </div>
+              
+              <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {promo.vigencia}
+                </div>
+                
+                <a 
+                  href={`https://wa.me/529616189200?text=Hola, me interesa la promoción: ${promo.titulo}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg gap-2"
+                >
+                  <span>Me interesa</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- CTA Final -->
+      <div class="mt-20 text-center bg-slate-100 dark:bg-slate-800/50 rounded-3xl p-8 md:p-12 border border-slate-200 dark:border-slate-700">
+        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">
+          ¿No encuentras lo que buscas?
+        </h2>
+        <p class="text-slate-600 dark:text-slate-300 mb-8 max-w-xl mx-auto">
+          Nuestros asesores pueden ayudarte a encontrar el plan o equipo perfecto para tus necesidades y presupuesto.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="px-6 py-3 bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-semibold rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+          >
+            Contactar Asesor
+          </a>
+          <button 
+            onclick="document.getElementById('chatbot-toggle').click()"
+            class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30"
+          >
+            Preguntar al Chatbot
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
