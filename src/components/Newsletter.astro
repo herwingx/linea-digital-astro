@@ -74,36 +74,64 @@
   const input = document.getElementById("email-address") as HTMLInputElement;
 
   if (form) {
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = input.value;
-
-      // Simulación de envío
+      const formData = new FormData(form);
       const btn = form.querySelector("button");
+      const originalText = btn?.textContent || "Suscribirme";
+
       if (btn) {
-        const originalText = btn.textContent;
         btn.textContent = "Enviando...";
         btn.disabled = true;
+      }
 
-        setTimeout(() => {
-          btn.textContent = "¡Suscrito! 🎉";
-          btn.classList.remove("bg-blue-600", "hover:bg-blue-500");
-          btn.classList.add("bg-green-600", "hover:bg-green-500");
+      try {
+        const response = await fetch("/api/subscribe", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Éxito
+          if (btn) {
+            btn.textContent = "¡Suscrito! 🎉";
+            btn.classList.remove("bg-blue-600", "hover:bg-blue-500");
+            btn.classList.add("bg-green-600", "hover:bg-green-500");
+          }
 
           if (feedback) {
-            feedback.textContent = `¡Gracias! Hemos enviado un correo de confirmación a ${email}`;
+            feedback.textContent = data.detail || "¡Gracias por suscribirte!";
+            feedback.classList.remove("text-slate-400", "text-red-400");
             feedback.classList.add("text-green-400");
           }
 
           input.value = "";
 
+          // Resetear botón después de 3s
           setTimeout(() => {
-            btn.textContent = originalText;
-            btn.disabled = false;
-            btn.classList.add("bg-blue-600", "hover:bg-blue-500");
-            btn.classList.remove("bg-green-600", "hover:bg-green-500");
+            if (btn) {
+              btn.textContent = originalText;
+              btn.disabled = false;
+              btn.classList.add("bg-blue-600", "hover:bg-blue-500");
+              btn.classList.remove("bg-green-600", "hover:bg-green-500");
+            }
           }, 3000);
-        }, 1500);
+        } else {
+          throw new Error(data.message || "Error al suscribirse");
+        }
+      } catch (error) {
+        console.error(error);
+        if (feedback) {
+          feedback.textContent = "Hubo un error. Intenta de nuevo más tarde.";
+          feedback.classList.remove("text-slate-400", "text-green-400");
+          feedback.classList.add("text-red-400");
+        }
+        if (btn) {
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }
       }
     });
   }
