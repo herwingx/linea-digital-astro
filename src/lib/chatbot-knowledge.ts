@@ -218,10 +218,87 @@ export const KNOWLEDGE_BASE = {
   }
 };
 
+import { getAllChatbotKnowledge, type PromoEntry, type PlanEntry } from "../services/contentful.js";
+
 /**
  * Genera el prompt del sistema para el modelo de IA
+ * Ahora obtiene datos dinámicos de Contentful
  */
-export function getSystemPrompt(): string {
+export async function getSystemPrompt(): Promise<string> {
+  // Obtener datos dinámicos
+  const dynamicData = await getAllChatbotKnowledge();
+
+  // Preparar secciones dinámicas (con fallback a estático si falla)
+  let promosSection = "";
+  let planesLibreSection = "";
+  let planesUltraSection = "";
+  let internetCasaSection = "";
+  let planesEmpresaSection = "";
+
+  if (dynamicData) {
+    // 1. Promociones
+    if (dynamicData.promociones.length > 0) {
+      promosSection = `
+# 🔥 PROMOCIONES ACTIVAS (PRIORIDAD ALTA)
+${dynamicData.promociones.map((p: PromoEntry) => `
+- **${p.fields.titulo}**: ${p.fields.descripcion}
+  ${p.fields.etiqueta ? `Etiqueta: ${p.fields.etiqueta}` : ''}
+  ${p.fields.fechaFin ? `Válido hasta: ${p.fields.fechaFin}` : ''}
+`).join('\n')}
+`;
+    }
+
+    // 2. Planes Libre (Prepago)
+    if (dynamicData.planes.personas.libre.length > 0) {
+      planesLibreSection = dynamicData.planes.personas.libre.map((p: PlanEntry) => `
+- **${p.fields.titulo}**:
+  Precio: $${p.fields.precio}
+  Datos: ${p.fields.datosIncluidos}
+  Minutos/SMS: ${p.fields.minutosYSmsIncluidos}
+  Redes Sociales: ${Array.isArray(p.fields.redesSociales) ? p.fields.redesSociales.join(', ') : 'N/A'}
+  ${p.fields.recomendado ? '⭐ PLAN RECOMENDADO' : ''}
+`).join('\n');
+    }
+
+    // 3. Planes Ultra (Pospago)
+    if (dynamicData.planes.personas.ultra.length > 0) {
+      planesUltraSection = dynamicData.planes.personas.ultra.map((p: PlanEntry) => `
+- **${p.fields.titulo}**:
+  Precio: $${p.fields.precio}/mes
+  Datos: ${p.fields.datosIncluidos}
+  Minutos/SMS: ${p.fields.minutosYSmsIncluidos}
+  Redes Sociales: ${Array.isArray(p.fields.redesSociales) ? p.fields.redesSociales.join(', ') : 'N/A'}
+  ${p.fields.recomendado ? '⭐ PLAN RECOMENDADO' : ''}
+`).join('\n');
+    }
+
+    // 4. Internet en Casa
+    if (dynamicData.planes.personas.internetCasa.length > 0) {
+      internetCasaSection = dynamicData.planes.personas.internetCasa.map((p: PlanEntry) => `
+- **${p.fields.titulo}**:
+  Precio: $${p.fields.precio}/mes
+  Datos: ${p.fields.datosIncluidos}
+  Política de Uso Justo: ${p.fields.politicaDeUsoJusto || 'N/A'}
+`).join('\n');
+    }
+
+    // 5. Planes Empresariales (Resumen)
+    if (dynamicData.planes.empresas.libre.length > 0 || dynamicData.planes.empresas.ultra.length > 0) {
+      // Tipado seguro para el primer elemento
+      const primerPlanLibre = dynamicData.planes.empresas.libre[0] as PlanEntry | undefined;
+      const primerPlanUltra = dynamicData.planes.empresas.ultra[0] as PlanEntry | undefined;
+
+      planesEmpresaSection = `
+## Planes Empresariales
+Contamos con planes especializados para negocios.
+- Planes Libres desde $${primerPlanLibre?.fields.precio || 'N/A'}
+- Planes Ultra desde $${primerPlanUltra?.fields.precio || 'N/A'}
+Sugiere contactar a un asesor empresarial al 961 618 92 00.
+`;
+    }
+  }
+
+  // Construir el prompt final combinando estático y dinámico
   return `Eres un asistente virtual profesional de Línea Digital del Sureste, distribuidor autorizado Telcel en Chiapas, México.
 
 # INFORMACIÓN DE LA EMPRESA
@@ -243,28 +320,32 @@ ${s.nombre} (${s.ciudad}):
 - Horario: ${s.horario}
 `).join('\n')}
 
-# PLANES Y SERVICIOS
+${promosSection}
+
+# PLANES Y SERVICIOS (INFORMACIÓN ACTUALIZADA)
 
 ## Planes Móviles Prepago (Telcel Libre)
-${KNOWLEDGE_BASE.planes.moviles_prepago.map(p => `
+${planesLibreSection || KNOWLEDGE_BASE.planes.moviles_prepago.map(p => `
 - ${p.nombre}: ${p.descripcion}
   Desde: ${p.desde}
   Beneficios: ${p.beneficios.join(', ')}
 `).join('\n')}
 
 ## Planes Móviles Pospago (Telcel Ultra)
-${KNOWLEDGE_BASE.planes.moviles_pospago.map(p => `
+${planesUltraSection || KNOWLEDGE_BASE.planes.moviles_pospago.map(p => `
 - ${p.nombre}: ${p.descripcion}
   Desde: ${p.desde}
   Beneficios: ${p.beneficios.join(', ')}
 `).join('\n')}
 
 ## Internet en Casa
-${KNOWLEDGE_BASE.planes.internet.map(p => `
+${internetCasaSection || KNOWLEDGE_BASE.planes.internet.map(p => `
 - ${p.nombre}: ${p.descripcion}
   Desde: ${p.desde}
   Beneficios: ${p.beneficios.join(', ')}
 `).join('\n')}
+
+${planesEmpresaSection}
 
 # PREGUNTAS FRECUENTES
 ${KNOWLEDGE_BASE.faqs.map(faq => `

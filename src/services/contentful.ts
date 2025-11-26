@@ -27,8 +27,8 @@ interface PlanFields extends EntrySkeletonType {
 
 
 // The entry type that Contentful returns
-type PromoEntry = Entry<PromoFields, undefined, string>;
-type PlanEntry = Entry<PlanFields, undefined, string>;
+export type PromoEntry = Entry<PromoFields, undefined, string>;
+export type PlanEntry = Entry<PlanFields, undefined, string>;
 
 // Initialize the Contentful client
 const client = createClient({
@@ -179,3 +179,112 @@ export async function getInternetEnTuEmpresa(): Promise<PlanEntry[]> {
 }
 
 
+// ============================================
+// FUNCIÓN PARA OBTENER TODOS LOS DATOS DEL CHATBOT KNOWLEDGE BASE
+// ============================================
+export async function getAllChatbotKnowledge() {
+  console.log('🤖 ===== INICIANDO OBTENCIÓN DE DATOS PARA CHATBOT =====');
+
+  try {
+    // Obtener todos los datos en paralelo
+    const [
+      promos,
+      planesLibre,
+      planesUltra,
+      planesInternet,
+      internetCasaLibre,
+      planesEmpresas,
+      planesEmpresasUltra,
+      planesInternetEmpresa,
+      internetEmpresa
+    ] = await Promise.all([
+      getActivePromos(),
+      getPlansLibre(),
+      getPlansUltra(),
+      getPlansInternet(),
+      getInternetEnTuCasaLibre(),
+      getPlansEmpresas(),
+      getPlansEmpresasUltra(),
+      getPlansInternetEmpresa(),
+      getInternetEnTuEmpresa()
+    ]);
+
+    // Crear objeto con todos los datos
+    const knowledgeBase = {
+      promociones: promos,
+      planes: {
+        personas: {
+          libre: planesLibre,
+          ultra: planesUltra,
+          internet: planesInternet,
+          internetCasa: internetCasaLibre
+        },
+        empresas: {
+          libre: planesEmpresas,
+          ultra: planesEmpresasUltra,
+          internet: planesInternetEmpresa,
+          internetEmpresa: internetEmpresa
+        }
+      }
+    };
+
+    // Logs detallados por categoría
+    console.log('\n📢 PROMOCIONES ACTIVAS:', promos.length);
+    console.log(JSON.stringify(promos, null, 2));
+
+    console.log('\n👤 PLANES PERSONAS - LIBRE:', planesLibre.length);
+    console.log(JSON.stringify(planesLibre, null, 2));
+
+    console.log('\n👤 PLANES PERSONAS - ULTRA:', planesUltra.length);
+    console.log(JSON.stringify(planesUltra, null, 2));
+
+    console.log('\n👤 PLANES PERSONAS - INTERNET:', planesInternet.length);
+    console.log(JSON.stringify(planesInternet, null, 2));
+
+    console.log('\n🏠 INTERNET EN TU CASA - LIBRE:', internetCasaLibre.length);
+    console.log(JSON.stringify(internetCasaLibre, null, 2));
+
+    console.log('\n🏢 PLANES EMPRESAS - LIBRE:', planesEmpresas.length);
+    console.log(JSON.stringify(planesEmpresas, null, 2));
+
+    console.log('\n🏢 PLANES EMPRESAS - ULTRA:', planesEmpresasUltra.length);
+    console.log(JSON.stringify(planesEmpresasUltra, null, 2));
+
+    console.log('\n🏢 PLANES EMPRESAS - INTERNET:', planesInternetEmpresa.length);
+    console.log(JSON.stringify(planesInternetEmpresa, null, 2));
+
+    console.log('\n🏢 INTERNET EN TU EMPRESA:', internetEmpresa.length);
+    console.log(JSON.stringify(internetEmpresa, null, 2));
+
+    // Resumen total
+    const totalItems =
+      promos.length +
+      planesLibre.length +
+      planesUltra.length +
+      planesInternet.length +
+      internetCasaLibre.length +
+      planesEmpresas.length +
+      planesEmpresasUltra.length +
+      planesInternetEmpresa.length +
+      internetEmpresa.length;
+
+    console.log('\n📊 ===== RESUMEN TOTAL =====');
+    console.log(`Total de items en knowledge base: ${totalItems}`);
+    console.log('Desglose:');
+    console.log(`  - Promociones: ${promos.length}`);
+    console.log(`  - Planes Personas Libre: ${planesLibre.length}`);
+    console.log(`  - Planes Personas Ultra: ${planesUltra.length}`);
+    console.log(`  - Planes Internet Personas: ${planesInternet.length}`);
+    console.log(`  - Internet Casa Libre: ${internetCasaLibre.length}`);
+    console.log(`  - Planes Empresas Libre: ${planesEmpresas.length}`);
+    console.log(`  - Planes Empresas Ultra: ${planesEmpresasUltra.length}`);
+    console.log(`  - Planes Internet Empresas: ${planesInternetEmpresa.length}`);
+    console.log(`  - Internet Empresa: ${internetEmpresa.length}`);
+    console.log('🤖 ===== FIN DE DATOS PARA CHATBOT =====\n');
+
+    return knowledgeBase;
+  } catch (error) {
+    console.error('❌ Error obteniendo datos para chatbot:', error);
+    return null;
+  }
+}

@@ -185,6 +185,7 @@ export class ChatbotClient {
       this.elements.input.focus();
       this.hideBadge();
       this.markAsOpened();
+      this.scrollToBottom();
     }
   }
 
@@ -445,6 +446,7 @@ export class ChatbotClient {
       if (!saved) return;
 
       const parsed = JSON.parse(saved);
+      let hasHistory = false;
 
       // Restaurar mensajes (excepto el de bienvenida que ya está)
       parsed.forEach((msg: any) => {
@@ -456,31 +458,11 @@ export class ChatbotClient {
           };
 
           this.history.push(message);
+          hasHistory = true;
 
           // Agregar al DOM si no es el mensaje de bienvenida
           if (msg.role === 'user' || this.history.length > 1) {
-            const messageEl = document.createElement('div');
-            messageEl.className = `chatbot-message chatbot-message-${msg.role} flex flex-col max-w-[75%] ${msg.role === 'bot' ? 'self-start' : 'self-end'} mb-2 animate-slide-up`;
-
-            const contentEl = document.createElement('div');
-            contentEl.className = msg.role === 'bot'
-              ? 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm border border-slate-200 dark:border-slate-700'
-              : 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-blue-600 text-white shadow-md shadow-blue-600/30';
-
-            // Renderizar markdown solo para mensajes del bot
-            if (msg.role === 'bot') {
-              contentEl.innerHTML = this.renderMarkdown(msg.content);
-            } else {
-              contentEl.innerHTML = this.escapeHtml(msg.content).replace(/\n/g, '<br>');
-            }
-
-            const timeEl = document.createElement('span');
-            timeEl.className = 'text-[11px] text-slate-500 dark:text-slate-400 mt-1 px-2';
-            timeEl.textContent = this.formatTime(message.timestamp);
-
-            messageEl.appendChild(contentEl);
-            messageEl.appendChild(timeEl);
-            this.elements.messages.appendChild(messageEl);
+            this.appendMessageToDOM(message);
           }
         }
       });
@@ -490,10 +472,39 @@ export class ChatbotClient {
         this.elements.quickReplies.style.display = 'none';
       }
 
+      // Scroll al final para mostrar el último mensaje
       this.scrollToBottom();
     } catch (error) {
       console.warn('No se pudo cargar el historial:', error);
     }
+  }
+
+  /**
+   * Helper para agregar mensaje al DOM sin guardarlo (usado por loadHistory)
+   */
+  private appendMessageToDOM(message: Message) {
+    const messageEl = document.createElement('div');
+    messageEl.className = `chatbot-message chatbot-message-${message.role} flex flex-col max-w-[75%] ${message.role === 'bot' ? 'self-start' : 'self-end'} mb-2 animate-slide-up`;
+
+    const contentEl = document.createElement('div');
+    contentEl.className = message.role === 'bot'
+      ? 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm border border-slate-200 dark:border-slate-700'
+      : 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-blue-600 text-white shadow-md shadow-blue-600/30';
+
+    // Renderizar markdown solo para mensajes del bot
+    if (message.role === 'bot') {
+      contentEl.innerHTML = this.renderMarkdown(message.content);
+    } else {
+      contentEl.innerHTML = this.escapeHtml(message.content).replace(/\n/g, '<br>');
+    }
+
+    const timeEl = document.createElement('span');
+    timeEl.className = 'text-[11px] text-slate-500 dark:text-slate-400 mt-1 px-2';
+    timeEl.textContent = this.formatTime(message.timestamp);
+
+    messageEl.appendChild(contentEl);
+    messageEl.appendChild(timeEl);
+    this.elements.messages.appendChild(messageEl);
   }
 
   /**

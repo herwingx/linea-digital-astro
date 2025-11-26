@@ -75,9 +75,11 @@ export async function getChatbotResponse(
     const client = getGeminiClient();
 
     // Configurar modelo con instrucciones del sistema
+    const systemInstruction = await getSystemPrompt();
+
     const model = client.getGenerativeModel({
       model: GEMINI_CONFIG.model,
-      systemInstruction: getSystemPrompt(),
+      systemInstruction: systemInstruction,
       generationConfig: {
         temperature: GEMINI_CONFIG.temperature,
         maxOutputTokens: GEMINI_CONFIG.maxOutputTokens,
@@ -86,25 +88,22 @@ export async function getChatbotResponse(
       },
     });
 
-    // Construir historial de conversación
-    // Filtrar para asegurar que el primer mensaje sea del usuario
-    let filteredHistory = conversationHistory.filter((msg, index) => {
-      // Excluir el mensaje de bienvenida del bot (primer mensaje)
-      if (index === 0 && msg.role === 'bot') {
-        return false;
-      }
-      return true;
-    });
+    // Construir historial de conversación válido para Gemini
+    // El historial DEBE empezar con un mensaje del usuario
+    let history: any[] = [];
 
-    // Asegurar que el historial comience con un mensaje del usuario
-    if (filteredHistory.length > 0 && filteredHistory[0].role !== 'user') {
-      filteredHistory = filteredHistory.slice(1);
+    // Encontrar el índice del primer mensaje de usuario
+    const firstUserIndex = conversationHistory.findIndex(msg => msg.role === 'user');
+
+    if (firstUserIndex !== -1) {
+      // Tomar desde el primer mensaje de usuario en adelante
+      const validHistory = conversationHistory.slice(firstUserIndex);
+
+      history = validHistory.map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }],
+      }));
     }
-
-    const history = filteredHistory.map(msg => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.content }],
-    }));
 
     // Iniciar chat con historial
     const chat: ChatSession = model.startChat({
