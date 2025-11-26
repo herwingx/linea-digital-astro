@@ -122,22 +122,46 @@ const navLinks = [
           >
         </a>
 
-        <!-- Botón Hamburguesa -->
+        <!-- Botón Hamburguesa Mejorado -->
         <button
           id="navbarToggler"
-          class="relative block lg:hidden p-3 rounded-full hover:bg-slate-100/50 dark:hover:bg-slate-800/50 text-slate-700 dark:text-white focus:outline-none transition-colors backdrop-blur-sm"
+          class="relative block lg:hidden group focus:outline-none"
           aria-label="Toggle navigation"
         >
-          <div class="w-6 h-5 flex flex-col justify-between relative">
-            <span
-              class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-center"
-            ></span>
-            <span
-              class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-center"
-            ></span>
-            <span
-              class="navbar-span w-full h-[2px] bg-current rounded-full transition-all duration-300 origin-center"
-            ></span>
+          <div
+            class="relative flex overflow-hidden items-center justify-center rounded-full w-[50px] h-[50px] transform transition-all bg-slate-100/80 dark:bg-slate-800/80 ring-0 ring-blue-500/30 hover:ring-8 group-[.active]:ring-4 ring-opacity-30 duration-200 shadow-md backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col justify-between w-[20px] h-[20px] transform transition-all duration-300 origin-center overflow-hidden"
+            >
+              <!-- Líneas del hamburguesa -->
+              <div
+                class="hamburger-line-1 bg-slate-700 dark:bg-white h-[2px] w-7 transform transition-all duration-300 origin-left"
+              >
+              </div>
+              <div
+                class="hamburger-line-2 bg-slate-700 dark:bg-white h-[2px] w-7 rounded transform transition-all duration-300"
+              >
+              </div>
+              <div
+                class="hamburger-line-3 bg-slate-700 dark:bg-white h-[2px] w-7 transform transition-all duration-300 origin-left"
+              >
+              </div>
+
+              <!-- X cuando está abierto -->
+              <div
+                class="hamburger-x absolute items-center justify-between transform transition-all duration-500 top-2.5 -translate-x-10 flex w-0"
+              >
+                <div
+                  class="hamburger-x-1 absolute bg-slate-700 dark:bg-white h-[2px] w-5 transform transition-all duration-500 rotate-0 delay-300"
+                >
+                </div>
+                <div
+                  class="hamburger-x-2 absolute bg-slate-700 dark:bg-white h-[2px] w-5 transform transition-all duration-500 -rotate-0 delay-300"
+                >
+                </div>
+              </div>
+            </div>
           </div>
         </button>
       </div>
@@ -193,6 +217,37 @@ const navLinks = [
     </nav>
   </div>
 </header>
+
+<style>
+  /* Animación del botón hamburguesa cuando está activo */
+  #navbarToggler.active .hamburger-line-1 {
+    transform: translate(0, 6px);
+    opacity: 0;
+  }
+
+  #navbarToggler.active .hamburger-line-2 {
+    transform: translate(0, 6px);
+    opacity: 0;
+  }
+
+  #navbarToggler.active .hamburger-line-3 {
+    transform: translate(0, 6px);
+    opacity: 0;
+  }
+
+  #navbarToggler.active .hamburger-x {
+    transform: translateX(0);
+    width: 3rem;
+  }
+
+  #navbarToggler.active .hamburger-x-1 {
+    transform: rotate(45deg);
+  }
+
+  #navbarToggler.active .hamburger-x-2 {
+    transform: rotate(-45deg);
+  }
+</style>
 
 <script is:inline>
   // --- SCROLL EFFECT ---
@@ -254,39 +309,51 @@ const navLinks = [
   // --- MOBILE MENU LOGIC ---
   const navbarToggler = document.getElementById("navbarToggler");
   const navbarCollapse = document.getElementById("navbarCollapse");
-  const navbarSpans = document.querySelectorAll(".navbar-span");
 
   if (navbarToggler && navbarCollapse) {
-    navbarToggler.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const isClosed = navbarCollapse.classList.contains("hidden");
+    let isOpen = false;
 
-      if (isClosed) {
+    const toggleMenu = (open) => {
+      isOpen = open;
+      if (isOpen) {
         navbarCollapse.classList.remove("hidden");
-        // Animate Icon to X
-        if (navbarSpans.length === 3) {
-          navbarSpans[0].style.transform = "rotate(45deg) translate(5px, 6px)";
-          navbarSpans[1].style.opacity = "0";
-          navbarSpans[2].style.transform =
-            "rotate(-45deg) translate(5px, -6px)";
-        }
+        navbarToggler.classList.add("active");
+        navbarToggler.setAttribute("aria-expanded", "true");
       } else {
         navbarCollapse.classList.add("hidden");
-        // Reset Icon
-        navbarSpans.forEach((s) => (s.style.transform = ""));
-        if (navbarSpans[1]) navbarSpans[1].style.opacity = "1";
+        navbarToggler.classList.remove("active");
+        navbarToggler.setAttribute("aria-expanded", "false");
       }
+    };
+
+    navbarToggler.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleMenu(!isOpen);
     });
 
     // Close on click outside
     document.addEventListener("click", (e) => {
       if (
         !navbarCollapse.contains(e.target) &&
-        !navbarToggler.contains(e.target)
+        !navbarToggler.contains(e.target) &&
+        isOpen
       ) {
-        navbarCollapse.classList.add("hidden");
-        navbarSpans.forEach((s) => (s.style.transform = ""));
-        if (navbarSpans[1]) navbarSpans[1].style.opacity = "1";
+        toggleMenu(false);
+      }
+    });
+
+    // Close on link click
+    const navLinks = navbarCollapse.querySelectorAll("a");
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        toggleMenu(false);
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isOpen) {
+        toggleMenu(false);
       }
     });
   }
