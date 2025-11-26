@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import logoWhite from "../assets/logo-white.svg";
 import logoDark from "../assets/logo-dark.svg";
 import SocialIcon from "./SocialIcon.astro";
+import Newsletter from "./Newsletter.astro";
 
 const currentYear = new Date().getFullYear();
 
@@ -38,6 +39,11 @@ const footerLinks = [
   class="relative w-full pt-20 pb-10 overflow-hidden border-t border-slate-200 dark:border-slate-900"
 >
   <div class="relative z-10 mx-auto max-w-7xl px-6 md:px-8">
+    <!-- NEWSLETTER SECTION -->
+    <div class="mb-20">
+      <Newsletter />
+    </div>
+
     <!-- TOP SECTION: CTA & BRAND -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
       <!-- BRAND COLUMN (4 cols) -->
