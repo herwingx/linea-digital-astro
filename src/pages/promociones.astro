@@ -1,155 +1,269 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SectionTitle from "../components/ui/SectionTitle.astro";
 
-// Datos de ejemplo para las promociones (esto podría venir de una CMS o archivo de configuración)
-const promociones = [
+// === SIMULACIÓN DE DATOS DE CONTENTFUL ===
+// Así se vería la respuesta de tu API.
+// Sugerencia de Modelo en Contentful (Content Type: 'promocion'):
+// - titulo (Short text)
+// - descripcion (Long text)
+// - imagen (Media)
+// - fechaFin (Date and time) -> ¡Aquí controlas el Timer! ⏰
+// - tipo (Short text / Dropdown)
+// - destacado (Boolean)
+
+const responseContentful = [
   {
-    id: 1,
-    titulo: "Doble de Gigas por 12 meses",
-    descripcion: "Contrata o renueva tu Plan Telcel Plus y recibe el doble de Gigas durante todo un año.",
-    imagen: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=2070&auto=format&fit=crop", // Imagen placeholder de alta calidad
-    vigencia: "Válido hasta el 30 de Noviembre",
-    tipo: "Plan Tarifario",
-    destacado: true,
+    sys: { id: "1" },
+    fields: {
+      titulo: "iPhone 15 Pro - Doble de Gigas",
+      descripcion: "Llévatelo en Plan Telcel Plus 5 con el doble de gigas por todo el contrato. ¡Solo por tiempo limitado!",
+      imagen: {
+        fields: {
+          file: {
+            url: "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=2070&auto=format&fit=crop"
+          }
+        }
+      },
+      fechaFin: new Date(new Date().getTime() + 48 * 60 * 60 * 1000).toISOString(), // 48 horas restantes
+      tipo: "Equipos",
+      destacado: true, // Esta irá al Hero
+    }
   },
   {
-    id: 2,
-    titulo: "Equipos con 50% de Descuento",
-    descripcion: "Llévate seleccionados modelos Samsung y Xiaomi a mitad de precio al contratar un plan desde $499.",
-    imagen: "https://images.unsplash.com/photo-1598327105666-5b89351aff23?q=80&w=2027&auto=format&fit=crop",
-    vigencia: "Hasta agotar existencias",
-    tipo: "Equipos",
-    destacado: false,
+    sys: { id: "2" },
+    fields: {
+      titulo: "Internet en Casa 50Mbps",
+      descripcion: "Contrata hoy y recibe instalación express gratuita + 1 mes de Amazon Prime.",
+      imagen: {
+        fields: {
+          file: {
+            url: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=2070&auto=format&fit=crop"
+          }
+        }
+      },
+      fechaFin: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 días
+      tipo: "Internet",
+      destacado: false,
+    }
   },
   {
-    id: 3,
-    titulo: "Internet en Casa sin Plazo Forzoso",
-    descripcion: "Prueba nuestro internet residencial sin compromisos a largo plazo. Instalación gratis esta semana.",
-    imagen: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=2071&auto=format&fit=crop",
-    vigencia: "Solo por tiempo limitado",
-    tipo: "Internet",
-    destacado: false,
+    sys: { id: "3" },
+    fields: {
+      titulo: "Renueva y Ahorra",
+      descripcion: "Bono de $1,000 en equipos Samsung al renovar tu plan actual antes del día 30.",
+      imagen: {
+        fields: {
+          file: {
+            url: "https://images.unsplash.com/photo-1610945265078-38584e106955?q=80&w=2070&auto=format&fit=crop"
+          }
+        }
+      },
+      fechaFin: null, // Sin timer (Promo permanente o hasta agotar existencias)
+      tipo: "Renovación",
+      destacado: false,
+    }
+  },
+  {
+    sys: { id: "4" },
+    fields: {
+      titulo: "Cámbiate a Telcel",
+      descripcion: "¿Vienes de otra compañía? Conserva tu número y recibe Gigas adicionales por 6 meses al hacer tu portabilidad.",
+      imagen: {
+        fields: {
+          file: {
+            url: "https://images.unsplash.com/photo-1534536281715-e28d76689b4d?q=80&w=2073&auto=format&fit=crop"
+          }
+        }
+      },
+      fechaFin: null,
+      tipo: "Portabilidad",
+      destacado: false,
+    }
   }
 ];
+
+// Separamos la promo destacada del resto para el diseño
+const heroPromo = responseContentful.find(p => p.fields.destacado);
+const gridPromos = responseContentful.filter(p => !p.fields.destacado);
 ---
 
 <BaseLayout
-  title="Promociones | Línea Digital del Sureste"
-  description="Descubre las mejores ofertas y promociones en planes Telcel, equipos y accesorios en Chiapas."
+  title="Promociones Exclusivas | Línea Digital"
+  description="Ofertas por tiempo limitado en equipos y planes Telcel."
 >
-  <!-- Hero Section -->
-  <section class="relative py-20 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-900 opacity-10 pattern-grid-lg"></div>
-    <div class="container mx-auto px-4 relative z-10 text-center">
-      <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-sm font-bold mb-4 animate-fade-down">
-        🔥 Ofertas por tiempo limitado
-      </span>
-      <h1 class="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 animate-fade-up">
-        Promociones Especiales
-      </h1>
-      <p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-8 animate-fade-up animation-delay-100">
-        Aprovecha descuentos exclusivos en equipos, planes con más gigas y beneficios únicos para ti.
-      </p>
-    </div>
-  </section>
+  
+  <!-- === 1. HERO SECTION (La Promo Estrella) === -->
+  {heroPromo && (
+    <section class="relative bg-slate-900 overflow-hidden min-h-[600px] flex items-center">
+      <!-- Imagen de Fondo con Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img 
+          src={heroPromo.fields.imagen.fields.file.url} 
+          alt={heroPromo.fields.titulo}
+          class="w-full h-full object-cover opacity-60"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+      </div>
 
-  <!-- Grid de Promociones -->
-  <section class="py-12 pb-24">
-    <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {promociones.map((promo, index) => (
-          <article 
-            class={`group relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-slate-100 dark:border-slate-700 flex flex-col ${promo.destacado ? 'md:col-span-2 lg:col-span-2' : ''}`}
-            style={`animation-delay: ${index * 100}ms`}
-          >
-            <!-- Badge de Tipo -->
-            <div class="absolute top-4 left-4 z-20">
-              <span class="px-3 py-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm">
-                {promo.tipo}
-              </span>
+      <div class="container mx-auto px-4 relative z-10 py-20">
+        <div class="max-w-2xl">
+          <span class="inline-block px-4 py-1.5 rounded-full bg-red-600 text-white text-sm font-bold mb-6 animate-pulse">
+            🔥 Oferta Relámpago
+          </span>
+          <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            {heroPromo.fields.titulo}
+          </h1>
+          <p class="text-xl text-slate-200 mb-8 leading-relaxed">
+            {heroPromo.fields.descripcion}
+          </p>
+
+          <!-- TIMER GIGANTE -->
+          {heroPromo.fields.fechaFin && (
+            <div class="mb-10 p-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl inline-block">
+              <p class="text-sm text-slate-300 uppercase tracking-widest mb-2 font-bold">Esta oferta termina en:</p>
+              <div class="promo-countdown text-4xl md:text-5xl font-mono font-bold text-white tracking-tight" data-ends={heroPromo.fields.fechaFin}>
+                Cargando...
+              </div>
             </div>
+          )}
 
-            {promo.destacado && (
-              <div class="absolute top-4 right-4 z-20">
-                <span class="px-3 py-1 bg-yellow-400 text-yellow-900 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  Destacado
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a 
+              href={`https://wa.me/529616189200?text=¡Lo quiero! Me interesa la promo destacada: ${heroPromo.fields.titulo}`}
+              target="_blank"
+              class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold rounded-xl transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2"
+            >
+              <span>Apartar Ahora</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+            </a>
+            <button 
+              class="share-btn px-8 py-4 bg-white/10 hover:bg-white/20 text-white text-lg font-bold rounded-xl border border-white/20 transition-all flex items-center justify-center gap-2"
+              data-title={heroPromo.fields.titulo}
+              data-text={heroPromo.fields.descripcion}
+            >
+              Compartir
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- === 2. GRID DE OFERTAS (El resto) === -->
+  <section class="py-20 bg-slate-50 dark:bg-slate-950">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between mb-12">
+        <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Más Promociones</h2>
+        <span class="text-slate-500 dark:text-slate-400 text-sm">{gridPromos.length} ofertas disponibles</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {gridPromos.map((promo, index) => (
+          <article class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-800 flex flex-col">
+            <!-- Imagen -->
+            <div class="relative h-56 overflow-hidden">
+              <div class="absolute top-4 left-4 z-10">
+                <span class="px-3 py-1 bg-white/90 dark:bg-slate-950/90 backdrop-blur rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200">
+                  {promo.fields.tipo}
                 </span>
               </div>
-            )}
-
-            <!-- Imagen -->
-            <div class={`relative overflow-hidden ${promo.destacado ? 'h-64 md:h-full md:w-1/2 md:absolute md:right-0 md:top-0 md:bottom-0' : 'h-56'}`}>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 md:hidden"></div>
               <img 
-                src={promo.imagen} 
-                alt={promo.titulo} 
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                src={promo.fields.imagen.fields.file.url} 
+                alt={promo.fields.titulo}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
             </div>
 
             <!-- Contenido -->
-            <div class={`p-6 flex flex-col flex-1 relative z-10 ${promo.destacado ? 'md:w-1/2 md:py-12 md:px-10' : ''}`}>
-              <div class="flex-1">
-                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {promo.titulo}
-                </h3>
-                <p class="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-                  {promo.descripcion}
-                </p>
-              </div>
-              
-              <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
-                <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {promo.vigencia}
+            <div class="p-6 flex flex-col flex-1">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 transition-colors">
+                {promo.fields.titulo}
+              </h3>
+              <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 flex-1">
+                {promo.fields.descripcion}
+              </p>
+
+              {/* Timer Pequeño */}
+              {promo.fields.fechaFin && (
+                <div class="mb-4 flex items-center gap-2 text-red-600 dark:text-red-400 text-xs font-bold bg-red-50 dark:bg-red-900/20 p-2 rounded-lg w-fit">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span class="promo-countdown" data-ends={promo.fields.fechaFin}>Calculando...</span>
                 </div>
-                
+              )}
+
+              <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
                 <a 
-                  href={`https://wa.me/529616189200?text=Hola, me interesa la promoción: ${promo.titulo}`}
+                  href={`https://wa.me/529616189200?text=Info sobre: ${promo.fields.titulo}`}
                   target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg gap-2"
+                  class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg text-center transition-colors"
                 >
-                  <span>Me interesa</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
+                  Me interesa
                 </a>
+                <button 
+                  class="share-btn p-2.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  data-title={promo.fields.titulo}
+                  data-text={promo.fields.descripcion}
+                  aria-label="Compartir"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+                </button>
               </div>
             </div>
           </article>
         ))}
       </div>
-
-      <!-- CTA Final -->
-      <div class="mt-20 text-center bg-slate-100 dark:bg-slate-800/50 rounded-3xl p-8 md:p-12 border border-slate-200 dark:border-slate-700">
-        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">
-          ¿No encuentras lo que buscas?
-        </h2>
-        <p class="text-slate-600 dark:text-slate-300 mb-8 max-w-xl mx-auto">
-          Nuestros asesores pueden ayudarte a encontrar el plan o equipo perfecto para tus necesidades y presupuesto.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a 
-            href="/contacto" 
-            class="px-6 py-3 bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-semibold rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
-          >
-            Contactar Asesor
-          </a>
-          <button 
-            onclick="document.getElementById('chatbot-toggle').click()"
-            class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30"
-          >
-            Preguntar al Chatbot
-          </button>
-        </div>
-      </div>
     </div>
   </section>
+
 </BaseLayout>
+
+<script>
+  // === Lógica de Timers ===
+  function updateCountdowns() {
+    const countdowns = document.querySelectorAll('.promo-countdown');
+    const now = new Date().getTime();
+    
+    countdowns.forEach(el => {
+      const endDate = new Date(el.getAttribute('data-ends') || '').getTime();
+      const diff = endDate - now;
+      
+      if (diff <= 0) {
+        el.textContent = "Finalizada";
+        el.classList.add('opacity-50');
+        return;
+      }
+      
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      // Formato diferente según si es el timer grande o pequeño
+      if (el.classList.contains('text-4xl')) {
+        el.textContent = `${d}d : ${h.toString().padStart(2,'0')}h : ${m.toString().padStart(2,'0')}m : ${s.toString().padStart(2,'0')}s`;
+      } else {
+        el.textContent = `${d}d ${h}h ${m}m`;
+      }
+    });
+  }
+  
+  setInterval(updateCountdowns, 1000);
+  updateCountdowns();
+
+  // === Lógica Compartir ===
+  document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const data = {
+        title: btn.getAttribute('data-title') || 'Promoción',
+        text: btn.getAttribute('data-text') || '',
+        url: window.location.href
+      };
+      if (navigator.share) {
+        try { await navigator.share(data); } catch (e) {}
+      } else {
+        // Fallback simple
+        alert('Copia este enlace: ' + data.url);
+      }
+    });
+  });
+</script>
