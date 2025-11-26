@@ -274,10 +274,12 @@ export class ChatbotClient {
 
     // Crear elemento del mensaje
     const messageEl = document.createElement('div');
-    messageEl.className = `chatbot-message chatbot-message-${role}`;
+    messageEl.className = `chatbot-message chatbot-message-${role} flex flex-col max-w-[75%] ${role === 'bot' ? 'self-start' : 'self-end'} mb-2 animate-slide-up`;
 
     const contentEl = document.createElement('div');
-    contentEl.className = 'chatbot-message-content';
+    contentEl.className = role === 'bot'
+      ? 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm border border-slate-200 dark:border-slate-700'
+      : 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-blue-600 text-white shadow-md shadow-blue-600/30';
 
     // Renderizar markdown solo para mensajes del bot
     if (role === 'bot') {
@@ -287,7 +289,7 @@ export class ChatbotClient {
     }
 
     const timeEl = document.createElement('span');
-    timeEl.className = 'chatbot-message-time';
+    timeEl.className = 'text-[11px] text-slate-500 dark:text-slate-400 mt-1 px-2';
     timeEl.textContent = this.formatTime(message.timestamp);
 
     messageEl.appendChild(contentEl);
@@ -305,12 +307,28 @@ export class ChatbotClient {
     this.isTyping = true;
     this.elements.sendBtn.disabled = true;
 
-    const typing = document.createElement('div');
-    typing.className = 'chatbot-typing';
-    typing.id = 'typing-indicator';
-    typing.innerHTML = '<span></span><span></span><span></span>';
+    // Crear wrapper para el typing
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex flex-col max-w-[75%] self-start mb-2';
+    wrapper.id = 'typing-indicator';
 
-    this.elements.messages.appendChild(typing);
+    // Contenedor de los puntos con estilos de Tailwind
+    const typing = document.createElement('div');
+    typing.className = 'flex gap-1.5 px-4 py-3.5 bg-white dark:bg-slate-800 rounded-[18px] rounded-bl-sm w-fit shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-200';
+
+    // Crear los 3 puntos
+    for (let i = 0; i < 3; i++) {
+      const dot = document.createElement('span');
+      // Clases de Tailwind para los puntos
+      dot.className = 'w-2.5 h-2.5 bg-blue-500 dark:bg-blue-400 rounded-full inline-block';
+      // La animación específica se mantiene inline o podría agregarse a tailwind.config
+      dot.style.animation = `typing 1.4s infinite`;
+      dot.style.animationDelay = `${i * 0.2}s`;
+      typing.appendChild(dot);
+    }
+
+    wrapper.appendChild(typing);
+    this.elements.messages.appendChild(wrapper);
     this.scrollToBottom();
   }
 
@@ -442,10 +460,12 @@ export class ChatbotClient {
           // Agregar al DOM si no es el mensaje de bienvenida
           if (msg.role === 'user' || this.history.length > 1) {
             const messageEl = document.createElement('div');
-            messageEl.className = `chatbot-message chatbot-message-${msg.role}`;
+            messageEl.className = `chatbot-message chatbot-message-${msg.role} flex flex-col max-w-[75%] ${msg.role === 'bot' ? 'self-start' : 'self-end'} mb-2 animate-slide-up`;
 
             const contentEl = document.createElement('div');
-            contentEl.className = 'chatbot-message-content';
+            contentEl.className = msg.role === 'bot'
+              ? 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm border border-slate-200 dark:border-slate-700'
+              : 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-blue-600 text-white shadow-md shadow-blue-600/30';
 
             // Renderizar markdown solo para mensajes del bot
             if (msg.role === 'bot') {
@@ -455,7 +475,7 @@ export class ChatbotClient {
             }
 
             const timeEl = document.createElement('span');
-            timeEl.className = 'chatbot-message-time';
+            timeEl.className = 'text-[11px] text-slate-500 dark:text-slate-400 mt-1 px-2';
             timeEl.textContent = this.formatTime(message.timestamp);
 
             messageEl.appendChild(contentEl);
