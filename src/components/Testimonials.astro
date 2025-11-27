@@ -1,5 +1,6 @@
 ---
 // src/components/Reviews.astro
+import Button from "./ui/Button.astro";
 
 // --- 1. DEFINICIÓN DE TIPOS ---
 interface Review {
@@ -106,7 +107,7 @@ const getInitial = (name: string) => (name ? name.charAt(0).toUpperCase() : "U")
 const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rating);
 ---
 
-<section class="relative overflow-hidden pt-8 pb-8 md:pt-16 md:pb-32 px-6 transition-colors duration-500">
+<section class="relative overflow-hidden py-16 md:py-24 px-6 transition-colors duration-500">
   
   <!-- Glow Effects (Ambient) -->
 <!--   <div class="pointer-events-none absolute -top-20 left-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
@@ -204,15 +205,16 @@ const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rat
 
     <!-- Modern Pill CTA -->
     <div class="mt-16 text-center">
-      <a
+      <Button
         href={`https://search.google.com/local/writereview?placeid=${PLACE_ID || ""}`}
         target="_blank"
-        rel="noopener noreferrer"
-        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-slate-900 px-10 py-4 text-sm font-bold text-white shadow-xl shadow-blue-900/10 transition-all duration-300 hover:scale-105 hover:bg-blue-600 hover:shadow-2xl hover:shadow-blue-600/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-white dark:text-slate-900 dark:hover:bg-blue-600 dark:hover:text-white"
+        variant="primary"
+        size="lg"
+        class="group gap-3"
       >
         <span class="relative z-10">Comparte tu Experiencia</span>
         <svg class="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-      </a>
+      </Button>
     </div>
   </div>
 </section>

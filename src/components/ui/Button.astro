@@ -1,0 +1,51 @@
+---
+interface Props {
+  variant?: "primary" | "secondary" | "ghost" | "outline";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  onclick?: string;
+  target?: string;
+  id?: string;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  class: className,
+  href,
+  type = "button",
+  ...rest
+} = Astro.props;
+
+const baseStyles =
+  "inline-flex items-center justify-center rounded-full font-bold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+
+const variants = {
+  primary:
+    "bg-blue-700 text-white shadow-xl shadow-blue-900/20 hover:bg-blue-800 hover:scale-105 hover:-translate-y-0.5 focus:ring-blue-400 dark:bg-blue-500 dark:hover:bg-blue-400 dark:shadow-blue-900/40 dark:focus:ring-offset-slate-900",
+  secondary:
+    "bg-white text-slate-700 border border-slate-200 hover:border-blue-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm hover:scale-105 dark:bg-transparent dark:border-slate-700 dark:text-slate-300 dark:hover:text-white dark:hover:border-blue-500 dark:focus:ring-offset-slate-900",
+  outline:
+    "border-2 border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20",
+  ghost:
+    "text-slate-600 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400 dark:hover:text-blue-400 dark:hover:bg-white/5",
+};
+
+const sizes = {
+  sm: "px-4 py-2 text-xs",
+  md: "px-6 py-3 text-sm",
+  lg: "px-8 py-4 text-base",
+};
+
+const classes = [baseStyles, variants[variant], sizes[size], className]
+  .filter(Boolean)
+  .join(" ");
+
+const Element = href ? "a" : "button";
+---
+
+<Element href={href} type={!href ? type : undefined} class={classes} {...rest}>
+  <slot />
+</Element>

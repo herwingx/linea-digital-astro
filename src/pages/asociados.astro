@@ -1,6 +1,7 @@
 ---
 // src/pages/asociados.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/ui/Button.astro";
 
 const beneficios = [
   {
@@ -79,22 +80,29 @@ const catalogo = [
           </p>
 
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up animation-delay-300">
-             <a 
+             <Button 
                href="https://wa.me/529616189200?text=Quiero%20ser%20Asociado" 
-               class="group relative inline-flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-blue-600 px-8 font-bold text-white shadow-2xl shadow-blue-600/30 transition-all hover:bg-blue-600 hover:scale-105 hover:-translate-y-1 focus:ring-4 focus:ring-blue-500/30"
+               variant="primary"
+               size="lg"
+               class="group gap-3"
              >
                 <span class="relative">Unirme Ahora</span>
                 <svg class="w-5 h-5 relative transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-             </a>
-             <button onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})" class="flex h-14 items-center justify-center rounded-full border border-slate-200 px-8 font-bold text-slate-600 transition-all hover:border-blue-200 hover:bg-slate-50 hover:text-blue-600 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-white">
+             </Button>
+             <Button 
+               onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})" 
+               variant="secondary"
+               size="lg"
+               class="text-blue-600 border-blue-200 hover:bg-blue-50"
+             >
                  Conocer Beneficios
-             </button>
+             </Button>
           </div>
       </div>
   </section>
 
   <!-- STATS QUICK VIEW (Prueba Social) -->
-  <section class="py-12 border-y border-slate-100  dark:border-white/5 dark:from-slate-900 dark:to-slate-950">
+  <section class="py-16 border-y border-slate-100  dark:border-white/5 dark:from-slate-900 dark:to-slate-950">
       <div class="container mx-auto px-4">
           <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-200 dark:divide-white/5">
               <div class="animate-fade-up">
@@ -148,7 +156,9 @@ const catalogo = [
   </section>
 
   <!-- PORTFOLIO SLIDER (Horizontal Scroll Snap) -->
-  <section class="py-24  overflow-hidden border-t border-slate-100 dark:border-white/5">
+  <section
+    class="py-24 px-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-white/5"
+  >
      <div class="container mx-auto px-4 mb-12 flex items-end justify-between">
          <div class="max-w-xl">
              <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Expande tu Catálogo</h2>
@@ -191,7 +201,7 @@ const catalogo = [
               </div>
               <h3 class="text-2xl font-bold mb-2">¿Tienes una idea?</h3>
               <p class="text-blue-50 mb-8">Si tienes un negocio diferente, también tenemos una solución.</p>
-              <a href="https://wa.me/529616189200" class="px-8 py-3 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors">Hablemos</a>
+              <Button href="https://wa.me/529616189200" variant="secondary" class="bg-white text-blue-600 hover:bg-blue-50 border-transparent shadow-none">Hablemos</Button>
          </div>
      </div>
   </section>
@@ -201,7 +211,7 @@ const catalogo = [
       <div class="container relative z-10 px-4 mx-auto max-w-3xl">
           <h2 class="text-3xl md:text-5xl font-bold mb-8 tracking-tight">Listo para escalar tu negocio?</h2>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-               <a href="https://wa.me/529616189200" class="px-8 py-4 bg-blue-600 rounded-full font-bold hover:bg-blue-500 transition-all shadow-lg hover:shadow-blue-600/50 hover:-translate-y-1">Registrarme Gratis</a>
+               <Button href="https://wa.me/529616189200" variant="primary" size="lg">Registrarme Gratis</Button>
           </div>
       </div>
   </section>

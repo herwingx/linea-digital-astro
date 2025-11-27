@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/ui/Button.astro";
 ---
 
 <BaseLayout
@@ -13,7 +14,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="w-full lg:w-1/2">
         <!-- Badge de Error -->
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 mb-6"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/20 mb-6"
         >
           <span class="relative flex h-2 w-2">
             <span
@@ -48,10 +49,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div
           class="flex flex-col sm:flex-row items-start sm:items-center mt-8 gap-4"
         >
-          <a
-            href="/"
-            class="group inline-flex items-center justify-center px-6 py-3 text-sm font-bold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all hover:scale-105 shadow-lg shadow-blue-600/20 gap-2"
-          >
+          <Button href="/" variant="primary" size="md" class="group gap-2">
             <svg
               class="w-5 h-5 transition-transform group-hover:-translate-x-1"
               fill="none"
@@ -66,7 +64,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               ></path>
             </svg>
             <span>Ir al Inicio</span>
-          </a>
+          </Button>
 
           <button
             onclick="history.back()"
@@ -98,25 +96,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <div class="flex flex-wrap gap-3">
             <a
               href="/empresas"
-              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-600 dark:hover:text-blue-400 transition-colors"
+              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
             >
               Empresas
             </a>
             <a
               href="/asociados"
-              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-600 dark:hover:text-blue-400 transition-colors"
+              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
             >
               Asociados
             </a>
             <a
               href="/nosotros"
-              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-600 dark:hover:text-blue-400 transition-colors"
+              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
             >
               Nosotros
             </a>
             <a
               href="/contacto"
-              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-600 dark:hover:text-blue-400 transition-colors"
+              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
             >
               Contacto
             </a>
