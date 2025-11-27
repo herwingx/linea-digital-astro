@@ -70,7 +70,7 @@ const {
               <button
                 onclick={`switchSub('${type}')`}
                 data-type={type}
-                class={`sub-tab px-5 py-2 rounded-full border text-xs font-bold uppercase transition-all ${idx === 0 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300 shadow-sm scale-105" : "border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+                class={`sub-tab px-5 py-2 rounded-full border text-xs font-bold uppercase transition-all ${idx === 0 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 shadow-sm scale-105" : "border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
               >
                 {type === "libre"
                   ? "Planes Libre"
@@ -177,7 +177,7 @@ const {
       const t = b.getAttribute("data-type");
       if (t === type)
         b.className =
-          "sub-tab px-5 py-2 rounded-full border text-xs font-bold uppercase transition-all bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300 shadow-sm scale-105";
+          "sub-tab px-5 py-2 rounded-full border text-xs font-bold uppercase transition-all bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 shadow-sm scale-105";
       else
         b.className =
           "sub-tab px-5 py-2 rounded-full border text-xs font-bold uppercase transition-all border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800";

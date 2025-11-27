@@ -166,8 +166,17 @@ export class ChatbotClient {
         // Si el viewport se redujo más de 150px, probablemente el teclado está abierto
         if (heightDiff > 150) {
           this.elements.window.classList.add('keyboard-open');
+          // Forzar altura exacta del viewport visual para evitar problemas de scroll/ocultamiento
+          this.elements.window.style.height = `${currentHeight}px`;
+          this.elements.window.style.maxHeight = `${currentHeight}px`;
         } else {
           this.elements.window.classList.remove('keyboard-open');
+          this.elements.window.style.height = ''; // Restaurar CSS original
+          this.elements.window.style.maxHeight = '';
+          // Re-habilitar transiciones después de un pequeño delay
+          setTimeout(() => {
+            this.elements.window.style.transition = '';
+          }, 50);
         }
       });
     }

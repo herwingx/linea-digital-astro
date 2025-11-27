@@ -1,6 +1,6 @@
 ---
 // src/components/PromoCard.astro
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 
 export interface Props {
   title: string;
@@ -15,57 +15,93 @@ const { title, description, imageUrl, tag, endDate } = Astro.props;
 
 <!-- Contenedor principal con padding para el efecto de borde brillante -->
 <div class="group relative w-full max-w-md mx-auto h-full">
-  
   <!-- 1. Efecto de "Glow" trasero (Borde gradiente animado) -->
-  <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl blur opacity-20 group-hover:opacity-75 transition duration-500 group-hover:duration-200"></div>
+  <div
+    class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl blur opacity-20 group-hover:opacity-75 transition duration-500 group-hover:duration-200"
+  >
+  </div>
 
   <!-- 2. La tarjeta en sí -->
-  <div class="relative flex flex-col h-full bg-white dark:bg-[#0F172A] rounded-xl border dark:border-slate-800 border-slate-300 overflow-hidden">
-    
+  <div
+    class="relative flex flex-col h-full bg-white dark:bg-[#0F172A] rounded-xl border dark:border-slate-800 border-slate-300 overflow-hidden"
+  >
     <!-- Contenedor Imagen -->
     <div class="relative aspect-[4/3] overflow-hidden">
-      <Image 
-        src={imageUrl} 
-        alt={description} 
-        width={400} 
-        height={300} 
+      <Image
+        src={imageUrl}
+        alt={description}
+        width={400}
+        height={300}
         class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
       />
-      
+
       <!-- Overlay gradiente sobre la imagen para que el texto se lea mejor si sube -->
-      <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"
+      >
+      </div>
 
       <!-- Tag flotante estilo "Chip" tecnológico -->
-      {tag && (
-        <span class="absolute top-3 left-3 bg-slate-950/70 backdrop-blur-md border border-cyan-500/30 text-cyan-400 text-xs font-bold px-3 py-1 rounded-full shadow-lg shadow-cyan-500/20">
-          {tag}
-        </span>
-      )}
+      {
+        tag && (
+          <span class="absolute top-3 left-3 bg-slate-950/70 backdrop-blur-md border border-cyan-500/30 text-cyan-400 text-xs font-bold px-3 py-1 rounded-full shadow-lg shadow-cyan-500/20">
+            {tag}
+          </span>
+        )
+      }
     </div>
 
     <!-- Contenido -->
     <div class="p-6 flex flex-col flex-grow relative">
-      <h3 class="text-xl font-bold text-blue-600 mb-2 tracking-wide dark:text-white group-hover:text-blue-700 transition-colors">
+      <h3
+        class="text-xl font-bold text-blue-600 mb-2 tracking-wide dark:text-white group-hover:text-blue-600 transition-colors"
+      >
         {title}
       </h3>
-      
+
       <!-- Descripción -->
       <div class="relative overflow-hidden mb-4 flex-grow">
-        <p class="text-slate-400 text-sm leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all duration-300">
+        <p
+          class="text-slate-400 text-sm leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all duration-300"
+        >
           {description}
         </p>
       </div>
 
       <!-- Footer / Metadata -->
-      <div class="mt-auto pt-4 border-t border-slate-300 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 font-mono">
+      <div
+        class="mt-auto pt-4 border-t border-slate-300 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 font-mono"
+      >
         <div class="flex items-center gap-1">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <svg
+            class="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg
+          >
           <span>Expira: {endDate}</span>
         </div>
-        
-        <span class="flex items-center gap-1 text-blue-700 font-bold group-hover:translate-x-1 transition-transform cursor-pointer">
-          Ver Promo 
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+
+        <span
+          class="flex items-center gap-1 text-blue-600 font-bold group-hover:translate-x-1 transition-transform cursor-pointer"
+        >
+          Ver Promo
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg
+          >
         </span>
       </div>
     </div>

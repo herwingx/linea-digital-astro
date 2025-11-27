@@ -11,21 +11,40 @@
       id="darkToggler"
       class="peer sr-only"
     />
-    
+
     <!-- TRACK BACKGROUND ICONS (Decorativos y sutiles) -->
-    <span class="absolute left-2.5 text-[10px] text-slate-300 dark:text-slate-600">
-        <!-- Sun placeholder outline for track -->
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="5"></circle></svg>
+    <span
+      class="absolute left-2.5 text-[10px] text-slate-300 dark:text-slate-600"
+    >
+      <!-- Sun placeholder outline for track -->
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"><circle cx="12" cy="12" r="5"></circle></svg
+      >
     </span>
-    <span class="absolute right-2.5 text-[10px] text-slate-300 dark:text-slate-600">
-         <!-- Moon placeholder outline for track -->
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    <span
+      class="absolute right-2.5 text-[10px] text-slate-300 dark:text-slate-600"
+    >
+      <!-- Moon placeholder outline for track -->
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        ><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg
+      >
     </span>
 
     <!-- KNOB (La pieza que se desliza) -->
     <!-- El knob se mueve usando peer-checked:translate-x -->
     <div
-      class="relative z-10 flex h-7 w-7 transform items-center justify-center rounded-full bg-white text-blue-600 shadow-md ring-1 ring-black/5 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] peer-checked:translate-x-7 dark:bg-slate-700 dark:text-blue-300 dark:ring-white/10"
+      class="relative z-10 flex h-7 w-7 transform items-center justify-center rounded-full bg-white text-blue-600 shadow-md ring-1 ring-black/5 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] peer-checked:translate-x-7 dark:bg-slate-700 dark:text-blue-400 dark:ring-white/10"
     >
       <!-- SUN ICON (Visible in Light) -->
       <svg
@@ -67,51 +86,54 @@
 </div>
 
 <script is:inline>
-  (function() {
+  (function () {
     // Función aislada para evitar colisiones
     function setupTheme() {
-        const toggler = document.getElementById("darkToggler");
-        const html = document.documentElement;
-        
-        // 1. Obtener Preferencia Actual
-        const getTheme = () => {
-             if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-                 return localStorage.getItem('theme');
-             }
-             if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                 return 'dark';
-             }
-             return 'light';
-        };
+      const toggler = document.getElementById("darkToggler");
+      const html = document.documentElement;
 
-        // 2. Aplicar Estado Visual al Input y al HTML
-        const updateTheme = (theme) => {
-            if (theme === 'dark') {
-                html.classList.add("dark");
-                if(toggler) toggler.checked = true;
-            } else {
-                html.classList.remove("dark");
-                if(toggler) toggler.checked = false;
-            }
-            localStorage.setItem('theme', theme);
-        };
-
-        // Inicializar inmediatamente
-        updateTheme(getTheme());
-
-        // 3. Escuchar Eventos (si el DOM ya cargó el input)
-        if(toggler) {
-            toggler.addEventListener("change", (e) => {
-                const newTheme = e.target.checked ? 'dark' : 'light';
-                updateTheme(newTheme);
-            });
+      // 1. Obtener Preferencia Actual
+      const getTheme = () => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
         }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      };
+
+      // 2. Aplicar Estado Visual al Input y al HTML
+      const updateTheme = (theme) => {
+        if (theme === "dark") {
+          html.classList.add("dark");
+          if (toggler) toggler.checked = true;
+        } else {
+          html.classList.remove("dark");
+          if (toggler) toggler.checked = false;
+        }
+        localStorage.setItem("theme", theme);
+      };
+
+      // Inicializar inmediatamente
+      updateTheme(getTheme());
+
+      // 3. Escuchar Eventos (si el DOM ya cargó el input)
+      if (toggler) {
+        toggler.addEventListener("change", (e) => {
+          const newTheme = e.target.checked ? "dark" : "light";
+          updateTheme(newTheme);
+        });
+      }
     }
-    
+
     // Ejecutar Setup
     setupTheme();
-    
+
     // Opcional: Re-ejecutar en 'astro:after-swap' si usas ViewTransitions en el futuro
-    document.addEventListener('astro:after-swap', setupTheme);
+    document.addEventListener("astro:after-swap", setupTheme);
   })();
 </script>
