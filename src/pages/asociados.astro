@@ -71,11 +71,11 @@ const catalogo = [
             </span>
           </div>
           
-          <h1 class="max-w-4xl mx-auto text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-slate-900 dark:text-white mb-8 leading-[0.95] animate-fade-up animation-delay-100">
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[0.95] text-slate-900 dark:text-white mb-8">
              Haz crecer <br /> tu <span class="text-transparent bg-clip-text bg-gradient-to-br from-blue-600 to-indigo-500">Negocio</span>
           </h1>
 
-          <p class="max-w-2xl mx-auto text-xl md:text-2xl text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-12 animate-fade-up animation-delay-200">
+          <p class="text-lg md:text-xl leading-relaxed text-slate-500 dark:text-slate-400 mb-10">
               Conviértete en un punto de venta oficial Telcel. Tecnología, comisiones y respaldo en una sola plataforma.
           </p>
 
@@ -131,7 +131,7 @@ const catalogo = [
          
          <div class="text-center mb-16 max-w-3xl mx-auto">
              <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">Plataforma diseñada para vender</h2>
-             <p class="text-slate-500 text-lg">Te damos las herramientas de una gran corporación en tu bolsillo. Simple, rápido y seguro.</p>
+             <p class="text-slate-500 text-lg md:text-xl">Te damos las herramientas de una gran corporación en tu bolsillo. Simple, rápido y seguro.</p>
          </div>
 
          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -145,7 +145,7 @@ const catalogo = [
                             <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={item.icon} /></svg>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{item.titulo}</h3>
+                            <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-3">{item.titulo}</h3>
                             <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">{item.descripcion}</p>
                         </div>
                      </div>
@@ -161,8 +161,8 @@ const catalogo = [
   >
      <div class="container mx-auto px-4 mb-12 flex items-end justify-between">
          <div class="max-w-xl">
-             <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Expande tu Catálogo</h2>
-             <p class="mt-2 text-slate-500">No te limites. Ofrece una gama completa de soluciones digitales.</p>
+             <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">Expande tu Catálogo</h2>
+             <p class="mt-2 text-slate-500 text-lg md:text-xl">No te limites. Ofrece una gama completa de soluciones digitales.</p>
          </div>
          <!-- Desktop arrows indicator -->
          <div class="hidden md:flex gap-2">
@@ -184,7 +184,7 @@ const catalogo = [
                 <!-- Content Bottom -->
                 <div class="absolute bottom-0 left-0 p-8 w-full z-10">
                     <div class={`w-10 h-1 mb-4 rounded-full bg-gradient-to-r ${cat.bgClass} group-hover:w-16 transition-all duration-300`}></div>
-                    <h3 class="text-3xl font-bold text-white mb-2 leading-tight">{cat.title}</h3>
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-3">{cat.title}</h3>
                     <p class="text-slate-200 font-medium mb-6 opacity-90">{cat.subtitle}</p>
                     
                     <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-wider group-hover:bg-white group-hover:text-slate-900 transition-all duration-300">
@@ -199,8 +199,8 @@ const catalogo = [
               <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-6 animate-pulse">
                   <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
               </div>
-              <h3 class="text-2xl font-bold mb-2">¿Tienes una idea?</h3>
-              <p class="text-blue-50 mb-8">Si tienes un negocio diferente, también tenemos una solución.</p>
+              <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-3">¿Tienes una idea?</h3>
+              <p class="text-blue-50 mb-8 text-lg leading-relaxed">Si tienes un negocio diferente, también tenemos una solución.</p>
               <Button href="https://wa.me/529616189200" variant="secondary" class="bg-white text-blue-600 hover:bg-blue-50 border-transparent shadow-none">Hablemos</Button>
          </div>
      </div>
@@ -209,7 +209,7 @@ const catalogo = [
   <!-- FINAL CTA -->
   <section class="py-24  text-white text-center relative overflow-hidden">
       <div class="container relative z-10 px-4 mx-auto max-w-3xl">
-          <h2 class="text-3xl md:text-5xl font-bold mb-8 tracking-tight">Listo para escalar tu negocio?</h2>
+          <h2 class="text-3xl md:text-4xl font-bold mb-8 tracking-tight">Listo para escalar tu negocio?</h2>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
                <Button href="https://wa.me/529616189200" variant="primary" size="lg">Registrarme Gratis</Button>
           </div>

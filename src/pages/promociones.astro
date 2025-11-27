@@ -107,12 +107,12 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
                   </div>
 
                   <!-- Title -->
-                  <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-slate-900 dark:text-white tracking-tighter leading-[0.95] mb-6 drop-shadow-sm dark:drop-shadow-xl">
+                  <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[0.95] text-slate-900 dark:text-white mb-8">
                     {promo.fields.titulo}
                   </h1>
 
                   <!-- Desc -->
-                  <p class="text-lg md:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed mb-10 font-light border-l-4 border-blue-500 pl-6 max-w-2xl">
+                  <p class="text-lg md:text-xl leading-relaxed text-slate-500 dark:text-slate-400 mb-10">
                     {promo.fields.descripcion}
                   </p>
 
@@ -124,15 +124,15 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
                          <div class="flex gap-3">
                              <div class="bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/20 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-sm">
                                  <span class="block text-2xl font-bold text-slate-900 dark:text-white timer-d">00</span>
-                                 <span class="block text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wide">Días</span>
+                                 <span class="block text-2xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Días</span>
                              </div>
                              <div class="bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/20 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-sm">
                                  <span class="block text-2xl font-bold text-slate-900 dark:text-white timer-h">00</span>
-                                 <span class="block text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wide">Hrs</span>
+                                 <span class="block text-2xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Hrs</span>
                              </div>
                              <div class="bg-blue-50/80 dark:bg-blue-600/80 backdrop-blur-md border border-blue-200 dark:border-blue-500 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-[0_0_30px_rgba(37,99,235,0.2)] dark:shadow-[0_0_30px_rgba(37,99,235,0.4)]">
                                  <span class="block text-2xl font-bold text-blue-600 dark:text-white timer-m">00</span>
-                                 <span class="block text-[10px] text-blue-600 dark:text-blue-200 uppercase tracking-wide">Min</span>
+                                 <span class="block text-2xs text-blue-600 dark:text-blue-200 uppercase tracking-wide">Min</span>
                              </div>
                          </div>
                     </div>
@@ -174,8 +174,8 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
       <!-- Grid Header -->
       <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 animate-fade-up">
          <div>
-            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Más Oportunidades</h2>
-            <p class="text-slate-500 dark:text-slate-400">Ofertas vigentes que podrías haber pasado por alto.</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">Más Oportunidades</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-lg md:text-xl">Ofertas vigentes que podrías haber pasado por alto.</p>
          </div>
          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-xl shadow-sm">
              <span class="text-sm font-mono text-blue-600 dark:text-blue-400 font-bold">{gridPromos.length} ACTIVAS</span>
@@ -189,7 +189,7 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
             
             <!-- Badge Float -->
             <div class="absolute top-6 left-6 z-20">
-               <span class="px-3 py-1 rounded-lg bg-white/90 dark:bg-black/80 backdrop-blur text-[10px] font-bold uppercase tracking-widest text-slate-900 dark:text-white shadow-sm">
+               <span class="px-3 py-1 rounded-lg bg-white/90 dark:bg-black/80 backdrop-blur text-2xs font-bold uppercase tracking-widest text-slate-900 dark:text-white shadow-sm">
                  {promo.fields.tipo}
                </span>
             </div>
@@ -215,7 +215,7 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
 
             <!-- Body -->
             <div class="flex flex-col flex-1 p-8">
-               <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 transition-colors leading-tight">
+               <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-3">
                   {promo.fields.titulo}
                </h3>
                <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400 flex-1 mb-8">

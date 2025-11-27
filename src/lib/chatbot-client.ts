@@ -299,7 +299,7 @@ export class ChatbotClient {
     }
 
     const timeEl = document.createElement('span');
-    timeEl.className = 'text-[11px] text-slate-500 dark:text-slate-400 mt-1 px-2';
+    timeEl.className = 'text-3xs text-slate-500 dark:text-slate-400 mt-1 px-2';
     timeEl.textContent = this.formatTime(message.timestamp);
 
     messageEl.appendChild(contentEl);
@@ -508,7 +508,7 @@ export class ChatbotClient {
     }
 
     const timeEl = document.createElement('span');
-    timeEl.className = 'text-[11px] text-slate-500 dark:text-slate-400 mt-1 px-2';
+    timeEl.className = 'text-3xs text-slate-500 dark:text-slate-400 mt-1 px-2';
     timeEl.textContent = this.formatTime(message.timestamp);
 
     messageEl.appendChild(contentEl);

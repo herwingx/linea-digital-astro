@@ -120,10 +120,10 @@ const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rat
       <span class="mb-4 inline-block rounded-full border border-blue-200/50 bg-blue-50/50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600 backdrop-blur-sm dark:border-blue-500/20 dark:bg-blue-900/20 dark:text-blue-400">
         Testimonios Reales
       </span>
-      <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl mb-6">
+      <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl mb-6">
         La confianza se construye con resultados
       </h2>
-      <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400">
+      <p class="text-lg md:text-xl leading-relaxed text-slate-500 dark:text-slate-400">
         No tomes solo nuestra palabra. Lee las experiencias de quienes ya han transformado su conectividad con nosotros.
       </p>
     </div>
@@ -152,10 +152,10 @@ const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rat
                     )}
                  </div>
                  <div class="flex flex-col">
-                   <h4 class="text-base font-bold text-slate-900 dark:text-white leading-none mb-1 group-hover:text-blue-600 transition-colors">
+                   <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-none mb-1 group-hover:text-blue-600 transition-colors">
                      {review.author_name}
                    </h4>
-                   <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                   <span class="text-2xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                      {review.relative_time_description}
                    </span>
                  </div>
@@ -187,7 +187,7 @@ const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rat
               </div>
 
               <!-- Clean Google Brand (Monochrome by default, Color on hover) -->
-              <div class="flex items-center gap-2 text-[10px] font-bold uppercase text-slate-300 dark:text-slate-600 transition-colors group-hover:text-slate-500 dark:group-hover:text-slate-400">
+              <div class="flex items-center gap-2 text-2xs font-bold uppercase text-slate-300 dark:text-slate-600 transition-colors group-hover:text-slate-500 dark:group-hover:text-slate-400">
                 <svg class="h-4 w-4 grayscale opacity-50 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
