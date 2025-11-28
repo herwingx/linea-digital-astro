@@ -1,6 +1,6 @@
 // src/lib/chatbot-knowledge.ts
 /**
- * Base de Conocimiento del Chatbot - Línea Digital del Sureste
+ * Base de Conocimiento del Chatbot - Línea Digital
  * 
  * Este archivo centraliza toda la información que el chatbot puede usar
  * para responder preguntas de los usuarios.
@@ -32,7 +32,7 @@ export interface FAQ {
 
 export const KNOWLEDGE_BASE = {
   empresa: {
-    nombre: "Línea Digital del Sureste",
+    nombre: "Línea Digital",
     descripcion: "Distribuidor autorizado Telcel en Chiapas",
     slogan: "Soluciones en Telefonía. El futuro es ahora.",
     servicios: [
@@ -299,7 +299,7 @@ Sugiere contactar a un asesor empresarial al 961 618 92 00.
   }
 
   // Construir el prompt final combinando estático y dinámico
-  return `Eres un asistente virtual profesional de Línea Digital del Sureste, distribuidor autorizado Telcel en Chiapas, México.
+  return `Eres un asistente virtual profesional de Línea Digital, distribuidor autorizado Telcel en Chiapas, México.
 
 # INFORMACIÓN DE LA EMPRESA
 Nombre: ${KNOWLEDGE_BASE.empresa.nombre}
