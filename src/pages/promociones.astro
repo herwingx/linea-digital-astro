@@ -84,7 +84,7 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
   
   <!-- === 1. HERO SWIPER CAROUSEL (Spotlight) === -->
   {heroPromos.length > 0 && (
-    <section class="relative h-[90vh] min-h-[600px] bg-slate-50 dark:bg-slate-900 overflow-hidden">
+    <section class="relative h-[90vh] min-h-[600px] overflow-hidden">
       
       <div class="swiper hero-swiper h-full w-full">
         <div class="swiper-wrapper">
@@ -123,23 +123,23 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
                   </h1>
 
                   <!-- Desc -->
-                  <p class="text-lg md:text-xl leading-relaxed text-slate-500 dark:text-slate-400 mb-10">
+                  <p class="text-lg md:text-xl leading-relaxed text-slate-600 dark:text-slate-300 mb-10">
                     {promo.fields.descripcion}
                   </p>
 
                   <!-- TIMER BLOCK (If active) -->
                   {promo.fields.fechaFin && (
                     <div class="mb-10 flex flex-wrap gap-4 items-center" data-timer-target={promo.fields.fechaFin}>
-                         <span class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Expira en:</span>
+                         <span class="text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300">Expira en:</span>
                          
                          <div class="flex gap-3">
                              <div class="bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/20 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-sm">
                                  <span class="block text-2xl font-bold text-slate-900 dark:text-white timer-d">00</span>
-                                 <span class="block text-2xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Días</span>
+                                 <span class="block text-2xs text-slate-600 dark:text-slate-300 uppercase tracking-wide">Días</span>
                              </div>
                              <div class="bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/20 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-sm">
                                  <span class="block text-2xl font-bold text-slate-900 dark:text-white timer-h">00</span>
-                                 <span class="block text-2xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Hrs</span>
+                                 <span class="block text-2xs text-slate-600 dark:text-slate-300 uppercase tracking-wide">Hrs</span>
                              </div>
                              <div class="bg-blue-50/80 dark:bg-blue-600/80 backdrop-blur-md border border-blue-200 dark:border-blue-500 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-[0_0_30px_rgba(37,99,235,0.2)] dark:shadow-[0_0_30px_rgba(37,99,235,0.4)]">
                                  <span class="block text-2xl font-bold text-blue-600 dark:text-white timer-m">00</span>
@@ -179,70 +179,111 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
   )}
 
   <!-- === 2. BENTO GRID OFERTAS (El resto) === -->
-  <section class="relative py-24 bg-gradient-to-b from-slate-50 to-transparent dark:from-slate-950 dark:to-transparent border-t border-slate-100 dark:border-white/5">
+  <section class="relative py-24 border-t border-slate-200/50 dark:border-white/5">
     <div class="container mx-auto px-4 md:px-8">
       
       <!-- Grid Header -->
-      <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 animate-fade-up">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 animate-fade-up">
          <div>
-            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">Más Oportunidades</h2>
-            <p class="text-slate-500 dark:text-slate-400 text-lg md:text-xl">Ofertas vigentes que podrías haber pasado por alto.</p>
+            <h2 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Más Oportunidades</h2>
+            <p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed">Ofertas vigentes que podrías haber pasado por alto.</p>
          </div>
-         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-xl shadow-sm">
-             <span class="text-sm font-mono text-blue-600 dark:text-blue-400 font-bold">{gridPromos.length} ACTIVAS</span>
+         <div class="relative group">
+             <!-- Badge con Glassmorphism -->
+             <div class="relative px-6 py-3 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                 <!-- Efecto de brillo -->
+                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                 
+                 <!-- Contenido -->
+                 <div class="relative flex items-center gap-3">
+                      <span
+          class="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/60 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 backdrop-blur-md transition-all hover:scale-105 hover:bg-white/80 dark:border-blue-500/20 dark:bg-blue-900/20 dark:text-blue-300 cursor-default shadow-sm"
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
+            ></span>
+            <span
+              class="relative inline-flex rounded-full h-2 w-2 bg-blue-500 dark:bg-blue-400"
+            ></span>
+          </span>
+          {gridPromos.length} Activas
+        </span>
+                 </div>
+             </div>
          </div>
       </div>
+      
 
       <!-- Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {gridPromos.map((promo, index) => (
-          <article class="group relative flex flex-col rounded-[2.5rem] overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg shadow-slate-200/50 dark:shadow-black/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+          <article class="group relative flex flex-col rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200/50 dark:border-white/10 shadow-xl shadow-slate-200/50 dark:shadow-black/30 transition-all duration-700 hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 hover:border-blue-200 dark:hover:border-blue-500/50 backdrop-blur-sm animate-fade-up" style={`animation-delay: ${index * 100}ms`}>
             
-            <!-- Badge Float -->
+            <!-- Borde Luminoso Animado -->
+            <div class="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                <div class="absolute inset-0 rounded-[2.5rem] bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-blue-500/20 blur-xl"></div>
+            </div>
+            
+            <!-- Efecto de Brillo en Hover -->
+            <div class="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
+                <div class="absolute -inset-full top-0 block h-full w-1/2 transform -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shine"></div>
+            </div>
+            
+            <!-- Badge Float Mejorado -->
             <div class="absolute top-6 left-6 z-20">
-               <span class="px-3 py-1 rounded-lg bg-white/90 dark:bg-black/80 backdrop-blur text-2xs font-bold uppercase tracking-widest text-slate-900 dark:text-white shadow-sm">
+               <span class="px-4 py-2 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white shadow-lg border border-white/50 dark:border-white/20 group-hover:scale-110 transition-transform duration-500 inline-block">
                  {promo.fields.tipo}
                </span>
             </div>
 
-            <!-- Imagen Area -->
-            <div class="relative h-72 overflow-hidden">
-               <!-- Overlay Gradiente -->
-               <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent z-10 transition-opacity group-hover:opacity-80"></div>
-               <img 
-                  src={promo.fields.imagen.fields.file.url} 
-                  alt={promo.fields.titulo}
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-               />
+            <!-- Imagen Area con Parallax -->
+            <div class="relative h-80 overflow-hidden">
+               <!-- Overlay Gradiente Mejorado -->
+               <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent z-10 transition-opacity group-hover:opacity-90"></div>
                
-               {/* Mini Timer (solo si tiene fecha) */}
+               <!-- Imagen con Parallax -->
+               <div class="absolute inset-0 overflow-hidden">
+                  <img 
+                     src={promo.fields.imagen.fields.file.url} 
+                     alt={promo.fields.titulo}
+                     class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-125 brightness-90 group-hover:brightness-100"
+                  />
+               </div>
+               
+               {/* Mini Timer Rediseñado */}
                {promo.fields.fechaFin && (
-                  <div class="absolute bottom-4 right-4 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-red-600 text-white text-xs font-bold shadow-lg border border-red-400 animate-pulse-slow">
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <div class="absolute bottom-4 right-4 z-20 flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 text-white text-xs font-bold shadow-2xl shadow-red-500/50 border border-red-400/50 backdrop-blur-md group-hover:scale-110 transition-transform duration-500">
+                      <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                       <span class="mini-countdown" data-end={promo.fields.fechaFin}>...</span>
                   </div>
                )}
             </div>
 
-            <!-- Body -->
-            <div class="flex flex-col flex-1 p-8">
-               <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-3">
+            <!-- Body con Glassmorphism -->
+            <div class="relative z-10 flex flex-col flex-1 p-8">
+               <!-- Barra de Color Decorativa -->
+               <div class="w-16 h-1.5 mb-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg group-hover:w-24 transition-all duration-500"></div>
+               
+               <h3 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-500">
                   {promo.fields.titulo}
                </h3>
-               <p class="text-base leading-relaxed text-slate-500 dark:text-slate-400 flex-1 mb-8">
+               <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400 flex-1 mb-8 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors duration-500">
                   {promo.fields.descripcion}
                </p>
                
-               <div class="flex gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+               <!-- CTAs Mejorados -->
+               <div class="flex gap-3 pt-6 border-t border-slate-200/50 dark:border-slate-700/50">
                    <a 
                      href={`https://wa.me/529616189200?text=Info promo: ${promo.fields.titulo}`}
                      target="_blank"
-                     class="flex-1 flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[1.02]"
+                     class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-slate-900 to-slate-800 dark:from-white dark:to-slate-100 text-white dark:text-slate-900 rounded-2xl py-4 px-6 text-xs font-bold uppercase tracking-widest transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-slate-900/20 dark:hover:shadow-white/20 group/btn"
                    >
-                     Ver Detalles
+                     <span>Ver Detalles</span>
+                     <svg class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                    </a>
-                   <button class="share-btn-small p-3 rounded-xl border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-200 dark:border-slate-700 transition-all" data-title={promo.fields.titulo}>
-                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+                   <button class="share-btn-small p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-blue-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-500 hover:scale-110 hover:rotate-6 group/share" data-title={promo.fields.titulo}>
+                      <svg class="w-5 h-5 group-hover/share:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
                    </button>
                </div>
             </div>
@@ -381,9 +422,22 @@ const gridPromos = responseContentful.filter(p => !p.fields.destacado);
       background-color: #fff !important;
   }
   
+  /* Animación de entrada suave */
   @keyframes fade-up {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
   }
-  .animate-fade-up { animation: fade-up 0.8s ease-out forwards; }
+  .animate-fade-up { 
+    animation: fade-up 0.8s ease-out forwards; 
+    opacity: 0;
+  }
+  
+  /* Animación de Brillo (Shine Effect) */
+  @keyframes shine {
+    0% { transform: translateX(-100%) skewX(-12deg); }
+    100% { transform: translateX(200%) skewX(-12deg); }
+  }
+  .animate-shine {
+    animation: shine 1.5s ease-in-out;
+  }
 </style>

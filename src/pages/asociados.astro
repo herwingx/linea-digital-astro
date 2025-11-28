@@ -62,14 +62,12 @@ const catalogo = [
 >
   
   <!-- 1. HERO SECTION (CLEAN GRADIENT) -->
-  <section class="relative py-32 overflow-hidden bg-slate-50 dark:bg-slate-950">
+  <section class="relative pb-44 overflow-hidden">
       <!-- Background Deco -->
       <div class="absolute inset-0 pointer-events-none">
           <!-- Radial Light Effect -->
           <div class="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-3xl opacity-60 dark:opacity-20 animate-pulse"></div>
           <div class="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl opacity-50 dark:opacity-20"></div>
-          <!-- Tech Grid -->
-          <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       </div>
 
       <div class="container relative z-10 mx-auto px-4 text-center max-w-4xl">
@@ -88,7 +86,7 @@ const catalogo = [
               <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Punto de Venta Digital</span>
           </h1>
           
-          <p class="text-xl text-slate-500 dark:text-slate-400 mb-12 leading-relaxed max-w-2xl mx-auto animate-fade-up animation-delay-200">
+          <p class="text-xl text-slate-600 dark:text-slate-300 mb-12 leading-relaxed max-w-2xl mx-auto animate-fade-up animation-delay-200">
               La plataforma más sencilla para vender tiempo aire y tecnología. 
               Sin contratos forzosos, sin letra chiquita. Solo ganancias desde el primer día.
           </p>
@@ -107,7 +105,7 @@ const catalogo = [
   </section>
 
   <!-- 2. STATS BAR (Prueba Social) -->
-  <section class="py-12 border-y border-slate-100 bg-white/50 dark:border-white/5 dark:bg-slate-900/50 backdrop-blur-sm">
+  <section class="py-12 border-y border-slate-200/50 dark:border-white/5 backdrop-blur-sm">
       <div class="container mx-auto px-4">
           <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-200 dark:divide-white/5">
               <div class="animate-fade-up px-2">
@@ -131,25 +129,45 @@ const catalogo = [
   </section>
 
   <!-- 3. BENEFICIOS (BENTO GRID) -->
-  <section id="beneficios" class="py-24 bg-white dark:bg-slate-900 relative scroll-mt-20">
+  <section id="beneficios" class="py-24 relative scroll-mt-20">
       <div class="container mx-auto px-4 max-w-7xl">
           <div class="mb-20 text-center max-w-3xl mx-auto animate-fade-up">
               <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl mb-6">Todo lo que necesitas para crecer</h2>
-              <p class="text-xl text-slate-500 dark:text-slate-400 mb-12 leading-relaxed max-w-2xl mx-auto animate-fade-up animation-delay-200">Nuestra plataforma está diseñada para eliminar barreras. Te damos tecnología empresarial sin la complejidad.</p>
+              <p class="text-xl text-slate-600 dark:text-slate-300 mb-12 leading-relaxed max-w-2xl mx-auto animate-fade-up animation-delay-200">Nuestra plataforma está diseñada para eliminar barreras. Te damos tecnología empresarial sin la complejidad.</p>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 justify-center">
               {beneficios.map((item, index) => (
-                  <div class="group relative p-8 rounded-[2.5rem] bg-slate-50 transition-all duration-500 border border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-blue-900/5 hover:-translate-y-1 dark:bg-white/5 dark:border-white/5 dark:hover:bg-white/10 animate-fade-up" style={`animation-delay: ${index * 100}ms`}>
-                      <!-- Icon Bubble -->
-                      <div class="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:rotate-3 transition-all duration-500 dark:bg-blue-900/30 dark:text-blue-400 dark:group-hover:bg-blue-600 dark:group-hover:text-white">
-                         <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={item.iconPath} /></svg>
+                  <div class="group relative p-4 rounded-[2.5rem] bg-gradient-to-br from-white to-slate-50/50 transition-all duration-700 border border-slate-200/50 hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 dark:from-slate-900/50 dark:to-slate-800/30 dark:border-white/10 dark:hover:border-blue-500/50 dark:hover:shadow-blue-500/30 backdrop-blur-sm animate-fade-up overflow-hidden" style={`animation-delay: ${index * 100}ms`}>
+                      
+                      <!-- Borde Luminoso Animado (Glow Effect) -->
+                      <div class="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                          <div class="absolute inset-0 rounded-[2.5rem] bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-blue-500/20 blur-xl"></div>
                       </div>
                       
-                      <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{item.titulo}</h3>
-                      <p class="text-base leading-relaxed text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">
-                          {item.descripcion}
-                      </p>
+                      <!-- Efecto de Brillo en Hover (Shine) -->
+                      <div class="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
+                          <div class="absolute -inset-full top-0 block h-full w-1/2 transform -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shine"></div>
+                      </div>
+                      
+                      <!-- Contenido -->
+                      <div class="relative z-10">
+                          <!-- Icon Bubble con Animación 3D -->
+                          <div class="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 text-blue-600 shadow-lg shadow-blue-500/10 group-hover:shadow-2xl group-hover:shadow-blue-500/30 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 dark:from-blue-900/40 dark:to-blue-800/20 dark:text-blue-400 dark:group-hover:from-blue-600 dark:group-hover:to-blue-500 dark:group-hover:text-white">
+                             <svg class="w-8 h-8 group-hover:scale-110 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={item.iconPath} /></svg>
+                          </div>
+                          
+                          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-500">{item.titulo}</h3>
+                          <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors duration-500">
+                              {item.descripcion}
+                          </p>
+                          
+                          <!-- Indicador de Interactividad -->
+                          <div class="mt-6 flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                              <span>Más info</span>
+                              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                          </div>
+                      </div>
                   </div>
               ))}
           </div>
@@ -157,12 +175,12 @@ const catalogo = [
   </section>
 
   <!-- 4. CATALOGO SHOWCASE (HORIZONTAL SNAP) -->
-  <section class="py-24 bg-slate-50 dark:bg-slate-950 overflow-hidden border-t border-slate-200 dark:border-white/5">
+  <section class="py-24 overflow-hidden border-t border-slate-200/50 dark:border-white/5">
       <div class="container mx-auto px-4 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
          <div class="max-w-xl animate-fade-up">
              <span class="text-blue-600 font-bold uppercase tracking-widest text-xs dark:text-blue-400">Catálogo Extendido</span>
              <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">Multiplica tus Ingresos</h2>
-             <p class="text-xl text-slate-500 dark:text-slate-400 mb-12 leading-relaxed max-w-2xl mx-auto animate-fade-up animation-delay-200">Ofrece una gama completa de soluciones digitales.</p>
+             <p class="text-xl text-slate-600 dark:text-slate-300 mb-12 leading-relaxed max-w-2xl mx-auto animate-fade-up animation-delay-200">Ofrece una gama completa de soluciones digitales.</p>
          </div>
          
          <!-- Action Link -->
@@ -174,47 +192,80 @@ const catalogo = [
       <!-- Scroll Container -->
       <div class="flex gap-6 overflow-x-auto pb-16 px-4 md:px-12 snap-x snap-mandatory scrollbar-hide">
          {catalogo.map((cat, index) => (
-            <div class="relative flex-shrink-0 w-[85vw] md:w-[400px] h-[480px] rounded-[2.5rem] overflow-hidden snap-center group shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl animate-fade-up" style={`animation-delay: ${index * 150}ms`}>
+            <div class="relative flex-shrink-0 w-[85vw] md:w-[420px] h-[500px] rounded-[2.5rem] overflow-hidden snap-center group shadow-xl transition-all duration-700 hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-500/20 animate-fade-up" style={`animation-delay: ${index * 150}ms`}>
                
-               <!-- Imagen -->
-               <img 
-                 src={cat.img} 
-                 alt={cat.title} 
-                 class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0" 
-                 loading="lazy"
-               />
+               <!-- Badge Numérico Flotante -->
+               <div class="absolute top-6 right-6 z-20 w-12 h-12 rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-lg flex items-center justify-center border border-white/20 dark:border-white/10 group-hover:scale-110 transition-transform duration-500">
+                  <span class="text-lg font-black text-slate-900 dark:text-white">{String(index + 1).padStart(2, '0')}</span>
+               </div>
                
-               <!-- Overlay Gradiente -->
-               <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent opacity-90 transition-opacity group-hover:opacity-100"></div>
+               <!-- Imagen con Parallax -->
+               <div class="absolute inset-0 overflow-hidden">
+                  <img 
+                     src={cat.img} 
+                     alt={cat.title} 
+                     class="absolute inset-0 h-full w-full object-cover transition-all duration-1000 group-hover:scale-125 brightness-90 group-hover:brightness-100" 
+                     loading="lazy"
+                  />
+               </div>
+               
+               <!-- Overlay Gradiente Mejorado con Glassmorphism -->
+               <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent opacity-95 group-hover:opacity-100 transition-opacity duration-700"></div>
+               
+               <!-- Borde Luminoso Animado -->
+               <div class="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                  <div class={`absolute inset-0 rounded-[2.5rem] bg-gradient-to-r ${cat.bgClass} opacity-30 blur-xl`}></div>
+               </div>
 
                <!-- Content -->
-               <div class="absolute bottom-0 left-0 p-10 w-full z-10 transform translate-y-2 transition-transform duration-500 group-hover:translate-y-0">
-                   <div class={`w-12 h-1.5 mb-6 rounded-full bg-gradient-to-r ${cat.bgClass}`}></div>
-                   <h3 class="text-xl md:text-2xl font-bold text-white mb-2 tracking-tight">{cat.title}</h3>
-                   <p class="text-base leading-relaxed text-slate-500 dark:text-slate-400 mb-8 opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">{cat.subtitle}</p>
-                   
-                   <div class="inline-flex items-center gap-3 text-white text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                       <span class="w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
-                           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                       </span>
-                       Detalles
-                   </div>
+               <div class="absolute bottom-0 left-0 p-10 w-full z-10 transform transition-transform duration-700 group-hover:translate-y-0">
+                  <!-- Barra de Color Animada -->
+                  <div class={`w-16 h-1.5 mb-6 rounded-full bg-gradient-to-r ${cat.bgClass} shadow-lg group-hover:w-24 transition-all duration-500`}></div>
+                  
+                  <!-- Título con Efecto -->
+                  <h3 class="text-2xl md:text-3xl font-black text-white mb-3 tracking-tight transform transition-all duration-500 group-hover:translate-x-2">
+                     {cat.title}
+                  </h3>
+                  
+                  <!-- Subtítulo con Reveal -->
+                  <p class="text-base leading-relaxed text-slate-300 mb-8 opacity-80 group-hover:opacity-100 transition-all duration-500">
+                     {cat.subtitle}
+                  </p>
+                  
+                  <!-- CTA Button Mejorado -->
+                  <div class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 text-white text-sm font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-700 delay-100 hover:bg-white/20 hover:scale-105 cursor-pointer">
+                     <span>Explorar</span>
+                     <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                  </div>
                </div>
             </div>
          ))}
 
+
          <!-- CTA Final Card -->
-         <div class="relative flex-shrink-0 w-[85vw] md:w-[350px] h-[480px] rounded-[2.5rem] overflow-hidden snap-center bg-blue-600 flex flex-col items-center justify-center text-center p-10 text-white shadow-xl transition-all hover:scale-[1.02] hover:shadow-blue-600/40">
-              <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
+         <div class="relative flex-shrink-0 w-[85vw] md:w-[420px] h-[500px] rounded-[2.5rem] overflow-hidden snap-center bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 flex flex-col items-center justify-center text-center p-10 text-white shadow-2xl transition-all duration-700 hover:scale-[1.02] hover:shadow-blue-500/50 group">
+              <!-- Textura de Fondo -->
+              <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
+              
+              <!-- Efecto de Brillo Animado -->
+              <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              
+              <!-- Círculos Decorativos -->
+              <div class="absolute top-10 right-10 w-32 h-32 rounded-full bg-white/10 blur-2xl animate-pulse"></div>
+              <div class="absolute bottom-10 left-10 w-40 h-40 rounded-full bg-cyan-400/20 blur-3xl"></div>
               
               <div class="relative z-10">
-                  <div class="mx-auto w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mb-8 animate-pulse">
-                      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  <!-- Icono Animado -->
+                  <div class="mx-auto w-24 h-24 rounded-3xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-8 shadow-2xl border border-white/30 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700">
+                      <svg class="w-12 h-12 group-hover:scale-110 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                   </div>
-                  <h3 class="text-2xl font-bold mb-3">¿Tienes otra idea?</h3>
-                  <p class="text-blue-100 mb-10 text-lg">Adaptamos nuestra plataforma a tu modelo de negocio.</p>
-                  <a href="https://wa.me/529616189200" target="_blank" class="inline-block px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-all shadow-lg hover:-translate-y-1">
-                      Hablemos
+                  
+                  <h3 class="text-3xl font-black mb-4 tracking-tight">¿Tienes otra idea?</h3>
+                  <p class="text-blue-50 mb-10 text-lg leading-relaxed max-w-xs mx-auto">Adaptamos nuestra plataforma a tu modelo de negocio único.</p>
+                  
+                  <a href="https://wa.me/529616189200" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-600 font-bold rounded-2xl hover:bg-blue-50 transition-all shadow-2xl hover:-translate-y-1 hover:shadow-white/30 group-hover:scale-105">
+                      <span>Hablemos</span>
+                      <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                   </a>
               </div>
          </div>
@@ -222,9 +273,7 @@ const catalogo = [
   </section>
 
   <!-- 5. FOOTER CTA (Dark Impact) -->
-  <section class="py-28 px-6 bg-slate-900 relative overflow-hidden text-center">
-      <!-- Effect -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-full bg-blue-500/5 blur-3xl pointer-events-none"></div>
+  <section class="py-28 px-6 relative overflow-hidden text-center">
       
       <div class="relative z-10 max-w-4xl mx-auto">
           <h2 class="text-4xl md:text-6xl font-black text-white tracking-tighter mb-8">
@@ -259,6 +308,15 @@ const catalogo = [
   .animate-fade-up {
     animation: fade-up 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     opacity: 0; /* Evita flash antes de cargar */
+  }
+  
+  /* Animación de Brillo (Shine Effect) */
+  @keyframes shine {
+    0% { transform: translateX(-100%) skewX(-12deg); }
+    100% { transform: translateX(200%) skewX(-12deg); }
+  }
+  .animate-shine {
+    animation: shine 1.5s ease-in-out;
   }
   
   /* Staggering */

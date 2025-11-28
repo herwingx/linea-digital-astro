@@ -3,7 +3,6 @@
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/user.css";
-import FloatingButtons from "../components/FloatingButtons.astro";
 import AmbientBlur from "../components/AmbientBlur.astro";
 import Chatbot from "../components/Chatbot.astro";
 
@@ -83,8 +82,6 @@ const { title, description } = Astro.props;
     <div class="relative z-10 mt-auto">
       <Footer />
     </div>
-
-    <FloatingButtons />
     <Chatbot />
 
     <!-- Style Global Fixes para Tipografía -->
