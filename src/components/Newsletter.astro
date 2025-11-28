@@ -266,7 +266,13 @@
 </section>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
+  // Flag to prevent duplicate initialization
+  let newsletterInitialized = false;
+
+  function initNewsletter() {
+    if (newsletterInitialized) return;
+    newsletterInitialized = true;
+
     const form = document.getElementById("newsletter-form") as HTMLFormElement;
     const feedback = document.getElementById("newsletter-feedback");
     const input = document.getElementById("email-address") as HTMLInputElement;
@@ -278,6 +284,9 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      // Prevent double submission
+      if (btn.disabled) return;
 
       // 1. Loading State
       btn.disabled = true;
@@ -302,40 +311,66 @@
         const data = await response.json();
 
         if (response.ok) {
-          // 2. Success Animation
-          if (feedback) {
-            feedback.innerHTML = `<span class="flex items-center justify-center sm:justify-start gap-1.5 text-emerald-400"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> ¡Listo! Revisa tu correo para confirmar.</span>`;
-            feedback.classList.remove("opacity-0", "translate-y-2");
-            feedback.classList.add("opacity-100", "translate-y-0");
-          }
+          try {
+            // Check if user was already subscribed
+            const isAlreadySubscribed = data.message === "Ya estás suscrito";
 
-          input.value = "";
-          btn.classList.remove("from-blue-600", "to-blue-500");
-          btn.classList.add(
-            "from-green-500",
-            "to-green-600",
-            "pointer-events-none",
-          );
-
-          btnSpinner.classList.add("hidden");
-          btnText.innerHTML = `<span class="flex items-center justify-center gap-2">¡Suscrito! 🎉</span>`;
-          btnText.classList.remove("hidden");
-
-          // Reset
-          setTimeout(() => {
+            // 2. Success Animation
             if (feedback) {
-              feedback.classList.add("opacity-0");
-              feedback.classList.remove("opacity-100");
+              const icon = isAlreadySubscribed
+                ? `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`
+                : `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+
+              const color = isAlreadySubscribed
+                ? "text-blue-400"
+                : "text-emerald-400";
+
+              feedback.innerHTML = `<span class="flex items-center justify-center sm:justify-start gap-1.5 ${color}">${icon} ${data.message}</span>`;
+              feedback.classList.remove("opacity-0", "translate-y-2");
+              feedback.classList.add("opacity-100", "translate-y-0");
             }
-            btn.classList.remove(
-              "from-green-500",
-              "to-green-600",
-              "pointer-events-none",
-            );
-            btn.classList.add("from-blue-600", "to-blue-500");
-            btn.disabled = false;
-            btnText.innerHTML = `Suscribirme gratis <svg class="w-4 h-4 inline ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>`;
-          }, 5000);
+
+            if (!isAlreadySubscribed) {
+              // Only clear input and show celebration for new subscriptions
+              input.value = "";
+              btn.classList.remove("from-blue-600", "to-blue-500");
+              btn.classList.add(
+                "from-green-500",
+                "to-green-600",
+                "pointer-events-none",
+              );
+
+              btnSpinner.classList.add("hidden");
+              btnText.innerHTML = `<span class="flex items-center justify-center gap-2">¡Suscrito! 🎉</span>`;
+              btnText.classList.remove("hidden");
+            } else {
+              // For already subscribed, just reset the button
+              btnSpinner.classList.add("hidden");
+              btnText.classList.remove("hidden");
+              btn.disabled = false;
+            }
+
+            // Reset
+            setTimeout(() => {
+              if (feedback) {
+                feedback.classList.add("opacity-0");
+                feedback.classList.remove("opacity-100");
+              }
+              if (!isAlreadySubscribed) {
+                btn.classList.remove(
+                  "from-green-500",
+                  "to-green-600",
+                  "pointer-events-none",
+                );
+                btn.classList.add("from-blue-600", "to-blue-500");
+                btn.disabled = false;
+                btnText.innerHTML = `Suscribirme gratis <svg class="w-4 h-4 inline ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>`;
+              }
+            }, 5000);
+          } catch (uiError) {
+            console.error("Error updating UI:", uiError);
+            throw uiError;
+          }
         } else {
           throw new Error(data.message || "Error");
         }
@@ -352,14 +387,15 @@
         btnText.classList.remove("hidden");
       }
     });
-  });
+  }
 
-  // Fallback simple por si no se usan view transitions
-  if (document.readyState === "complete") {
-    document.dispatchEvent(new Event("astro:page-load"));
+  // Initialize on Astro page load (for view transitions)
+  document.addEventListener("astro:page-load", initNewsletter);
+
+  // Initialize immediately if page is already loaded
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initNewsletter);
   } else {
-    document.addEventListener("DOMContentLoaded", () =>
-      document.dispatchEvent(new Event("astro:page-load")),
-    );
+    initNewsletter();
   }
 </script>
