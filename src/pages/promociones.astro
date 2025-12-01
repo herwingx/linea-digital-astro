@@ -1,443 +1,436 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Button from "../components/ui/Button.astro";
+// En producción: import { Image } from 'astro:assets';
 
-// === SIMULACIÓN DE DATOS DE CONTENTFUL ===
-const responseContentful = [
+// === TYPES ===
+interface PromoField {
+  titulo: string;
+  descripcion: string;
+  imagen: { fields: { file: { url: string } } };
+  fechaFin: string | null;
+  tipo: string;
+  destacado: boolean;
+}
+
+interface ContentfulItem {
+  sys: { id: string };
+  fields: PromoField;
+}
+
+// === DATOS EXPANDIDOS (SIMULACIÓN REAL) ===
+const responseContentful: ContentfulItem[] = [
+  // --- HERO SLIDER ITEMS (3) ---
   {
-    sys: { id: "1" },
+    sys: { id: "hero-1" },
     fields: {
-      titulo: "iPhone 15 Pro",
-      descripcion: "La potencia definitiva en tus manos. Contrátalo en Plan Telcel Plus 5 con doble de gigas x12 meses.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=2070&auto=format&fit=crop" } } },
-      fechaFin: new Date(new Date().getTime() + 48 * 60 * 60 * 1000).toISOString(),
-      tipo: "Equipos Premium",
+      titulo: "iPhone 15 Pro Titanium",
+      descripcion: "Forjado en titanio. El chip A17 Pro cambia las reglas del juego. Llévatelo en Plan Telcel Plus 5.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?q=80&w=2070&auto=format&fit=crop" } } },
+      fechaFin: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
+      tipo: "Flagship",
       destacado: true,
-    }
+    },
   },
   {
-    sys: { id: "2" },
+    sys: { id: "hero-2" },
     fields: {
-      titulo: "Internet Casa 50 Megas",
-      descripcion: "Olvídate de los cables. Conéctate al instante y recibe 1 mes de Prime Video de regalo.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=2070&auto=format&fit=crop" } } },
-      fechaFin: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-      tipo: "Hogar",
-      destacado: false,
-    }
+      titulo: "PlayStation 5 Slim",
+      descripcion: "Juega como nunca antes. Edición digital con 2 juegos incluidos y 12 meses de PS Plus.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=2070&auto=format&fit=crop" } } },
+      fechaFin: new Date(Date.now() + 72 * 3600 * 1000).toISOString(),
+      tipo: "Gaming",
+      destacado: true,
+    },
   },
   {
-    sys: { id: "3" },
+    sys: { id: "hero-3" },
     fields: {
-      titulo: "Renueva tu Samsung",
-      descripcion: "Bono de $2,000 en la Serie S24 al renovar tu plan actual antes de fin de mes.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=2071&auto=format&fit=crop" } } },
+      titulo: "MacBook Air M3",
+      descripcion: "Superligera. Superpotente. La laptop más popular del mundo ahora con el chip M3.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1926&auto=format&fit=crop" } } },
       fechaFin: null,
-      tipo: "Renovación",
-      destacado: false,
-    }
-  },
-  {
-    sys: { id: "4" },
-    fields: {
-      titulo: "Galaxy S24 Ultra",
-      descripcion: "El smartphone más avanzado de Samsung. Incluye Galaxy Buds2 Pro de regalo en planes Plus.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=2071&auto=format&fit=crop" } } },
-      fechaFin: new Date(new Date().getTime() + 72 * 60 * 60 * 1000).toISOString(),
-      tipo: "Equipos Premium",
+      tipo: "Computacion",
       destacado: true,
-    }
+    },
+  },
+  
+
+  // --- BENTO GRID ITEMS (6+) ---
+  {
+    sys: { id: "grid-1" },
+    fields: {
+      titulo: "Internet Simétrico 1GB",
+      descripcion: "Velocidad luz para tu hogar. Instalación gratis hoy.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" } } }, // Wide
+      fechaFin: new Date(Date.now() + 5 * 24 * 3600 * 1000).toISOString(),
+      tipo: "Hogar",
+      destacado: false, 
+    },
   },
   {
-    sys: { id: "5" },
+    sys: { id: "grid-2" },
     fields: {
-      titulo: "Plan Familiar Telcel",
-      descripcion: "4 líneas con 20GB cada una. Llamadas ilimitadas y redes sociales sin límite.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=2071&auto=format&fit=crop" } } },
-      fechaFin: new Date(new Date().getTime() + 120 * 60 * 60 * 1000).toISOString(),
-      tipo: "Planes",
-      destacado: true,
-    }
-  },
-  {
-    sys: { id: "6" },
-    fields: {
-      titulo: "Plan Familiar Telcel",
-      descripcion: "4 líneas con 20GB cada una. Llamadas ilimitadas y redes sociales sin límite.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=2071&auto=format&fit=crop" } } },
-      fechaFin: new Date(new Date().getTime() + 120 * 60 * 60 * 1000).toISOString(),
-      tipo: "Planes",
+      titulo: "Samsung Galaxy S24 Ultra",
+      descripcion: "Galaxy AI ha llegado.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1610945265078-d86f3d297dfb?q=80&w=2070&auto=format&fit=crop" } } },
+      fechaFin: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+      tipo: "Móvil",
       destacado: false,
-    }
-  }
+    },
+  },
+  {
+    sys: { id: "grid-3" },
+    fields: {
+      titulo: "Apple Watch Ultra 2",
+      descripcion: "La aventura te espera. Titanio y cristal de zafiro.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1695646199432-8df7d9d8c67c?q=80&w=2070&auto=format&fit=crop" } } },
+      fechaFin: null,
+      tipo: "Wearables",
+      destacado: false,
+    },
+  },
+  {
+    sys: { id: "grid-4" },
+    fields: {
+      titulo: "Sony WH-1000XM5",
+      descripcion: "Cancelación de ruido líder en la industria. Sumérgete en tu música.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1888&auto=format&fit=crop" } } }, // Wide
+      fechaFin: new Date(Date.now() + 10 * 3600 * 1000).toISOString(),
+      tipo: "Audio",
+      destacado: false,
+    },
+  },
+  {
+    sys: { id: "grid-5" },
+    fields: {
+      titulo: "iPad Air",
+      descripcion: "Potencia colorida.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=2030&auto=format&fit=crop" } } },
+      fechaFin: null,
+      tipo: "Tablet",
+      destacado: false,
+    },
+  },
+  {
+    sys: { id: "grid-6" },
+    fields: {
+      titulo: "Casa Inteligente Kit",
+      descripcion: "Alexa Echo Dot + 2 Focos Philips Hue.",
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1558002038-109177381793?q=80&w=2070&auto=format&fit=crop" } } },
+      fechaFin: new Date(Date.now() + 120 * 3600 * 1000).toISOString(),
+      tipo: "Smarthome",
+      destacado: false,
+    },
+  },
 ];
 
-// Filtramos destacados vs grid normal
-const heroPromos = responseContentful.filter(p => p.fields.destacado);
-const gridPromos = responseContentful.filter(p => !p.fields.destacado);
+const heroPromos = responseContentful.filter((p) => p.fields.destacado);
+const gridPromos = responseContentful.filter((p) => !p.fields.destacado);
+
+// Lógica Bento Grid Mejorada (Patrón: Grande - Pequeño - Pequeño - Grande - Pequeño - Pequeño)
+// Index: 0 (Wide), 1, 2, 3 (Wide), 4, 5
+const getBentoClass = (index: number) => {
+    // Patrón matemático: si el residuo de dividir entre 3 es 0, es Wide.
+    return index % 3 === 0 ? "md:col-span-2" : "md:col-span-1";
+};
+
+const WA_NUMBER = "529614603593";
 ---
 
 <BaseLayout
-  title="Promociones Exclusivas | Línea Digital"
-  description="Las mejores ofertas en telefonía e internet por tiempo limitado."
+  title="Ofertas Premium | Tech Store"
+  description="Tecnología de punta y planes exclusivos."
 >
   
-  <!-- === 1. HERO SWIPER CAROUSEL (Spotlight) === -->
+  <!-- === HERO SECTION (Swiper Creative Effect) === -->
   {heroPromos.length > 0 && (
-    <section class="relative h-[90vh] min-h-[600px] overflow-hidden">
-      
-      <div class="swiper hero-swiper h-full w-full">
+    <section class="relative w-full h-[90vh] min-h-[600px] bg-slate-950 overflow-hidden">
+        
+      <div class="swiper hero-swiper w-full h-full">
         <div class="swiper-wrapper">
-          {heroPromos.map((promo) => (
-            <div class="swiper-slide relative h-full w-full">
-              
-              <!-- Background Image with Overlay -->
-              <div class="absolute inset-0 z-0">
-                <img 
-                  src={promo.fields.imagen.fields.file.url} 
-                  alt={promo.fields.titulo}
-                  class="h-full w-full object-cover dark:opacity-70"
-                  loading="eager"
-                />
-                <!-- Cinematic Gradient Overlay (Adaptive) -->
-                <div class="absolute inset-0 bg-gradient-to-t from-white/90 via-white/40 to-transparent dark:from-slate-950 dark:via-slate-950/40"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-white/90 via-white/40 to-transparent dark:from-slate-950/90 dark:via-slate-950/50"></div>
-              </div>
-
-              <!-- Content Container -->
-              <div class="container relative z-10 mx-auto px-6 h-full flex flex-col justify-center items-start">
-                <div class="max-w-3xl pt-20 animate-fade-up">
-                  
-                  <!-- Badge -->
-                  <div class="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1.5 backdrop-blur-md mb-8 shadow-lg shadow-red-500/10">
-                      <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                      </span>
-                      <span class="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-[0.2em]">{promo.fields.tipo}</span>
-                  </div>
-
-                  <!-- Title -->
-                  <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[0.95] text-slate-900 dark:text-white mb-8">
-                    {promo.fields.titulo}
-                  </h1>
-
-                  <!-- Desc -->
-                  <p class="text-lg md:text-xl leading-relaxed text-slate-600 dark:text-slate-300 mb-10">
-                    {promo.fields.descripcion}
-                  </p>
-
-                  <!-- TIMER BLOCK (If active) -->
-                  {promo.fields.fechaFin && (
-                    <div class="mb-10 flex flex-wrap gap-4 items-center" data-timer-target={promo.fields.fechaFin}>
-                         <span class="text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300">Expira en:</span>
-                         
-                         <div class="flex gap-3">
-                             <div class="bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/20 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-sm">
-                                 <span class="block text-2xl font-bold text-slate-900 dark:text-white timer-d">00</span>
-                                 <span class="block text-2xs text-slate-600 dark:text-slate-300 uppercase tracking-wide">Días</span>
-                             </div>
-                             <div class="bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/20 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-sm">
-                                 <span class="block text-2xl font-bold text-slate-900 dark:text-white timer-h">00</span>
-                                 <span class="block text-2xs text-slate-600 dark:text-slate-300 uppercase tracking-wide">Hrs</span>
-                             </div>
-                             <div class="bg-blue-50/80 dark:bg-blue-600/80 backdrop-blur-md border border-blue-200 dark:border-blue-500 rounded-xl px-4 py-2 min-w-[70px] text-center shadow-[0_0_30px_rgba(37,99,235,0.2)] dark:shadow-[0_0_30px_rgba(37,99,235,0.4)]">
-                                 <span class="block text-2xl font-bold text-blue-600 dark:text-white timer-m">00</span>
-                                 <span class="block text-2xs text-blue-600 dark:text-blue-200 uppercase tracking-wide">Min</span>
-                             </div>
-                         </div>
-                    </div>
-                  )}
-
-                  <!-- CTAs -->
-                  <div class="flex flex-wrap gap-4">
-                     <Button 
-                       href={`https://wa.me/529616189200?text=Me interesa la oferta: ${promo.fields.titulo}`}
-                       target="_blank"
-                       variant="primary"
-                       size="lg"
-                       class="group gap-3"
-                     >
-                        <svg class="w-5 h-5 transition-transform group-hover:-rotate-12" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.548 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                         <span>Reclamar Oferta</span>
-                     </Button>
-                     <button class="share-btn px-6 py-4 rounded-full border border-slate-300 text-slate-600 hover:bg-slate-100 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all backdrop-blur" data-title={promo.fields.titulo}>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
-                     </button>
-                  </div>
-
+          {heroPromos.map((promo, index) => (
+            <div class="swiper-slide relative w-full h-full overflow-hidden">
+                
+                <!-- 1. Imagen de Fondo (Parallax Effect target) -->
+                <!-- La clase 'slide-bg-image' será animada por Swiper Effect Creative -->
+                <div class="absolute inset-0 w-full h-full">
+                     <img
+                        src={promo.fields.imagen.fields.file.url}
+                        alt={promo.fields.titulo}
+                        class="h-full w-full object-cover transform scale-105" 
+                        loading={index === 0 ? "eager" : "lazy"}
+                    />
                 </div>
-              </div>
+                
+                <!-- 2. Capas de Oscurecimiento (Mejora contraste texto) -->
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-90" />
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-transparent to-transparent opacity-80" />
+                <div class="absolute inset-0 bg-black/10 mix-blend-multiply" /> 
+
+                <!-- 3. Contenido -->
+                <div class="relative z-10 container mx-auto px-6 h-full flex flex-col justify-end pb-28 md:justify-center md:pb-0">
+                    <div class="max-w-4xl space-y-6">
+                        
+                        <!-- Etiqueta Flotante -->
+                        <div class="opacity-0 translate-y-8 transition-all duration-700 delay-100 ease-out slide-content-entry inline-flex">
+                             <div class="px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-xs font-bold uppercase tracking-[0.2em] text-blue-300 shadow-glow">
+                                {promo.fields.tipo}
+                             </div>
+                        </div>
+
+                        <!-- Título Grande -->
+                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tight leading-[0.9] drop-shadow-2xl opacity-0 translate-y-8 transition-all duration-700 delay-200 ease-out slide-content-entry">
+                            {promo.fields.titulo}
+                        </h1>
+                        
+                        <!-- Descripción -->
+                        <p class="text-lg md:text-2xl text-slate-200/80 max-w-2xl font-light leading-relaxed opacity-0 translate-y-8 transition-all duration-700 delay-300 ease-out slide-content-entry">
+                            {promo.fields.descripcion}
+                        </p>
+
+                        <!-- CTA & Timer Row -->
+                        <div class="flex flex-wrap items-center gap-8 pt-4 opacity-0 translate-y-8 transition-all duration-700 delay-500 ease-out slide-content-entry">
+                            
+                            <a
+                                href={`https://wa.me/${WA_NUMBER}?text=Promo: ${promo.fields.titulo}`}
+                                target="_blank"
+                                class="relative inline-flex h-14 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+                            >
+                                <span class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#3b82f6_0%,#000000_50%,#3b82f6_100%)]"></span>
+                                <span class="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-sm font-bold uppercase tracking-widest text-white backdrop-blur-3xl hover:bg-slate-900 transition-colors gap-2">
+                                    Ver Oferta <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                            </a>
+
+                            {promo.fields.fechaFin && (
+                                <div class="flex items-center gap-3 pl-6 border-l border-white/10" data-timer-target={promo.fields.fechaFin}>
+                                    <span class="text-xs font-bold text-red-400 uppercase tracking-widest animate-pulse">Termina en:</span>
+                                    <div class="font-mono text-xl font-bold text-white flex gap-1">
+                                        <span class="timer-d">00</span><span class="text-white/40">:</span>
+                                        <span class="timer-h">00</span><span class="text-white/40">:</span>
+                                        <span class="timer-m">00</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
           ))}
         </div>
-        
-        <!-- Navigation Dots Custom -->
-        <div class="swiper-pagination !bottom-10 !px-12 !text-left !w-auto"></div>
+
+        <!-- 4. CONTROLES PERSONALIZADOS (Pagination Position Improved) -->
+        <!-- Contenedor flotante en la esquina inferior derecha (Desktop) o Centro (Mobile) -->
+        <div class="absolute bottom-8 right-1/2 translate-x-1/2 md:right-12 md:translate-x-0 z-30">
+             <div class="swiper-pagination-custom-container bg-black/20 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full flex items-center gap-1 shadow-2xl">
+                <!-- Los bullets se inyectan aquí -->
+             </div>
+        </div>
       </div>
     </section>
   )}
 
-  <!-- === 2. BENTO GRID OFERTAS (El resto) === -->
-  <section class="relative py-24 border-t border-slate-200/50 dark:border-white/5">
-    <div class="container mx-auto px-4 md:px-8">
-      
-      <!-- Grid Header -->
-      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 animate-fade-up">
-         <div>
-            <h2 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Más Oportunidades</h2>
-            <p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed">Ofertas vigentes que podrías haber pasado por alto.</p>
-         </div>
-         <div class="relative group">
-             <!-- Badge con Glassmorphism -->
-             <div class="relative px-6 py-3 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-500">
-                 <!-- Efecto de brillo -->
-                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                 
-                 <!-- Contenido -->
-                 <div class="relative flex items-center gap-3">
-                      <span
-          class="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/60 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 backdrop-blur-md transition-all hover:scale-105 hover:bg-white/80 dark:border-blue-500/20 dark:bg-blue-900/20 dark:text-blue-300 cursor-default shadow-sm"
-        >
-          <span class="relative flex h-2 w-2">
-            <span
-              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
-            ></span>
-            <span
-              class="relative inline-flex rounded-full h-2 w-2 bg-blue-500 dark:bg-blue-400"
-            ></span>
-          </span>
-          {gridPromos.length} Activas
-        </span>
-                 </div>
-             </div>
-         </div>
-      </div>
-      
+  <!-- === BENTO GRID SECTION === -->
+  <section class="py-32 bg-slate-50 dark:bg-[#020617] relative">
+    
+    <!-- Header -->
+    <div class="container mx-auto px-6 mb-16 relative z-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h2 class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
+                    Destacados <span class="text-blue-600">del Mes</span>.
+                </h2>
+                <p class="text-slate-500 dark:text-slate-400 max-w-lg text-lg">
+                    Una selección curada de dispositivos y servicios con beneficios únicos por tiempo limitado.
+                </p>
+            </div>
+            
+            <a href="#" class="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-300 pb-1 hover:border-blue-500 transition-colors">
+                Ver todo el catálogo
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+    </div>
 
-      <!-- Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- Grid -->
+    <div class="container mx-auto px-6 pb-20 relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px]">
         {gridPromos.map((promo, index) => (
-          <article class="group relative flex flex-col rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200/50 dark:border-white/10 shadow-xl shadow-slate-200/50 dark:shadow-black/30 transition-all duration-700 hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 hover:border-blue-200 dark:hover:border-blue-500/50 backdrop-blur-sm animate-fade-up" style={`animation-delay: ${index * 100}ms`}>
-            
-            <!-- Borde Luminoso Animado -->
-            <div class="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                <div class="absolute inset-0 rounded-[2.5rem] bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-blue-500/20 blur-xl"></div>
-            </div>
-            
-            <!-- Efecto de Brillo en Hover -->
-            <div class="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
-                <div class="absolute -inset-full top-0 block h-full w-1/2 transform -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shine"></div>
-            </div>
-            
-            <!-- Badge Float Mejorado -->
-            <div class="absolute top-6 left-6 z-20">
-               <span class="px-4 py-2 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white shadow-lg border border-white/50 dark:border-white/20 group-hover:scale-110 transition-transform duration-500 inline-block">
-                 {promo.fields.tipo}
-               </span>
-            </div>
+            <article 
+                class={`
+                    group relative rounded-[2rem] overflow-hidden 
+                    bg-white dark:bg-slate-900 
+                    border border-slate-200 dark:border-white/5
+                    shadow-sm hover:shadow-[0_20px_50px_-20px_rgba(59,130,246,0.3)]
+                    transition-all duration-500 ease-out hover:-translate-y-2
+                    ${getBentoClass(index)}
+                `}
+            >
+              <!-- Link Full Area -->
+              <a 
+                href={`https://wa.me/${WA_NUMBER}?text=Info: ${promo.fields.titulo}`}
+                target="_blank" 
+                class="absolute inset-0 z-30"
+              ></a>
 
-            <!-- Imagen Area con Parallax -->
-            <div class="relative h-80 overflow-hidden">
-               <!-- Overlay Gradiente Mejorado -->
-               <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent z-10 transition-opacity group-hover:opacity-90"></div>
-               
-               <!-- Imagen con Parallax -->
-               <div class="absolute inset-0 overflow-hidden">
-                  <img 
-                     src={promo.fields.imagen.fields.file.url} 
-                     alt={promo.fields.titulo}
-                     class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-125 brightness-90 group-hover:brightness-100"
-                  />
-               </div>
-               
-               {/* Mini Timer Rediseñado */}
-               {promo.fields.fechaFin && (
-                  <div class="absolute bottom-4 right-4 z-20 flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 text-white text-xs font-bold shadow-2xl shadow-red-500/50 border border-red-400/50 backdrop-blur-md group-hover:scale-110 transition-transform duration-500">
-                      <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                      <span class="mini-countdown" data-end={promo.fields.fechaFin}>...</span>
-                  </div>
-               )}
-            </div>
+              <!-- Image with "reveal" effect -->
+              <div class="absolute inset-0 z-0">
+                <img
+                  src={promo.fields.imagen.fields.file.url}
+                  alt=""
+                  class="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent transition-opacity duration-300 group-hover:opacity-80" />
+              </div>
 
-            <!-- Body con Glassmorphism -->
-            <div class="relative z-10 flex flex-col flex-1 p-8">
-               <!-- Barra de Color Decorativa -->
-               <div class="w-16 h-1.5 mb-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg group-hover:w-24 transition-all duration-500"></div>
-               
-               <h3 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-500">
-                  {promo.fields.titulo}
-               </h3>
-               <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400 flex-1 mb-8 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors duration-500">
-                  {promo.fields.descripcion}
-               </p>
-               
-               <!-- CTAs Mejorados -->
-               <div class="flex gap-3 pt-6 border-t border-slate-200/50 dark:border-slate-700/50">
-                   <a 
-                     href={`https://wa.me/529616189200?text=Info promo: ${promo.fields.titulo}`}
-                     target="_blank"
-                     class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-slate-900 to-slate-800 dark:from-white dark:to-slate-100 text-white dark:text-slate-900 rounded-2xl py-4 px-6 text-xs font-bold uppercase tracking-widest transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-slate-900/20 dark:hover:shadow-white/20 group/btn"
-                   >
-                     <span>Ver Detalles</span>
-                     <svg class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                   </a>
-                   <button class="share-btn-small p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-blue-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-500 hover:scale-110 hover:rotate-6 group/share" data-title={promo.fields.titulo}>
-                      <svg class="w-5 h-5 group-hover/share:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-                   </button>
-               </div>
-            </div>
+              <!-- Content Layer -->
+              <div class="relative z-20 h-full flex flex-col justify-end p-8 md:p-10 select-none">
+                
+                <!-- Tag Superior (visible on hover) -->
+                <div class="absolute top-8 left-8 md:top-10 md:left-10 opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                    <span class="px-3 py-1 rounded-full bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest shadow-lg">
+                        {promo.fields.tipo}
+                    </span>
+                </div>
 
-          </article>
+                <div class="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                    <h3 class={`text-white font-bold leading-tight mb-3 ${getBentoClass(index).includes('2') ? 'text-3xl md:text-4xl' : 'text-2xl'}`}>
+                        {promo.fields.titulo}
+                    </h3>
+                    
+                    <p class="text-slate-300/90 text-sm font-medium leading-relaxed max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 line-clamp-2">
+                         {promo.fields.descripcion}
+                    </p>
+                    
+                    <!-- Decorative Line -->
+                    <div class="w-12 h-1 bg-blue-500 mt-6 rounded-full origin-left transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 delay-200"></div>
+                </div>
+              </div>
+            </article>
         ))}
       </div>
     </div>
   </section>
 </BaseLayout>
 
-<!-- SCRIPT Y ESTILOS -->
 <script>
-  import Swiper from 'swiper';
-  import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
-  import 'swiper/css';
-  import 'swiper/css/effect-fade';
-  import 'swiper/css/pagination';
+  import Swiper from "swiper";
+  import { Autoplay, EffectCreative, Pagination } from "swiper/modules";
+  import "swiper/css";
+  import "swiper/css/pagination";
+  // NOTA: effect-creative css viene incluido en el bundle base normalmente, si falla importar 'swiper/css/effect-creative'
 
-  // Función init que maneja todo el ciclo de vida
-  const initPromos = () => {
-     // 1. Init Swiper
-     const swiperEl = document.querySelector('.hero-swiper') as HTMLElement;
-     if (swiperEl && !(swiperEl as any).swiper) {
-         new Swiper(swiperEl, {
-            modules: [Autoplay, Pagination, EffectFade],
-            effect: 'fade',
-            fadeEffect: { crossFade: true },
-            speed: 1500,
-            loop: true,
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-                renderBullet: (index, className) => {
-                   return `<span class="${className} !w-8 !h-1 !rounded-sm !bg-slate-900 dark:!bg-white !opacity-50 hover:!opacity-100 !transition-all"></span>`;
-                }
+  const init = () => {
+    // 1. SWIPER CONFIGURACIÓN PRO
+    const swiperEl = document.querySelector(".hero-swiper") as HTMLElement & { swiper?: any };
+    if (swiperEl) {
+      if (swiperEl.swiper) return; // Evitar doble inicialización
+      
+      new Swiper(swiperEl, {
+        modules: [Autoplay, EffectCreative, Pagination],
+        // EFECTO CREATIVE: Más fluido y "nativo"
+        effect: "creative",
+        creativeEffect: {
+          prev: {
+            shadow: true,
+            translate: ["-20%", 0, -1],
+            opacity: 0,
+          },
+          next: {
+            translate: ["100%", 0, 0],
+          },
+        },
+        speed: 1000, // Transición de imagen lenta y elegante
+        loop: true,
+        autoplay: { delay: 7000, disableOnInteraction: false },
+        pagination: { 
+            el: ".swiper-pagination-custom-container", 
+            clickable: true,
+            // RENDER BULLET PERSONALIZADO
+            renderBullet: function (index, className) {
+                return `<span class="${className} w-2 h-2 rounded-full bg-white/40 transition-all duration-300 hover:bg-white/80 cursor-pointer block" aria-label="Go to slide ${index + 1}"></span>`;
             }
-         });
-     }
+        },
 
-     // 2. Timer System Robust
-     const updateTimes = () => {
-        const now = new Date().getTime();
+      });
+    }
+
+    // 2. TIMERS (Lógica Robusta)
+    const updateTimers = () => {
+      const now = Date.now();
+      document.querySelectorAll("[data-timer-target]").forEach((el) => {
+        const targetAttr = el.getAttribute("data-timer-target");
+        if(!targetAttr) return;
         
-        // Hero Timers
-        document.querySelectorAll('[data-timer-target]').forEach(el => {
-            const target = new Date(el.getAttribute('data-timer-target') || '').getTime();
-            const distance = target - now;
-            
-            if (distance < 0) {
-                el.innerHTML = `<span class="px-4 py-2 bg-red-500 text-white rounded-lg font-bold text-sm">¡Terminada!</span>`;
-                return;
-            }
-            
-            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const end = new Date(targetAttr).getTime();
+        const diff = end - now;
 
-            // Update only if content changed to prevent layout trashing
-            updateText(el, '.timer-d', d.toString().padStart(2, '0'));
-            updateText(el, '.timer-h', h.toString().padStart(2, '0'));
-            updateText(el, '.timer-m', m.toString().padStart(2, '0'));
-        });
+        if (diff <= 0) {
+            el.innerHTML = '<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Oferta Expirada</span>';
+            return;
+        }
 
-        // Mini Timers
-        document.querySelectorAll('.mini-countdown').forEach(el => {
-            const target = new Date(el.getAttribute('data-end') || '').getTime();
-            const distance = target - now;
-            if(distance < 0) {
-                el.textContent = "Terminó";
-                el.parentElement?.classList.replace('bg-red-600', 'bg-gray-500');
-                return;
-            }
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            el.textContent = `${days}d ${hours}h`;
-        });
-     }
-     
-     // Start Loop
-     const interval = setInterval(updateTimes, 1000);
-     updateTimes(); // Run immediate
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-     // Share Buttons
-     const setupShare = (selector: string) => {
-         document.querySelectorAll(selector).forEach(btn => {
-             // remove old listeners clean if using navigating (optional for advanced setup)
-             btn.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const title = btn.getAttribute('data-title') || 'Promoción';
-                
-                if(navigator.share) {
-                    await navigator.share({ title: title, url: window.location.href });
-                } else {
-                    await navigator.clipboard.writeText(window.location.href);
-                    alert('Enlace copiado');
-                }
-             });
-         });
-     }
-     setupShare('.share-btn');
-     setupShare('.share-btn-small');
+        const setT = (cls: string, val: number) => {
+             const n = el.querySelector(`.${cls}`);
+             if(n) n.textContent = val.toString().padStart(2, '0');
+        };
+        
+        setT('timer-d', d); setT('timer-h', h); setT('timer-m', m);
+      });
+    };
+    const timerInterval = setInterval(updateTimers, 1000);
+    updateTimers();
 
-     // Helper Text Update
-     function updateText(parent: Element, selector: string, val: string) {
-        const el = parent.querySelector(selector);
-        if(el && el.textContent !== val) el.textContent = val;
-     }
-  }
+    // Cleanup si se usa View Transitions
+    document.addEventListener("astro:before-swap", () => clearInterval(timerInterval), { once: true });
+  };
 
-  document.addEventListener('astro:page-load', initPromos);
-  if (document.readyState === 'complete') initPromos();
-  else document.addEventListener('DOMContentLoaded', initPromos);
+  document.addEventListener("astro:page-load", init);
 </script>
 
-<style>
-  /* Pagination Styles Override */
-  :global(.swiper-pagination-bullet-active) {
-      background-color: #0f172a !important; /* slate-900 */
+<style is:global>
+  /* === PAGINATION STYLES (Overriding Swiper Defaults) === */
+  
+  /* Contenedor Flex en el TSX, aquí definimos comportamiento de los bullets activos */
+  .swiper-pagination-bullet {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3) !important;
+    opacity: 1 !important;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    margin: 0 6px !important;
+  }
+
+  /* El bullet activo se convierte en una línea (Pill) */
+  .swiper-pagination-bullet-active {
+    width: 32px !important; /* Estira a lo ancho */
+    border-radius: 4px !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+  
+  /* Sombra del texto glow para el hero */
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  /* === SWIPER ANIMATION FIX === */
+  /* Estado Activo: Mostrar contenido con transición */
+  .swiper-slide-active .slide-content-entry {
       opacity: 1 !important;
-      width: 2rem !important; 
+      transform: translateY(0) !important;
   }
   
-  @media (prefers-color-scheme: dark) {
-    :global(.swiper-pagination-bullet-active) {
-        background-color: #0f172a !important;
-    }
-  }
-  
-  /* Manual Dark Mode override if using class="dark" on html */
-  :global(.dark .swiper-pagination-bullet-active) {
-      background-color: #fff !important;
-  }
-  
-  /* Animación de entrada suave */
-  @keyframes fade-up {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-  }
-  .animate-fade-up { 
-    animation: fade-up 0.8s ease-out forwards; 
-    opacity: 0;
-  }
-  
-  /* Animación de Brillo (Shine Effect) */
-  @keyframes shine {
-    0% { transform: translateX(-100%) skewX(-12deg); }
-    100% { transform: translateX(200%) skewX(-12deg); }
-  }
-  .animate-shine {
-    animation: shine 1.5s ease-in-out;
+  /* Estado Inactivo: Ocultar inmediatamente para resetear animación */
+  .swiper-slide:not(.swiper-slide-active) .slide-content-entry {
+      opacity: 0 !important;
+      transform: translateY(2rem) !important;
+      transition: none !important;
   }
 </style>
