@@ -1,113 +1,120 @@
 ---
 // src/components/Chatbot.astro
-import "../styles/user.css"; // Asegura que tus estilos base estén disponibles
+import "../styles/user.css";
 
 /**
- * Componente de Chatbot con IA
- * Refactorizado para UX/UI Premium (Modern Clean Design)
- * Lógica preservada 100%
+ * Componente Chatbot Enterprise - Fixed UX
+ * - Separación visual mejorada en Desktop
+ * - Lógica de cierre robusta en Mobile
+ * - Animación de Typing restaurada
  */
 ---
 
+<!-- SCROLL TO TOP BUTTON -->
+<button
+  id="scroll-to-top"
+  onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+  class="fixed bottom-24 right-5 sm:bottom-28 sm:right-8 z-[8999] group flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full border border-slate-200/60 bg-white/90 text-slate-500 shadow-lg shadow-slate-200/50 backdrop-blur-md transition-all duration-500 translate-y-10 opacity-0 pointer-events-none hover:-translate-y-1 hover:scale-110 hover:border-blue-300 hover:text-blue-600 dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-400 dark:shadow-black/30"
+  aria-label="Volver arriba"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M12 19V5M5 12l7-7 7 7"></path>
+  </svg>
+</button>
+
+<!-- CONTENEDOR DEL CHATBOT -->
 <div
   id="chatbot-container"
-  class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-[9999] flex flex-col items-center gap-4 pointer-events-none font-sans"
+  class="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-[9000] flex flex-col items-end gap-4 pointer-events-none font-sans"
 >
-  <!-- SCROLL TO TOP BUTTON -->
-  <button
-    id="scroll-to-top"
-    onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-    class="group flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-slate-500 shadow-lg shadow-slate-200/50 backdrop-blur-md transition-all duration-500 translate-y-10 opacity-0 pointer-events-none hover:-translate-y-1 hover:scale-110 hover:border-blue-200 hover:text-blue-600 dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-400 dark:shadow-black/30"
-    aria-label="Volver arriba"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+  <!-- FAB (BOTÓN FLOTANTE) -->
+  <div class="relative pointer-events-auto">
+    <!-- Tooltip - A la izquierda del botón -->
+    <div
+      id="chatbot-tooltip"
+      class="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-xl opacity-0 transition-all duration-500 hidden sm:block pointer-events-none"
     >
-      <path d="M12 19V5M5 12l7-7 7 7"></path>
-    </svg>
-  </button>
+      ¿Necesitas cotización? 👋
+      <!-- Arrow pointing right -->
+      <div
+        class="absolute left-full top-1/2 -translate-y-1/2 -ml-[1px] w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[6px] border-l-slate-900"
+      >
+      </div>
+    </div>
 
-  <!-- BOTÓN FLOTANTE (FAB) -->
-  <!-- Diseño Jewel: Sombra de color difusa y bordes suaves -->
-  <button
-    id="chatbot-toggle"
-    class="chatbot-fab group relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-blue-600 text-white shadow-2xl shadow-blue-600/40 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-1 hover:scale-110 hover:shadow-blue-600/50 active:scale-95 pointer-events-auto"
-    aria-label="Abrir asistente"
-    type="button"
-  >
-    <!-- Ripple Effect decorativo -->
-    <span
-      class="absolute inset-0 rounded-full border border-white/20 opacity-0 transition-opacity group-hover:opacity-100"
-    ></span>
-
-    <!-- Icono Chat (Scale transition) -->
-    <svg
-      class="chatbot-icon-chat absolute h-6 w-6 sm:h-7 sm:w-7 transition-all duration-300 group-hover:rotate-[-10deg]"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      stroke-width="2"
+    <button
+      id="chatbot-toggle"
+      class="group relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-blue-600 text-white shadow-2xl shadow-blue-600/40 ring-4 ring-white/20 dark:ring-slate-900/20 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 hover:shadow-blue-600/60 active:scale-95"
+      aria-label="Abrir asistente"
     >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-      ></path>
-    </svg>
+      <span
+        class="absolute inset-0 rounded-full border border-white/30 opacity-0 transition-opacity group-hover:opacity-100 animate-ping-slow"
+      ></span>
 
-    <!-- Icono Close (Scale & Rotate transition) -->
-    <svg
-      class="chatbot-icon-close absolute h-5 w-5 sm:h-6 sm:w-6 rotate-90 scale-50 opacity-0 transition-all duration-300"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      stroke-width="2.5"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M6 18L18 6M6 6l12 12"></path>
-    </svg>
+      <!-- Icono Chat -->
+      <svg
+        class="chatbot-icon-chat absolute h-7 w-7 transition-all duration-300 ease-out group-hover:rotate-[-12deg]"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+        ></path>
+      </svg>
 
-    <!-- Badge -->
-    <span
-      id="chatbot-badge"
-      class="chatbot-badge absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-2xs font-bold text-white ring-2 ring-white dark:ring-slate-900 transition-transform"
-    >
-      1
-    </span>
-  </button>
+      <!-- Icono Cerrar -->
+      <svg
+        class="chatbot-icon-close absolute h-6 w-6 rotate-90 scale-50 opacity-0 transition-all duration-300 ease-out"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+
+      <span
+        id="chatbot-badge"
+        class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900 transition-transform scale-100"
+        >1</span
+      >
+    </button>
+  </div>
 </div>
 
 <!-- VENTANA DEL CHAT -->
+<!-- Ajuste: 'bottom-28' en Desktop para separarlo del botón flotante -->
 <div
   id="chatbot-window"
-  class="chatbot-window fixed bottom-24 right-4 sm:right-6 flex pointer-events-none h-[650px] max-h-[calc(100dvh-120px)] w-full max-w-[380px] flex-col overflow-hidden rounded-[2.5rem] bg-white shadow-2xl shadow-slate-900/20 opacity-0 translate-y-8 scale-95 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) dark:bg-slate-900 dark:shadow-black/60 dark:ring-1 dark:ring-white/10"
+  class="fixed bottom-28 right-4 sm:right-8 z-[9999] flex h-[600px] max-h-[calc(100dvh-120px)] w-full max-w-[380px] flex-col overflow-hidden rounded-[2rem] bg-white opacity-0 translate-y-12 scale-95 pointer-events-none transition-all duration-500 cubic-bezier(0.19, 1, 0.22, 1) shadow-2xl shadow-slate-900/20 ring-1 ring-black/5 dark:bg-slate-900 dark:shadow-black/50 dark:ring-white/10"
 >
-  <!-- HEADER (Glassmorphism con Gradiente) -->
+  <!-- HEADER -->
   <div
-    class="relative flex flex-shrink-0 items-center justify-between bg-slate-900/5 px-6 py-5 backdrop-blur-xl dark:bg-slate-800/50 border-b border-slate-100/50 dark:border-white/5"
+    class="relative z-20 flex flex-shrink-0 items-center justify-between border-b border-slate-100 bg-white/80 px-6 py-4 backdrop-blur-md dark:border-white/5 dark:bg-slate-900/80"
   >
-    <!-- Gradient bg aesthetic -->
-    <div
-      class="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/5 opacity-50 pointer-events-none"
-    >
-    </div>
-
-    <div class="relative flex items-center gap-4 z-10">
+    <div class="flex items-center gap-3">
       <div class="relative">
         <div
-          class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg"
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md"
         >
           <svg
-            class="h-6 w-6"
+            class="h-5 w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -118,138 +125,145 @@ import "../styles/user.css"; // Asegura que tus estilos base estén disponibles
               d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
           >
         </div>
-        <!-- Status dot -->
         <span
-          class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-900 animate-pulse"
+          class="absolute bottom-0 right-0 block h-3 w-3 rounded-full border-2 border-white bg-green-500 ring-1 ring-slate-100 dark:border-slate-900"
         ></span>
       </div>
 
-      <div class="flex flex-col">
-        <h3
-          class="text-base font-bold text-slate-800 dark:text-white leading-none"
-        >
-          Asistente IA
+      <div>
+        <h3 class="text-sm font-bold text-slate-800 dark:text-white">
+          Asistente B2B
         </h3>
-        <span
-          class="mt-1 text-3xs font-medium text-blue-600 dark:text-blue-400 tracking-wide"
-          >Línea Digital</span
+        <p
+          class="text-[10px] font-medium text-green-600 dark:text-green-400 flex items-center gap-1"
         >
+          <span class="relative flex h-1.5 w-1.5">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+            ></span>
+            <span
+              class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"
+            ></span>
+          </span>
+          En línea ahora
+        </p>
       </div>
     </div>
 
-    <!-- Botón minimizar (Ghost) -->
+    <!-- Botón Minimizar -->
+    <!-- Ajuste: Añadido 'pointer-events-auto' y z-index alto para asegurar click en móvil -->
     <button
       id="chatbot-minimize"
-      class="relative z-10 flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-200/50 hover:text-slate-600 dark:hover:bg-white/10 dark:hover:text-white"
       type="button"
-      aria-label="Cerrar"
+      class="relative z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 active:scale-95 transition-all dark:hover:bg-white/10 dark:hover:text-white pointer-events-auto"
     >
-      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        ><path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"></path></svg
+      <svg
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+        ><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"
+        ></path></svg
       >
     </button>
   </div>
 
-  <!-- ÁREA DE MENSAJES (Limpia) -->
+  <!-- MESSAGES AREA -->
   <div
     id="chatbot-messages"
-    class="flex flex-1 flex-col gap-4 overflow-y-auto bg-slate-50 p-5 scroll-smooth dark:bg-slate-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700"
+    class="flex flex-1 flex-col gap-4 overflow-y-auto bg-slate-50 p-5 dark:bg-[#0B1120] scroll-smooth scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800"
   >
-    <!-- Welcome Msg -->
     <div
-      class="chatbot-message chatbot-message-bot flex animate-slide-up flex-col items-start max-w-[85%]"
+      class="chatbot-message-bot flex flex-col items-start animate-fade-in-up max-w-[85%]"
     >
       <div
-        class="rounded-2xl rounded-tl-sm bg-white px-4 py-3.5 text-sm leading-relaxed text-slate-700 shadow-sm ring-1 ring-slate-900/5 dark:bg-slate-800 dark:text-slate-200 dark:ring-white/10 dark:shadow-none"
+        class="rounded-2xl rounded-tl-none bg-white px-4 py-3 text-sm leading-relaxed text-slate-600 shadow-sm ring-1 ring-black/5 dark:bg-slate-800 dark:text-slate-300 dark:ring-white/10"
       >
-        👋 ¡Hola! Soy tu asistente virtual.<br />
-        ¿Te ayudo a encontrar tu plan ideal?
+        Hola 👋. Soy tu asistente de Línea Digital.<br />
+        <strong>¿Buscas stock de equipos o activar planes empresariales?</strong
+        >
       </div>
-      <span class="ml-1 mt-1 text-2xs font-medium text-slate-400"
-        >Ahora mismo</span
+      <span class="mt-1.5 ml-1 text-[10px] font-medium text-slate-400"
+        >Justo ahora</span
       >
     </div>
   </div>
 
-  <!-- QUICK REPLIES & INPUT (Footer Flotante) -->
+  <!-- INPUT AREA -->
   <div
-    class="flex flex-shrink-0 flex-col gap-3 border-t border-slate-100 bg-white px-5 pt-3 pb-5 dark:bg-slate-900 dark:border-slate-800 z-20"
+    class="relative z-20 bg-white px-4 pb-4 pt-2 dark:bg-slate-900 border-t border-slate-100 dark:border-white/5"
   >
-    <!-- Quick Replies Scroll -->
     <div
       id="chatbot-quick-replies"
-      class="scrollbar-hide -mx-5 flex gap-2 overflow-x-auto px-5 py-1 pb-2"
+      class="flex gap-2 overflow-x-auto pb-3 scrollbar-hide mask-fade-sides"
     >
-      <!-- JS injects buttons here with styling classes below -->
-      <!-- Ejemplo visual para diseño (JS los genera): 
-              <button class="shrink-0 rounded-full border border-blue-200 bg-blue-50/50 px-3 py-1.5 text-xs font-semibold text-blue-600 transition hover:bg-blue-50 dark:border-blue-900/30 dark:bg-blue-900/20 dark:text-blue-400">
-                  📱 Ver Planes
-              </button> 
-              -->
+      <!-- JS inyectará botones aquí -->
     </div>
 
-    <!-- Input Wrapper Pill -->
-    <form
-      id="chatbot-form"
-      class="relative flex items-center gap-2 rounded-full bg-slate-100 p-1.5 pr-2 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all dark:bg-slate-950/50 border border-transparent focus-within:border-blue-200 dark:border-slate-800 dark:focus-within:border-blue-500"
-    >
-      <input
-        id="chatbot-input"
-        type="text"
-        class="w-full bg-transparent px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white"
-        placeholder="Escribe aquí..."
-        autocomplete="off"
-        maxlength="250"
-      />
-
-      <button
-        id="chatbot-send-btn"
-        type="submit"
-        disabled
-        class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm transition-all hover:scale-105 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-slate-300 dark:disabled:bg-slate-700"
+    <form id="chatbot-form" class="relative flex items-center">
+      <div
+        class="relative w-full overflow-hidden rounded-full bg-slate-100 shadow-inner focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white transition-all dark:bg-black/30 dark:focus-within:bg-black/50 border border-transparent focus-within:border-blue-200 dark:focus-within:border-blue-500/50"
       >
-        <svg
-          class="ml-0.5 h-4 w-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2.5"
-          ><path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg
+        <input
+          id="chatbot-input"
+          type="text"
+          class="w-full bg-transparent px-5 py-3 pr-12 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white"
+          placeholder="Escribe tu consulta..."
+          autocomplete="off"
+        />
+
+        <button
+          id="chatbot-send-btn"
+          type="submit"
+          disabled
+          class="absolute right-1.5 top-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm transition-all hover:bg-blue-700 hover:scale-105 disabled:bg-slate-300 disabled:cursor-not-allowed disabled:shadow-none dark:disabled:bg-slate-700"
         >
-      </button>
+          <svg
+            class="ml-0.5 h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg
+          >
+        </button>
+      </div>
     </form>
 
-    <!-- Footer brand tiny -->
-    <p class="text-center text-2xs text-slate-400 dark:text-slate-600">
-      Powered by <span class="font-bold">Línea Digital AI</span>
-    </p>
+    <div class="mt-2 text-center">
+      <p class="text-[9px] text-slate-300 dark:text-slate-600 font-medium">
+        Powered by Línea Digital AI
+      </p>
+    </div>
   </div>
 </div>
 
 <script>
   import { ChatbotClient } from "../lib/chatbot-client";
 
-  // Inicializamos el cliente si estamos en el navegador
-  if (typeof window !== "undefined") {
-    new ChatbotClient();
-  }
-
-  // Lógica del botón Scroll to Top
   document.addEventListener("astro:page-load", () => {
-    const scrollBtn = document.getElementById("scroll-to-top");
-    const SHOW_THRESHOLD = 300;
+    // 1. Inicializar ChatbotClient (maneja toda la lógica de toggle)
+    if (typeof window !== "undefined") {
+      try {
+        new ChatbotClient();
+      } catch (e) {
+        console.error("Error chatbot:", e);
+      }
+    }
 
+    const scrollBtn = document.getElementById("scroll-to-top");
+    const chatbotTooltip = document.getElementById("chatbot-tooltip");
+    const minimizeBtn = document.getElementById("chatbot-minimize");
+    const chatbotToggle = document.getElementById("chatbot-toggle");
+
+    // 2. Scroll Button Logic
     const toggleScrollBtn = () => {
       if (!scrollBtn) return;
-
-      if (window.scrollY > SHOW_THRESHOLD) {
+      if (window.scrollY > 300) {
         scrollBtn.classList.remove(
           "opacity-0",
           "translate-y-10",
@@ -260,25 +274,72 @@ import "../styles/user.css"; // Asegura que tus estilos base estén disponibles
           "translate-y-0",
           "pointer-events-auto",
         );
+        // Ocultar tooltip cuando aparece el scroll button
+        chatbotTooltip?.classList.add("opacity-0");
       } else {
-        scrollBtn.classList.remove(
-          "opacity-100",
-          "translate-y-0",
-          "pointer-events-auto",
-        );
         scrollBtn.classList.add(
           "opacity-0",
           "translate-y-10",
           "pointer-events-none",
         );
+        scrollBtn.classList.remove("opacity-100", "translate-y-0");
+        // Mostrar tooltip de nuevo si no está el chat abierto
+        const windowActive = document
+          .getElementById("chatbot-window")
+          ?.classList.contains("active");
+        if (chatbotTooltip && !windowActive) {
+          chatbotTooltip.classList.remove("opacity-0");
+        }
       }
     };
-
     window.addEventListener("scroll", toggleScrollBtn, { passive: true });
-    toggleScrollBtn();
+
+    // 3. Tooltip (solo mostrar al inicio si no hay scroll)
+    setTimeout(() => {
+      const windowActive = document
+        .getElementById("chatbot-window")
+        ?.classList.contains("active");
+      if (chatbotTooltip && !windowActive && window.scrollY <= 300)
+        chatbotTooltip.classList.remove("opacity-0");
+    }, 2000);
+
+    // 4. Ocultar tooltip cuando se hace click en el toggle
+    if (chatbotToggle) {
+      chatbotToggle.addEventListener("click", () => {
+        chatbotTooltip?.classList.add("hidden");
+      });
+    }
+
+    // 5. Minimize Button - Cierre manual sin focus
+    if (minimizeBtn && chatbotToggle) {
+      minimizeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Cerrar directamente sin disparar click (evita focus en input)
+        const chatWindow = document.getElementById("chatbot-window");
+
+        // Remover clases activas
+        chatbotToggle.classList.remove("active");
+        chatWindow?.classList.remove("active");
+
+        // Restaurar iconos del botón
+        chatbotToggle
+          .querySelector(".chatbot-icon-chat")
+          ?.classList.remove("opacity-0", "rotate-90", "scale-50");
+        chatbotToggle
+          .querySelector(".chatbot-icon-close")
+          ?.classList.add("opacity-0", "rotate-90", "scale-50");
+
+        // Blur del input para cerrar teclado en móvil
+        const input = document.getElementById(
+          "chatbot-input",
+        ) as HTMLInputElement;
+        input?.blur();
+      });
+    }
   });
 
-  // Fallback para carga inicial si astro:page-load no dispara (ej. primera carga sin view transitions)
   if (document.readyState === "complete") {
     document.dispatchEvent(new Event("astro:page-load"));
   } else {
@@ -289,81 +350,41 @@ import "../styles/user.css"; // Asegura que tus estilos base estén disponibles
 </script>
 
 <style>
-  /* === ANIMACIONES UI === */
-  @keyframes slide-up {
+  /* === ANIMATIONS === */
+  @keyframes fade-in-up {
     from {
       opacity: 0;
-      transform: translateY(15px);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  .animate-slide-up {
-    animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  .animate-fade-in-up {
+    animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-ping-slow {
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 
-  /* === TRANSICIONES DEL TOGGLE === */
-  /* Cuando 'active' está en el botón, cambiamos iconos */
-  #chatbot-toggle.active .chatbot-icon-chat {
-    opacity: 0;
-    transform: scale(0.5) rotate(90deg);
+  /* === TYPING INDICATOR (RESTORED) === */
+  /* El JS de tu cliente busca clases especificas, asegurate de que use .typing-dot */
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
   }
-  #chatbot-toggle.active .chatbot-icon-close {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-  #chatbot-toggle.active #chatbot-badge {
-    opacity: 0;
-    transform: scale(0);
-  }
-
-  /* === ESTADO DE VENTANA ABIERTA === */
-  #chatbot-window {
-    z-index: 9999; /* Asegurar z-index alto ya que salió del contenedor padre */
-  }
-
-  #chatbot-window.active {
-    display: flex !important; /* Force flex override */
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
-  }
-
-  /* === ESTILO DINÁMICO DE MENSAJES (Targeteado desde JS classes) === */
-
-  /* Bot Msg */
-  .chatbot-message-bot > div {
-    @apply rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-sm leading-relaxed text-slate-700 shadow-sm ring-1 ring-slate-200/50 dark:bg-slate-800 dark:text-slate-200 dark:ring-white/10 dark:shadow-none;
-  }
-
-  /* User Msg */
-  .chatbot-message-user {
-    @apply self-end items-end max-w-[85%];
-  }
-  .chatbot-message-user > div {
-    @apply rounded-2xl rounded-br-sm bg-gradient-to-br from-blue-600 to-blue-600 px-4 py-3 text-sm leading-relaxed text-white shadow-md shadow-blue-600/20 border border-transparent dark:from-blue-600 dark:to-blue-600;
-  }
-
-  /* === SCROLLBAR INVISIBLE EN QUICK REPLIES === */
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  /* === QUICK REPLIES BUTTONS (Estilo inyectado a botones dinámicos) === */
-  /* El JS usa la clase .chatbot-quick-reply, redefinimos aqui con @apply */
-  .chatbot-quick-reply {
-    @apply flex-shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-blue-400;
-  }
-
-  /* === TYPING DOTS (Animación de carga) === */
   .typing-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #94a3b8; /* slate-400 */
+    border-radius: 50%;
     animation: typing 1.4s infinite ease-in-out both;
+  }
+  .dark .typing-dot {
+    background-color: #64748b; /* slate-500 */
   }
   .typing-dot:nth-child(1) {
     animation-delay: -0.32s;
@@ -377,46 +398,78 @@ import "../styles/user.css"; // Asegura que tus estilos base estén disponibles
     80%,
     100% {
       transform: scale(0);
+      opacity: 0.5;
     }
     40% {
       transform: scale(1);
+      opacity: 1;
     }
   }
 
-  /* === MOBILE OVERRIDES === */
-  @media (max-width: 640px) {
-    /* Ocultar FAB cuando el chat está abierto en móvil */
-    .chatbot-fab.active {
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.8);
-    }
+  /* === MESSAGE STYLES === */
+  .chatbot-message-bot > div {
+    @apply rounded-2xl rounded-tl-none bg-white px-4 py-3 text-sm leading-relaxed text-slate-600 shadow-sm ring-1 ring-black/5 dark:bg-slate-800 dark:text-slate-300 dark:ring-white/10;
+  }
+  .chatbot-message-user {
+    @apply self-end items-end max-w-[85%];
+  }
+  .chatbot-message-user > div {
+    @apply rounded-2xl rounded-br-none bg-blue-600 px-4 py-3 text-sm leading-relaxed text-white shadow-md shadow-blue-600/20;
+  }
+  .chatbot-quick-reply {
+    @apply flex-shrink-0 whitespace-nowrap rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm transition-all hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700;
+  }
 
+  /* === WINDOW STATES === */
+  #chatbot-window.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  /* === UTILITIES === */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* === MOBILE RESPONSIVE === */
+  @media (max-width: 640px) {
     #chatbot-window {
-      @apply fixed top-0 bottom-0 right-0 left-0 w-full max-w-full rounded-none shadow-[0_-10px_40px_rgba(0,0,0,0.1)];
+      /* Fullscreen adaptativo para móvil */
+      @apply fixed inset-0 m-0 w-full max-w-full rounded-none;
+      /* Usar height fija en lugar de dvh para evitar saltos con teclado */
+      height: 100vh;
       height: 100dvh;
-      max-height: 100dvh;
-      transform: translateY(100%) scale(1); /* Oculto abajo, sin escala */
-      padding-bottom: 0;
-      /* Prevenir deformación durante transiciones */
-      will-change: transform;
-      backface-visibility: hidden;
-      z-index: 10001; /* Z-index superior en mobile */
+      max-height: none;
+      transform: translateY(100%);
+      z-index: 10000;
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     #chatbot-window.active {
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
 
+    /* Cuando el teclado está abierto, ajustar altura dinámicamente */
     #chatbot-window.keyboard-open {
-      /* Mantener estable durante cambios de teclado */
-      transition: none; /* Desactivar transición durante ajuste de teclado */
+      /* La altura se ajustará via JS usando visualViewport */
+      transition: none; /* Sin transición para evitar flickering */
     }
 
-    /* Ajuste de z-index para sobreponerse al footer móvil si existe */
-    #chatbot-container {
-      z-index: 10000;
+    /* Ocultar FAB cuando chat está abierto */
+    #chatbot-toggle.active {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Scroll button también se oculta cuando chat está abierto */
+    #chatbot-window.active ~ #scroll-to-top {
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
   }
 </style>
-```

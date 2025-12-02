@@ -5,18 +5,19 @@ import logoDark from "../assets/logo-dark.svg";
 import DarkModeToggle from "./DarkModeToggle.astro";
 
 const { pathname } = Astro.url;
+
 const isActive = (href: string) => {
   if (href === "/" && pathname === "/") return true;
   return href !== "/" && pathname.startsWith(href);
 };
 
 const navLinks = [
-  { 
-    label: "Planes", 
-    href: "#", 
+  {
+    label: "Planes",
+    href: "#",
     children: [
-      { label: "Personas", href: "/personas" },
-      { label: "Empresas", href: "/empresas" },
+      { label: "Personas", href: "/personas", desc: "Datos ilimitados y redes" },
+      { label: "Empresas", href: "/empresas", desc: "Soluciones corporativas" },
     ]
   },
   { label: "Promociones", href: "/promociones" },
@@ -26,429 +27,274 @@ const navLinks = [
 ];
 ---
 
-<!-- 
-  HEADER MEJORADO
-  - Transition suave de altura y fondo al hacer scroll
-  - Glassmorphism premium
--->
 <header
   id="main-header"
-  class="fixed top-0 z-[999] w-full transition-all duration-500 border-b border-transparent"
+  class="fixed top-0 left-0 w-full z-[100] transition-all duration-300"
 >
-  <!-- Fondo dinámico (se activa con JS) -->
-  <div
-    id="header-bg"
-    class="absolute inset-0 bg-white/0 dark:bg-slate-950/0 backdrop-blur-[0px] transition-all duration-500 -z-10"
-  >
-  </div>
+  <!-- Background Backdrop -->
+  <div 
+    id="header-bg" 
+    class="absolute inset-0 bg-transparent backdrop-blur-[0px] border-b border-transparent transition-all duration-300 -z-10"
+  ></div>
 
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <nav
-      class="relative flex items-center justify-between h-20 lg:h-24 transition-all duration-500"
-      id="nav-container"
-    >
-      <!-- 1. LOGO AREA -->
-      <div
-        class="flex-shrink-0 z-50 transition-transform hover:scale-105 duration-300"
-      >
-        <a href="/" class="block" aria-label="Ir al inicio">
-          <Image
-            src={logoWhite}
-            alt="Grupo Linea Digital Logo"
-            class="w-32 sm:w-36 md:w-40 h-auto hidden dark:block drop-shadow-lg transition-all duration-300"
-            loading="eager"
-          />
-          <Image
-            src={logoDark}
-            alt="Grupo Linea Digital Logo"
-            class="w-32 sm:w-36 md:w-40 h-auto dark:hidden transition-all duration-300"
-            loading="eager"
-          />
+    <div class="relative flex items-center justify-between h-20 transition-all duration-300" id="header-container">
+        
+      <!-- 1. LOGO -->
+      <div class="flex-shrink-0 relative z-[110]">
+        <a href="/" class="block group" aria-label="Inicio">
+           <Image src={logoWhite} alt="Logo" class="w-32 h-auto hidden dark:block transition-transform group-hover:scale-105" loading="eager" />
+           <Image src={logoDark} alt="Logo" class="w-32 h-auto dark:hidden transition-transform group-hover:scale-105" loading="eager" />
         </a>
       </div>
 
-      <!-- 2. MENÚ DESKTOP (CENTRADO & FLOTANTE) -->
-      <div
-        class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-      >
-        <!-- Pill Container con fondo sutil -->
-        <ul
-          class="flex items-center gap-1 p-1.5 rounded-full bg-white/50 dark:bg-slate-900/30 border border-white/20 dark:border-white/5 backdrop-blur-sm shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/80 dark:hover:bg-slate-900/60"
-        >
-          {
-            navLinks.map((link) => {
-              // Lógica para detectar si es activo (incluyendo hijos)
-              const isChildActive = link.children?.some(child => isActive(child.href));
-              const active = isActive(link.href) || isChildActive;
+      <!-- 2. DESKTOP NAV (Visible lg+) -->
+      <nav class="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+        <ul class="flex items-center gap-1 p-1.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/50 dark:border-white/10 shadow-sm ring-1 ring-black/5">
+           {navLinks.map((link) => {
+               const hasChildren = link.children && link.children.length > 0;
+               const active = isActive(link.href) || (hasChildren && link.children?.some(c => isActive(c.href)));
 
-              if (link.children) {
-                return (
-                  <li class="relative group">
-                    <button
-                      class={`
-                        flex items-center gap-1 px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer
-                        ${
-                          active
-                            ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm"
-                            : "text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/50 dark:hover:bg-white/5"
-                        }
-                      `}
-                    >
-                      {link.label}
-                      <svg class="w-3 h-3 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
-
-                    <!-- Dropdown Menu -->
-                    <div class="absolute top-full left-0 mt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left scale-95 group-hover:scale-100 pt-2">
-                       <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden p-1">
-                          {link.children.map(child => (
-                             <a 
-                               href={child.href}
-                               class={`block px-4 py-2.5 text-sm font-medium rounded-xl transition-colors ${isActive(child.href) ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400'}`}
-                             >
-                               {child.label}
-                             </a>
-                          ))}
-                       </div>
-                    </div>
-                  </li>
-                );
-              }
-
-              return (
-                <li>
-                  <a
-                    href={link.href}
-                    class={`
-                    relative px-5 py-2 rounded-full text-sm font-bold transition-all duration-300
-                    ${
-                      active
-                        ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/50 dark:hover:bg-white/5"
-                    }
-                  `}
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              );
-            })
-          }
-        </ul>
-      </div>
-
-      <!-- 3. ACCIONES DERECHA -->
-      <div class="flex items-center gap-3 sm:gap-4 z-50">
-        <!-- Toggle -->
-        <div
-          class="rounded-full p-1 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-colors backdrop-blur-sm"
-        >
-          <DarkModeToggle />
-        </div>
-
-        <!-- Botón Mi Telcel (Glassy Premium) -->
-        <a
-          target="_blank"
-          href="https://www.mitelcel.com/mitelcel/login"
-          class="group hidden lg:inline-flex items-center justify-center rounded-full bg-slate-900/90 dark:bg-white/90 px-6 py-2.5 text-center text-sm font-bold text-white dark:text-slate-900 shadow-lg shadow-slate-900/20 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-blue-600 dark:hover:bg-blue-500 hover:shadow-blue-600/30"
-        >
-          Mi Telcel
-          <svg
-            class="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg
-          >
-        </a>
-
-        <!-- Botón Hamburguesa Mejorado -->
-        <button
-          id="navbarToggler"
-          class="relative block lg:hidden group focus:outline-none"
-          aria-label="Toggle navigation"
-        >
-          <div
-            class="relative flex overflow-hidden items-center justify-center rounded-full w-[50px] h-[50px] transform transition-all bg-slate-100/80 dark:bg-slate-800/80 ring-0 ring-blue-500/30 hover:ring-8 group-[.active]:ring-4 ring-opacity-30 duration-200 shadow-md backdrop-blur-sm"
-          >
-            <div
-              class="flex flex-col justify-between w-[20px] h-[20px] transform transition-all duration-300 origin-center overflow-hidden"
-            >
-              <!-- Líneas del hamburguesa -->
-              <div
-                class="hamburger-line-1 bg-slate-700 dark:bg-white h-[2px] w-7 transform transition-all duration-300 origin-left"
-              >
-              </div>
-              <div
-                class="hamburger-line-2 bg-slate-700 dark:bg-white h-[2px] w-7 rounded transform transition-all duration-300"
-              >
-              </div>
-              <div
-                class="hamburger-line-3 bg-slate-700 dark:bg-white h-[2px] w-7 transform transition-all duration-300 origin-left"
-              >
-              </div>
-
-              <!-- X cuando está abierto -->
-              <div
-                class="hamburger-x absolute items-center justify-between transform transition-all duration-500 top-2.5 -translate-x-10 flex w-0"
-              >
-                <div
-                  class="hamburger-x-1 absolute bg-slate-700 dark:bg-white h-[2px] w-5 transform transition-all duration-500 rotate-0 delay-300"
-                >
-                </div>
-                <div
-                  class="hamburger-x-2 absolute bg-slate-700 dark:bg-white h-[2px] w-5 transform transition-all duration-500 -rotate-0 delay-300"
-                >
-                </div>
-              </div>
-            </div>
-          </div>
-        </button>
-      </div>
-
-      <!-- 4. MENÚ MÓVIL -->
-      <div
-        id="navbarCollapse"
-        class="hidden absolute top-full right-0 mt-4 w-80 lg:hidden origin-top-right z-[10000] px-4"
-      >
-        <div
-          class="rounded-[2rem] border border-slate-200/80 bg-white/90 dark:bg-slate-900/90 dark:border-slate-700 p-4 shadow-2xl shadow-blue-900/20 backdrop-blur-xl ring-1 ring-black/5"
-        >
-          <ul class="flex flex-col space-y-1">
-            {
-              navLinks.map((link) => {
-                if (link.children) {
-                   // Lógica para ver si algún hijo está activo para marcar el padre
-                   const isChildActive = link.children.some(child => isActive(child.href));
-                   
-                   return (
-                     <li>
-                        <button
-                          class={`
-                            mobile-dropdown-btn flex items-center justify-between w-full px-5 py-4 rounded-2xl text-base font-bold transition-all duration-200 group
-                            ${isChildActive ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-blue-600'}
-                          `}
-                          onclick="
-                            const submenu = this.nextElementSibling;
-                            const icon = this.querySelector('.arrow-icon');
-                            if (submenu.style.maxHeight) {
-                              submenu.style.maxHeight = null;
-                              icon.style.transform = 'rotate(0deg)';
-                            } else {
-                              submenu.style.maxHeight = submenu.scrollHeight + 'px';
-                              icon.style.transform = 'rotate(180deg)';
-                            }
-                          "
-                        >
-                          {link.label}
-                          <svg class="arrow-icon w-4 h-4 transition-transform duration-300 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        
-                        <div class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-in-out">
-                           <div class="pt-1 pb-2 pl-4 space-y-1">
-                             {link.children.map(child => {
-                                const active = isActive(child.href);
-                                return (
-                                  <a
-                                    href={child.href}
-                                    class={`
-                                      flex items-center w-full px-5 py-4 rounded-2xl text-base font-bold transition-all duration-200
-                                      ${
-                                        active
-                                          ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-                                          : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-blue-600"
-                                      }
-                                    `}
-                                  >
-                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 mr-3 group-hover:bg-blue-400 transition-colors"></span>
-                                    {child.label}
-                                  </a>
-                                )
-                             })}
+               return (
+                   <li class="relative group">
+                       <a href={link.href} class={`flex items-center gap-1 px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${active ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400'}`}>
+                           {link.label}
+                           {hasChildren && <svg class="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>}
+                       </a>
+                       
+                       {/* Dropdown Desktop (Premium Glass) */}
+                       {hasChildren && (
+                           <div class="absolute top-full left-1/2 -translate-x-1/2 pt-5 w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform origin-top scale-90 group-hover:scale-100 translate-y-2 group-hover:translate-y-0 z-50">
+                               <div class="bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-slate-200/50 dark:border-white/10 p-2 ring-1 ring-black/5 overflow-hidden">
+                                   {link.children?.map(child => (
+                                       <a href={child.href} class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200">
+                                           <div class="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover/item:scale-110 group-hover/item:bg-blue-100 dark:group-hover/item:bg-blue-900/40 transition-all">
+                                               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                           </div>
+                                           <div>
+                                               <div class="text-sm font-bold text-slate-900 dark:text-white group-hover/item:text-blue-600 transition-colors">{child.label}</div>
+                                               <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">{child.desc}</div>
+                                           </div>
+                                       </a>
+                                   ))}
+                               </div>
                            </div>
-                        </div>
-                     </li>
-                   )
-                }
+                       )}
+                   </li>
+               );
+           })}
+        </ul>
+      </nav>
 
-                const active = isActive(link.href);
-                return (
-                  <li>
-                    <a
-                      href={link.href}
-                      class={`
-                        flex items-center w-full px-5 py-4 rounded-2xl text-base font-bold transition-all duration-200
-                        ${
-                          active
-                            ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-                            : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-blue-600"
-                        }
-                      `}
-                    >
-                      {link.label}
-                      {active && (
-                        <div class="ml-auto w-2 h-2 rounded-full bg-blue-500" />
-                      )}
-                    </a>
-                  </li>
-                );
-              })
-            }
-            <li
-              class="pt-4 mt-2 border-t border-slate-100 dark:border-slate-800"
-            >
-              <a
-                target="_blank"
-                href="https://www.mitelcel.com/mitelcel/login"
-                class="flex items-center justify-center w-full bg-slate-900 text-white px-4 py-4 rounded-2xl font-bold text-sm shadow-lg shadow-slate-900/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 dark:bg-white dark:text-slate-900"
-              >
-                Ingresar a Mi Telcel
-              </a>
-            </li>
-          </ul>
-        </div>
+      <!-- 3. ACTIONS & HAMBURGER -->
+      <div class="flex items-center gap-3 relative z-[110]">
+         <div class="hidden sm:block"><DarkModeToggle /></div>
+         
+         <a href="https://www.mitelcel.com/mitelcel/login" target="_blank" class="hidden lg:inline-flex items-center justify-center px-6 py-2.5 text-sm font-bold text-white transition-all bg-slate-900 rounded-full hover:bg-blue-600 hover:shadow-lg dark:bg-white dark:text-slate-900">
+            Mi Telcel
+         </a>
+
+         <!-- Hamburger Button (Mobile) -->
+         <button 
+            id="mobile-menu-btn"
+            class="lg:hidden relative z-50 w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 focus:outline-none touch-manipulation
+                   bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border border-slate-200/50 dark:border-white/10 shadow-sm
+                   hover:scale-110 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-500/30
+                   active:scale-90"
+            aria-label="Menú"
+            aria-expanded="false"
+         >
+             <div class="w-5 h-3.5 flex flex-col justify-between relative overflow-visible pointer-events-none">
+                 <span class="w-full h-0.5 bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] origin-center ham-line-1"></span>
+                 <span class="w-full h-0.5 bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] ham-line-2"></span>
+                 <span class="w-full h-0.5 bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] origin-center ham-line-3"></span>
+             </div>
+         </button>
       </div>
-    </nav>
+    </div>
+  </div>
+
+  <!-- 4. MOBILE MENU FLOATING DROPDOWN -->
+  <div 
+    id="mobile-menu-dropdown" 
+    class="absolute top-[80px] left-0 right-0 mx-4 z-[100] origin-top transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] scale-95 opacity-0 invisible pointer-events-none"
+  >
+      <div class="bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-2xl rounded-[2rem] border border-slate-200/60 dark:border-white/10 shadow-2xl shadow-blue-900/20 overflow-hidden ring-1 ring-black/5">
+          <nav class="flex flex-col p-2">
+             {navLinks.map((link) => {
+                 // CASE: Dropdown Mobile (Accordion)
+                 if (link.children) {
+                     return (
+                         <div class="mobile-group">
+                             <button 
+                                class="flex items-center justify-between w-full px-5 py-4 text-left rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group mobile-accordion-trigger"
+                                aria-expanded="false"
+                             >
+                                 <span class="font-bold text-slate-900 dark:text-white text-lg">{link.label}</span>
+                                 <span class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900 transition-colors">
+                                     <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 transition-transform duration-300 accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                 </span>
+                             </button>
+                             
+                             <!-- Submenu Animated Content -->
+                             <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out mobile-accordion-grid">
+                                 <div class="overflow-hidden">
+                                     <div class="px-4 pb-2 space-y-1 bg-slate-50/50 dark:bg-black/20 rounded-xl mt-1 mx-2">
+                                         {link.children.map(child => (
+                                             <a href={child.href} class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-base font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-white/5 transition-all">
+                                                 <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                                                 {child.label}
+                                             </a>
+                                         ))}
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     )
+                 }
+                 // CASE: Normal Link
+                 const active = isActive(link.href);
+                 return (
+                     <a href={link.href} class={`flex items-center w-full px-5 py-4 rounded-2xl text-lg font-bold transition-all ${active ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}>
+                         {link.label}
+                     </a>
+                 );
+             })}
+          </nav>
+
+          <!-- Footer Actions -->
+          <div class="p-4 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex flex-col gap-3">
+               <div class="flex items-center justify-between px-2">
+                   <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">Preferencia de tema</span>
+                   <DarkModeToggle />
+               </div>
+               <a href="https://www.mitelcel.com/mitelcel/login" target="_blank" class="w-full flex items-center justify-center py-3.5 rounded-xl bg-slate-900 dark:bg-blue-600 text-white font-bold shadow-lg shadow-slate-900/10 active:scale-95 transition-transform">
+                   Ingresar a Mi Telcel
+               </a>
+          </div>
+      </div>
   </div>
 </header>
 
 <style>
-  /* Animación del botón hamburguesa cuando está activo */
-  #navbarToggler.active .hamburger-line-1 {
-    transform: translate(0, 6px);
-    opacity: 0;
+  /* Hamburger Animation (Elastic) */
+  .menu-active .ham-line-1 { transform: translateY(6px) rotate(135deg); }
+  .menu-active .ham-line-2 { opacity: 0; transform: scaleX(0); }
+  .menu-active .ham-line-3 { transform: translateY(-6px) rotate(-135deg); }
+  
+  /* Active Button State */
+  #mobile-menu-btn.menu-active {
+      @apply bg-slate-900 dark:bg-white border-slate-900 dark:border-white;
+  }
+  #mobile-menu-btn.menu-active span {
+      @apply bg-white dark:bg-slate-900;
   }
 
-  #navbarToggler.active .hamburger-line-2 {
-    transform: translate(0, 6px);
-    opacity: 0;
+  /* Accordion Animation */
+  .mobile-accordion-trigger[aria-expanded="true"] .accordion-icon {
+      transform: rotate(180deg);
+  }
+  .mobile-accordion-trigger[aria-expanded="true"] {
+      @apply bg-slate-50 dark:bg-white/5 text-blue-600 dark:text-blue-400;
+  }
+  .mobile-accordion-grid.open {
+      grid-template-rows: 1fr;
+  }
+  
+  /* Scroll State */
+  .header-scrolled #header-bg {
+     @apply bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-xl border-slate-200/60 dark:border-white/10 shadow-sm;
+  }
+  .header-scrolled #header-container {
+     @apply h-16;
   }
 
-  #navbarToggler.active .hamburger-line-3 {
-    transform: translate(0, 6px);
-    opacity: 0;
-  }
-
-  #navbarToggler.active .hamburger-x {
-    transform: translateX(0);
-    width: 3rem;
-  }
-
-  #navbarToggler.active .hamburger-x-1 {
-    transform: rotate(45deg);
-  }
-
-  #navbarToggler.active .hamburger-x-2 {
-    transform: rotate(-45deg);
+  /* Dropdown Active State */
+  .dropdown-active {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: scale(100%) !important;
   }
 </style>
 
-<script is:inline>
-  // --- SCROLL EFFECT ---
-  const header = document.getElementById("main-header");
-  const headerBg = document.getElementById("header-bg");
-  const navContainer = document.getElementById("nav-container");
+<script>
+    const setupHeader = () => {
+        const header = document.getElementById("main-header");
+        const btn = document.getElementById("mobile-menu-btn");
+        const dropdown = document.getElementById("mobile-menu-dropdown");
+        
+        // 1. SCROLL EFFECT
+        if (!header?.dataset.scrollInitialized) {
+            const updateScroll = () => {
+                if (window.scrollY > 20) {
+                    header?.classList.add("header-scrolled");
+                } else {
+                    header?.classList.remove("header-scrolled");
+                }
+            };
+            window.addEventListener("scroll", updateScroll);
+            updateScroll();
+            if(header) header.dataset.scrollInitialized = "true";
+        }
 
-  function updateHeader() {
-    if (!header || !headerBg || !navContainer) return;
+        // 2. TOGGLE MENU LOGIC
+        let isOpen = false;
+        
+        const closeMenu = () => {
+            isOpen = false;
+            btn?.classList.remove("menu-active");
+            btn?.setAttribute("aria-expanded", "false");
+            dropdown?.classList.remove("dropdown-active");
+        };
 
-    if (window.scrollY > 20) {
-      // Scrolled State
-      headerBg.classList.remove(
-        "bg-white/0",
-        "dark:bg-slate-950/0",
-        "backdrop-blur-[0px]",
-      );
-      headerBg.classList.add(
-        "bg-white/80",
-        "dark:bg-slate-950/80",
-        "backdrop-blur-md",
-        "shadow-sm",
-      );
-      header.classList.add("border-slate-200/60", "dark:border-slate-800/60");
-      header.classList.remove("border-transparent");
+        const toggleMenu = () => {
+            isOpen = !isOpen;
+            if (isOpen) {
+                btn?.classList.add("menu-active");
+                btn?.setAttribute("aria-expanded", "true");
+                dropdown?.classList.add("dropdown-active");
+            } else {
+                closeMenu();
+            }
+        };
 
-      // Compact Nav removed to prevent layout shift
-    } else {
-      // Top State
-      headerBg.classList.add(
-        "bg-white/0",
-        "dark:bg-slate-950/0",
-        "backdrop-blur-[0px]",
-      );
-      headerBg.classList.remove(
-        "bg-white/80",
-        "dark:bg-slate-950/80",
-        "backdrop-blur-md",
-        "shadow-sm",
-      );
-      header.classList.remove(
-        "border-slate-200/60",
-        "dark:border-slate-800/60",
-      );
-      header.classList.add("border-transparent");
+        if (btn && !btn.dataset.clickInitialized) {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                toggleMenu();
+            });
+            btn.dataset.clickInitialized = "true";
+        }
 
-      // Expanded Nav removed
-    }
-  }
+        document.addEventListener("click", (e) => {
+            if (isOpen && dropdown && !dropdown.contains(e.target as Node) && !btn?.contains(e.target as Node)) {
+                closeMenu();
+            }
+        });
 
-  window.addEventListener("scroll", updateHeader);
-  // Init on load
-  document.addEventListener("DOMContentLoaded", updateHeader);
-
-  // --- MOBILE MENU LOGIC ---
-  const navbarToggler = document.getElementById("navbarToggler");
-  const navbarCollapse = document.getElementById("navbarCollapse");
-
-  if (navbarToggler && navbarCollapse) {
-    let isOpen = false;
-
-    const toggleMenu = (open) => {
-      isOpen = open;
-      if (isOpen) {
-        navbarCollapse.classList.remove("hidden");
-        navbarToggler.classList.add("active");
-        navbarToggler.setAttribute("aria-expanded", "true");
-      } else {
-        navbarCollapse.classList.add("hidden");
-        navbarToggler.classList.remove("active");
-        navbarToggler.setAttribute("aria-expanded", "false");
-      }
+        // 3. ACCORDION SUBMENU LOGIC (Smooth Grid Animation)
+        const triggers = document.querySelectorAll(".mobile-accordion-trigger");
+        triggers.forEach(trigger => {
+            if ((trigger as HTMLElement).dataset.accordionInitialized) return;
+            
+            trigger.addEventListener("click", function(this: HTMLElement) {
+                const isExpanded = this.getAttribute("aria-expanded") === "true";
+                this.setAttribute("aria-expanded", String(!isExpanded));
+                
+                const grid = this.nextElementSibling;
+                if (grid) {
+                    grid.classList.toggle("open");
+                }
+            });
+            (trigger as HTMLElement).dataset.accordionInitialized = "true";
+        });
+        
+        const links = dropdown?.querySelectorAll("a");
+        links?.forEach(link => {
+            link.addEventListener("click", closeMenu);
+        });
     };
 
-    navbarToggler.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggleMenu(!isOpen);
-    });
-
-    // Close on click outside
-    document.addEventListener("click", (e) => {
-      if (
-        !navbarCollapse.contains(e.target) &&
-        !navbarToggler.contains(e.target) &&
-        isOpen
-      ) {
-        toggleMenu(false);
-      }
-    });
-
-    // Close on link click
-    const navLinks = navbarCollapse.querySelectorAll("a");
-    navLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        toggleMenu(false);
-      });
-    });
-
-    // Close on Escape key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && isOpen) {
-        toggleMenu(false);
-      }
-    });
-  }
+    document.addEventListener("astro:page-load", setupHeader);
 </script>

@@ -1,102 +1,121 @@
 ---
+// src/components/Benefits.astro
+
 const benefits = [
   {
+    category: "Ahorro Inteligente",
     title: "Cashback Telcel",
-    description:
-      "Recibe un porcentaje de la renta para pagar servicios adicionales en tu factura mensual.",
+    description: "Recibe un porcentaje de tu renta mensual para pagar servicios adicionales o reducir tu próxima factura.",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />`,
+    highlight: "Ahorro Recurrente",
+    color: "text-green-600 dark:text-green-400",
+    bg: "bg-green-50 dark:bg-green-900/20"
   },
   {
+    category: "Entretenimiento Premium",
     title: "Amazon Prime",
-    description:
-      "Contrata Amazon Prime con cargo a tu factura Telcel y disfruta de 6 meses sin costo.",
+    description: "Envíos gratis y todo el catálogo de Prime Video incluido con cargo a tu factura Telcel.",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />`,
+    highlight: "6 Meses Sin Costo",
+    color: "text-blue-600 dark:text-blue-400",
+    bg: "bg-blue-50 dark:bg-blue-900/20"
   },
   {
-    title: "ClaroVideo con Paramount +",
-    description:
-      "Disfruta de las mejores películas, series y documentales en Claro Video más todo el contenido de Paramount+.",
+    category: "Streaming",
+    title: "Claro Video + Paramount+",
+    description: "Acceso ilimitado a películas, series exclusivas y deportes en vivo desde cualquier dispositivo.",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />`,
+    highlight: "Suscripción Incluida",
+    color: "text-red-600 dark:text-red-400",
+    bg: "bg-red-50 dark:bg-red-900/20"
   },
   {
+    category: "Productividad",
     title: "Claro Drive",
-    description:
-      "Obtén 20 GB para guardar de forma segura tus fotos, videos y otros archivos para consultarlos desde cualquier dispositivo.",
+    description: "Almacenamiento en la nube de nivel empresarial para respaldar fotos, contratos y archivos.",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />`,
+    highlight: "20 GB Gratis",
+    color: "text-indigo-600 dark:text-indigo-400",
+    bg: "bg-indigo-50 dark:bg-indigo-900/20"
   },
   {
+    category: "Fintech",
     title: "Claro Pay",
-    description:
-      "Paga tu factura cada mes a través de Claro Pay y recibe 1GB adicional para navegar.",
+    description: "Gestiona pagos de servicios y recibe bonificaciones de datos por usar la app oficial.",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />`,
+    highlight: "+1 GB de Regalo",
+    color: "text-amber-600 dark:text-amber-400",
+    bg: "bg-amber-50 dark:bg-amber-900/20"
   },
 ];
 ---
 
-<section class="py-16 md:py-24 relative overflow-hidden">
-  <div class="container mx-auto px-4 max-w-4xl relative z-10">
-    <!-- Accordion/Card Container -->
-    <div
-      class="rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:bg-slate-900 dark:border-slate-700 dark:shadow-none overflow-hidden"
-    >
-      <!-- Header -->
-      <div
-        class="bg-slate-50/80 dark:bg-slate-800/50 p-6 md:p-8 border-b border-slate-100 dark:border-slate-700/50 backdrop-blur-sm"
-      >
-        <h2
-          class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3"
-        >
-          <span class="text-blue-600 dark:text-blue-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"
-              ></path>
-            </svg>
-          </span>
-          Conoce todos los beneficios
-        </h2>
-      </div>
+<section class="py-20 relative overflow-hidden">
+  
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#64748b 1px, transparent 1px); background-size: 32px 32px;"></div>
+  
+  <!-- Ambient Light -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-      <!-- Content List -->
-      <div class="p-6 md:p-8">
-        <ul class="space-y-6">
-          {
-            benefits.map((item) => (
-              <li class="flex items-start gap-4 group">
-                <div class="shrink-0 mt-1">
-                  <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2.5"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {item.title}
-                  </h3>
-                  <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm md:text-base">
-                    {item.description}
-                  </p>
-                </div>
-              </li>
-            ))
-          }
-        </ul>
+  <div class="container mx-auto px-6 max-w-7xl relative z-10">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest mb-4">
+        Valor Agregado
       </div>
+      <h2 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-6">
+        Mucho más que una <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">línea telefónica.</span>
+      </h2>
+      <p class="text-lg text-slate-600 dark:text-slate-400">
+        Al contratar con nosotros, desbloqueas un ecosistema de servicios digitales diseñados para tu entretenimiento y productividad.
+      </p>
+    </div>
+
+    <!-- Benefits Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      {benefits.map((item) => (
+        <div class="group relative flex flex-col p-8 rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 transition-all duration-300 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1">
+          
+          <!-- Icon Header -->
+          <div class="flex items-start justify-between mb-6">
+            <div class={`w-14 h-14 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
+              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <Fragment set:html={item.icon} />
+              </svg>
+            </div>
+            
+            <!-- Badge de Valor -->
+            {item.highlight && (
+              <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300">
+                {item.highlight}
+              </span>
+            )}
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1">
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">{item.category}</p>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              {item.title}
+            </h3>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+              {item.description}
+            </p>
+          </div>
+
+          <!-- Bottom Decorative Line -->
+          <div class="mt-6 h-1 w-12 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+            <div class="h-full w-full bg-blue-500 -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+          </div>
+
+        </div>
+      ))}
+
+
+
     </div>
   </div>
 </section>

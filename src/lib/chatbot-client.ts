@@ -190,11 +190,23 @@ export class ChatbotClient {
     this.elements.fab.classList.toggle('active', this.isOpen);
     this.elements.window.classList.toggle('active', this.isOpen);
 
+    // Cambiar iconos del FAB
+    const chatIcon = this.elements.fab.querySelector('.chatbot-icon-chat');
+    const closeIcon = this.elements.fab.querySelector('.chatbot-icon-close');
+
     if (this.isOpen) {
+      // Chat abierto: mostrar X (cerrar)
+      chatIcon?.classList.add('opacity-0', 'rotate-90', 'scale-50');
+      closeIcon?.classList.remove('opacity-0', 'rotate-90', 'scale-50');
+
       this.elements.input.focus();
       this.hideBadge();
       this.markAsOpened();
       this.scrollToBottom();
+    } else {
+      // Chat cerrado: mostrar mensaje (chat)
+      chatIcon?.classList.remove('opacity-0', 'rotate-90', 'scale-50');
+      closeIcon?.classList.add('opacity-0', 'rotate-90', 'scale-50');
     }
   }
 

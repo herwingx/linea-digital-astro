@@ -12,59 +12,42 @@ interface Review {
   time?: number;
 }
 
-// --- 2. DATOS DE RESPALDO (FALLBACK) ACTUALIZADOS ---
-// Mantenidos intactos según tu código
-let fallbackReviews: Review[] = [
+// --- 2. DATOS DE RESPALDO (FALLBACK) ---
+// Optimizados para vender confianza B2B (Soporte, Rapidez, Stock)
+const fallbackReviews: Review[] = [
   {
-    author_name: "Ana María García",
+    author_name: "Constructora del Sur",
     profile_photo_url: null,
     rating: 5,
-    text: "Me sorprendió gratamente la rapidez de la atención. Llevaba semanas con dudas sobre qué plan elegir y aquí me explicaron cada detalle con mucha paciencia y claridad.",
-    relative_time_description: "Hace 1 semana",
+    text: "La implementación de la flotilla de líneas para nuestros ingenieros de campo fue inmediata. El portal de autogestión nos ahorra horas administrativas al mes.",
+    relative_time_description: "Hace 2 semanas",
   },
   {
     author_name: "Carlos Rodríguez",
     profile_photo_url: null,
     rating: 5,
-    text: "Definitivamente el mejor servicio técnico que he probado en años. Resolvieron mi problema de conectividad en menos de 24 horas cuando otros tardaban días. 100% recomendados.",
-    relative_time_description: "Hace 3 semanas",
-  },
-  {
-    author_name: "Elena Torres",
-    profile_photo_url: null,
-    rating: 5,
-    text: "Excelente relación calidad-precio. Los equipos son de gama alta y los planes se adaptan perfectamente a lo que necesito sin pagar de más. Muy contenta con el cambio.",
+    text: "Excelente atención para distribuidores. Siempre tienen stock de los equipos de gama alta que mis clientes piden. La logística de entrega es impecable.",
     relative_time_description: "Hace 1 mes",
   },
   {
-    author_name: "Javier López",
+    author_name: "Farmacias San Pablo (Sucursal)",
     profile_photo_url: null,
     rating: 5,
-    text: "Son unos profesionales increíbles. Me ayudaron a configurar todos los dispositivos de mi empresa y el soporte post-venta ha sido impecable en todo momento.",
+    text: "Resolvieron nuestro problema de conectividad 4G en zonas rurales donde otros proveedores no llegaban. El soporte técnico realmente sabe lo que hace.",
     relative_time_description: "Hace 2 meses",
-  },
-  {
-    author_name: "Laura Méndez",
-    profile_photo_url: null,
-    rating: 5,
-    text: "La cobertura es fantástica incluso en zonas alejadas. Viajo mucho por trabajo y nunca he tenido problemas de señal, algo que valoro muchísimo en un servicio móvil.",
-    relative_time_description: "Hace 4 meses",
-  },
-  {
-    author_name: "Roberto Sánchez",
-    profile_photo_url: null,
-    rating: 5,
-    text: "Trato cercano y muy eficaz. Se nota que se preocupan por el cliente y no eres solo un número más. Sin duda seguiré renovando mis servicios con ellos.",
-    relative_time_description: "Hace 6 meses",
   },
 ];
 
-// --- 3. LÓGICA DE API ---
+// --- 3. LÓGICA DE API (Server Side) ---
 const API_KEY = import.meta.env.GOOGLE_API_KEY;
 const PLACE_ID = import.meta.env.GOOGLE_PLACE_ID;
 
 let finalReviews: Review[] = [];
 
+// Función para obtener iniciales
+const getInitial = (name: string) => (name ? name.charAt(0).toUpperCase() : "C");
+
+// Fetching de datos
 if (API_KEY && PLACE_ID) {
   try {
     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=reviews&key=${API_KEY}&language=es`;
@@ -74,72 +57,66 @@ if (API_KEY && PLACE_ID) {
     if (data.result && data.result.reviews) {
       let googleReviews: Review[] = data.result.reviews;
 
-      // Filtro estricto (Mantenido intacto)
+      // Filtrado B2B: Solo reseñas de alta calidad (largas y positivas)
       googleReviews = googleReviews.filter(
         (review) =>
           review.rating >= 4 &&
           review.text &&
-          review.text.length > 100,
+          review.text.length > 40 // Filtramos "Muy bien" o textos cortos que no aportan valor
       );
 
-      // Orden
+      // Ordenar por fecha (más reciente primero)
       googleReviews.sort((a, b) => (b.time || 0) - (a.time || 0));
       finalReviews = googleReviews;
     }
   } catch (error) {
-    console.error("Error conectando a Google Reviews", error);
+    console.error("Error conectando a Google Reviews:", error);
+    // Fallback silencioso
   }
 }
 
-// --- 4. FUSIÓN Y RELLENO ---
-const espaciosFaltantes = 3 - finalReviews.length;
-if (espaciosFaltantes > 0) {
+// Relleno inteligente
+const reviewsNeeded = 3;
+if (finalReviews.length < reviewsNeeded) {
   finalReviews = [
     ...finalReviews,
-    ...fallbackReviews.slice(0, espaciosFaltantes),
+    ...fallbackReviews.slice(0, reviewsNeeded - finalReviews.length),
   ];
 } else {
-  finalReviews = finalReviews.slice(0, 3);
+  finalReviews = finalReviews.slice(0, 6); // Máximo 6 cards
 }
-
-// --- 5. UTILIDADES ---
-const getInitial = (name: string) => (name ? name.charAt(0).toUpperCase() : "U");
-const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rating);
 ---
 
-<section class="relative overflow-hidden py-16 md:py-24 px-6 transition-colors duration-500">
-  
-  <!-- Glow Effects (Ambient) -->
-<!--   <div class="pointer-events-none absolute -top-20 left-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
-  <div class="pointer-events-none absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-blue-400/5 blur-[100px] mix-blend-multiply dark:mix-blend-screen dark:opacity-20"></div> -->
-
-  <div class="container relative z-10 mx-auto px-6 md:px-8">
+<section class="relative overflow-hidden py-24 transition-colors duration-500">
+  <div class="container relative z-10 mx-auto px-6 lg:px-8">
     
-    <!-- Header Section -->
-    <div class="mx-auto mb-16 max-w-3xl text-center animate-fade-up">
-      <span class="mb-4 inline-block rounded-full border border-blue-200/50 bg-blue-50/50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600 backdrop-blur-sm dark:border-blue-500/20 dark:bg-blue-900/20 dark:text-blue-400">
-        Testimonios Reales
-      </span>
-      <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl mb-6">
+    <!-- HEADER -->
+    <div class="mx-auto mb-20 max-w-3xl text-center">
+      <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700 backdrop-blur-md dark:border-blue-800/50 dark:bg-blue-950/30 dark:text-blue-400 shadow-sm">
+        <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        Reputación Verificada
+      </div>
+      
+      <h2 class="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white md:text-5xl">
         La confianza se construye con resultados
+
       </h2>
-      <p class="text-lg md:text-xl leading-relaxed text-slate-500 dark:text-slate-400">
+      <p class="mt-6 text-xl leading-relaxed text-slate-600 dark:text-slate-400">
         No tomes solo nuestra palabra. Lee las experiencias de quienes ya han transformado su conectividad con nosotros.
       </p>
     </div>
 
-    <!-- Cards Grid -->
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+    <!-- REVIEWS GRID (Bento Style Cards) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
-        finalReviews.map((review, index) => (
-          <div 
-            class="group relative flex h-full flex-col rounded-[2rem] border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10 dark:border-white/5 dark:bg-slate-900 dark:shadow-none dark:hover:border-blue-500/30 dark:hover:bg-slate-800/80"
-          >
-            <!-- Top: User Profile & Stars -->
-            <div class="flex items-center justify-between mb-6">
-               <!-- User Info -->
-               <div class="flex items-center gap-4">
-                 <div class="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-100 bg-gradient-to-br from-blue-50 to-white shadow-inner dark:border-slate-700 dark:from-slate-800 dark:to-slate-800">
+        finalReviews.map((review) => (
+          <article class="group relative flex flex-col justify-between h-full rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-900/10 hover:border-blue-200 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-800 dark:hover:bg-slate-800/50">
+            
+            <div>
+              <!-- Header Card: Profile + Info -->
+              <div class="flex items-center gap-4 mb-6">
+                 <!-- Avatar Logic -->
+                 <div class="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-white dark:ring-slate-800 shadow-md">
                     {review.profile_photo_url ? (
                       <img
                         src={review.profile_photo_url}
@@ -148,37 +125,39 @@ const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rat
                         loading="lazy"
                       />
                     ) : (
-                      <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{getInitial(review.author_name)}</span>
+                      <div class="h-full w-full bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 flex items-center justify-center">
+                        <span class="text-lg font-bold text-blue-700 dark:text-blue-300">{getInitial(review.author_name)}</span>
+                      </div>
                     )}
                  </div>
-                 <div class="flex flex-col">
-                   <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-none mb-1 group-hover:text-blue-600 transition-colors">
+                 
+                 <div>
+                   <h3 class="text-base font-bold text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                      {review.author_name}
-                   </h4>
-                   <span class="text-2xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                   </h3>
+                   <time class="text-xs font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
                      {review.relative_time_description}
-                   </span>
+                   </time>
                  </div>
-               </div>
+              </div>
+
+              <!-- Content -->
+              <div class="relative">
+                <!-- Comillas decorativas -->
+                <span class="absolute -top-2 -left-2 text-6xl text-slate-100 dark:text-slate-800 font-serif leading-none select-none -z-10 group-hover:text-blue-50 dark:group-hover:text-blue-900/20 transition-colors">“</span>
+                <p class="relative z-10 text-base leading-relaxed text-slate-600 dark:text-slate-300 line-clamp-4 group-hover:line-clamp-none transition-all duration-300">
+                  {review.text}
+                </p>
+              </div>
             </div>
 
-            <!-- Middle: Review Content -->
-            <div class="relative flex-grow">
-               <!-- Decorative Quote Icon -->
-               <svg class="absolute -left-2 -top-2 h-8 w-8 text-slate-100 dark:text-slate-800 -z-10 opacity-0 transition-all group-hover:opacity-100 group-hover:-top-4 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.096 14.017 14.192 14.017 12.289C14.017 9.71298 13.3902 8.07998 12.1362 7.39C12.5243 7.34472 12.7597 7.19464 12.8424 6.93968C12.8424 6.93968 14.8913 6.91968 16.0472 8.55971C17.2032 10.1997 16.6542 12.3497 16.6542 12.3497L16.6542 21H14.017ZM8.01717 21L8.01717 18C8.01717 16.096 8.01717 14.192 8.01717 12.289C8.01717 9.71298 7.39025 8.07998 6.13625 7.39C6.5243 7.34472 6.75972 7.19464 6.84243 6.93968C6.84243 6.93968 8.89125 6.91968 10.0472 8.55971C11.2032 10.1997 10.6542 12.3497 10.6542 12.3497L10.6542 21H8.01717Z"/></svg>
-               
-               <p class="relative text-base leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-6 italic">
-                "{review.text}"
-               </p>
-            </div>
-
-            <!-- Bottom: Stars & Source -->
-            <div class="mt-8 flex items-center justify-between border-t border-slate-50 pt-6 dark:border-white/5">
-              <div class="flex items-center gap-1">
-                {getStars(review.rating).map((isFilled) => (
-                   <svg
-                    class={`h-4 w-4 transition-all ${isFilled ? "text-amber-400" : "text-slate-200"}`}
-                    fill="currentColor"
+            <!-- Footer Card: Rating + Platform -->
+            <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <!-- Estrellas -->
+              <div class="flex gap-1">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <svg
+                    class={`h-4 w-4 ${i < review.rating ? "text-amber-400 fill-amber-400" : "text-slate-200 dark:text-slate-700 fill-slate-200 dark:fill-slate-700"}`}
                     viewBox="0 0 20 20"
                   >
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -186,34 +165,36 @@ const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rat
                 ))}
               </div>
 
-              <!-- Clean Google Brand (Monochrome by default, Color on hover) -->
-              <div class="flex items-center gap-2 text-2xs font-bold uppercase text-slate-300 dark:text-slate-600 transition-colors group-hover:text-slate-500 dark:group-hover:text-slate-400">
-                <svg class="h-4 w-4 grayscale opacity-50 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100" viewBox="0 0 24 24">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+              <!-- Google Logo (Interactive Monochrome) -->
+              <a href={`https://search.google.com/local/reviews?placeid=${PLACE_ID}`} target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0" title="Ver en Google">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Verificado en</span>
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M23.766 12.2764C23.766 11.4607 23.6999 10.6406 23.5588 9.83807H12.24V14.4591H18.7217C18.4528 15.9494 17.5885 17.2678 16.323 18.1056V21.1039H20.19C22.4608 19.0139 23.766 15.9274 23.766 12.2764Z" fill="#4285F4"/>
+                  <path d="M12.2401 24.0008C15.4766 24.0008 18.2059 22.9382 20.1945 21.1039L16.3275 18.1055C15.2517 18.8375 13.8627 19.252 12.2445 19.252C9.11388 19.252 6.45946 17.1399 5.50705 14.3003H1.5166V17.3912C3.55371 21.4434 7.7029 24.0008 12.2401 24.0008Z" fill="#34A853"/>
+                  <path d="M5.50253 14.3003C5.00236 12.8099 5.00236 11.1961 5.50253 9.70575V6.61481H1.51649C-0.18551 10.0056 -0.18551 14.0004 1.51649 17.3912L5.50253 14.3003Z" fill="#FBBC04"/>
+                  <path d="M12.2401 4.74966C13.9509 4.7232 15.6044 5.36697 16.8434 6.54867L20.2695 3.12262C18.1001 1.0855 15.2208 -0.0344664 12.2401 0.000808666C7.7029 0.000808666 3.55371 2.55822 1.5166 6.61481L5.50264 9.70575C6.45064 6.86173 9.10947 4.74966 12.2401 4.74966Z" fill="#EA4335"/>
                 </svg>
-                <span>Google Reviews</span>
-              </div>
+              </a>
             </div>
-
-          </div>
+          </article>
         ))
       }
     </div>
 
-    <!-- Modern Pill CTA -->
-    <div class="mt-16 text-center">
+    <!-- CTA FOOTER -->
+    <div class="mt-16 flex flex-col items-center justify-center gap-4 text-center">
+      <p class="text-sm font-medium text-slate-500 dark:text-slate-400">
+        ¿Eres cliente y quieres compartir tu experiencia?
+      </p>
       <Button
-        href={`https://search.google.com/local/writereview?placeid=${PLACE_ID || ""}`}
+        href={`https://search.google.com/local/writereview?placeid=${PLACE_ID}`}
         target="_blank"
-        variant="primary"
-        size="lg"
-        class="group gap-3"
+        variant="secondary"
+        size="md"
+        class="gap-2 border-slate-200 dark:border-slate-700 dark:bg-slate-900"
       >
-        <span class="relative z-10">Comparte tu Experiencia</span>
-        <svg class="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+        Escribir una Reseña
       </Button>
     </div>
   </div>
