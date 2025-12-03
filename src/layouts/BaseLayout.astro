@@ -32,7 +32,7 @@ const selectionClass =
     <meta name="generator" content={Astro.generator} />
 
     <!-- SEO & Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/logo-white.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
 
@@ -53,7 +53,7 @@ const selectionClass =
       (function () {
         const savedTheme = localStorage.getItem("theme");
         const systemPrefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)",
+          "(prefers-color-scheme: dark)"
         ).matches;
 
         // Lógica robusta para evitar FOUC (Flash of Unstyled Content)
@@ -123,7 +123,7 @@ const selectionClass =
 
     <!-- Main Content: Padding ajustado para Mobile-First y evitar solapamiento con Header -->
     <main
-      class="relative z-10 flex-grow flex flex-col pt-24 pb-12 md:pt-28 md:pb-20 animate-fade-in"
+      class="relative z-10 flex-grow flex flex-col pt-[5rem] pb-[5rem] md:pt-[5rem] md:pb-[5rem] animate-fade-in"
     >
       <slot />
     </main>

@@ -1,287 +1,274 @@
 ---
+// src/pages/404.astro
+import Header from "../components/Header.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/ui/Button.astro";
 ---
 
 <BaseLayout
-  title="Página no encontrada | Línea Digital"
-  description="La página que buscas no está disponible."
+  title="404: Señal No Encontrada | Grupo Línea Digital"
+  description="La página que buscas no está disponible en este momento."
 >
-  <section>
+  <section
+    class="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-6 py-20"
+  >
+    <!-- FONDO ATMOSFÉRICO -->
     <div
-      class="container min-h-screen px-6 py-12 mx-auto lg:flex lg:items-center lg:gap-16"
+      class="absolute inset-0 dark:bg-[#101623] transition-colors duration-500 -z-20"
     >
-      <div class="w-full lg:w-1/2">
-        <!-- Badge de Error -->
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/20 mb-6"
-        >
-          <span class="relative flex h-2 w-2">
+    </div>
+
+    <!-- Patrón de Ruido (Efecto TV sin señal) -->
+    <div
+      class="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] z-0"
+    >
+    </div>
+
+    <!-- Glow Spot Central -->
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] dark:bg-blue-600/5 z-0 animate-pulse-slow"
+    >
+    </div>
+
+    <div class="relative z-10 max-w-5xl mx-auto w-full">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center"
+      >
+        <!-- COLUMNA IZQUIERDA: CONTENIDO TEXTUAL -->
+        <div class="text-center lg:text-left order-2 lg:order-1">
+          <!-- Badge de Error (Estilo Sistema) -->
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-red-500/20 bg-red-500/10 text-red-500 text-[11px] font-mono font-bold uppercase tracking-widest mb-8 shadow-sm backdrop-blur-md"
+          >
+            <span class="relative flex h-2 w-2">
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"
+              ></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"
+              ></span>
+            </span>
+            Error 404 :: Signal_Lost
+          </div>
+
+          <h1
+            class="text-5xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white mb-6 leading-[0.95]"
+          >
+            Fuera del área de <br />
             <span
-              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"
-            ></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"
-            ></span>
-          </span>
-          <span
-            class="text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400"
-          >
-            Error 404
-          </span>
-        </div>
-
-        <!-- Título -->
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[0.95] text-slate-900 dark:text-white mb-8 text-center">
-          Señal <span class="text-blue-600 dark:text-blue-400">Perdida</span>
-        </h1>
-
-        <!-- Descripción -->
-        <p class="text-lg md:text-xl leading-relaxed font-light text-slate-500 dark:text-slate-400 mb-10">
-          Lo sentimos, la página que buscas no está disponible o ha sido movida.
-          Te sugerimos algunos enlaces útiles:
-        </p>
-
-        <!-- Botones de Acción -->
-        <div
-          class="flex flex-col sm:flex-row items-start sm:items-center mt-8 gap-4"
-        >
-          <Button href="/" variant="primary" size="md" class="group gap-2">
-            <svg
-              class="w-5 h-5 transition-transform group-hover:-translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
+              class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400"
+              >cobertura.</span
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-              ></path>
-            </svg>
-            <span>Ir al Inicio</span>
-          </Button>
+          </h1>
 
-          <button
-            onclick="history.back()"
-            class="inline-flex items-center justify-center px-6 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full hover:bg-slate-50 dark:hover:bg-slate-700 transition-all gap-2"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            <span>Volver Atrás</span>
-          </button>
-        </div>
-
-        <!-- Enlaces Rápidos -->
-        <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
           <p
-            class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4"
+            class="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-md mx-auto lg:mx-0 leading-relaxed"
           >
-            Enlaces útiles:
+            La página que buscas se ha movido o no existe. Reorientemos la
+            antena hacia donde quieres ir.
           </p>
-          <div class="flex flex-wrap gap-3">
-            <a
-              href="/empresas"
-              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
+
+          <div
+            class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+          >
+            <Button
+              href="/"
+              variant="primary"
+              size="lg"
+              class="shadow-lg shadow-blue-600/20 w-full sm:w-auto"
             >
-              Empresas
-            </a>
-            <a
-              href="/asociados"
-              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                ></path></svg
+              >
+              Regresar al Inicio
+            </Button>
+            <Button
+              onclick="history.back()"
+              variant="secondary"
+              size="lg"
+              class="w-full sm:w-auto dark:bg-white/5 dark:text-white dark:border-white/10 dark:hover:bg-white/10"
             >
-              Asociados
-            </a>
-            <a
-              href="/nosotros"
-              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
+              Volver Atrás
+            </Button>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: RADAR VISUAL -->
+        <div class="flex justify-center order-1 lg:order-2">
+          <div class="relative w-80 h-80 md:w-96 md:h-96">
+            <!-- Radar Circles -->
+            <div
+              class="absolute inset-0 rounded-full border border-slate-200 dark:border-white/5"
             >
-              Nosotros
-            </a>
-            <a
-              href="/contacto"
-              class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
+            </div>
+            <div
+              class="absolute inset-12 rounded-full border border-slate-200 dark:border-white/5 opacity-60"
             >
-              Contacto
-            </a>
+            </div>
+            <div
+              class="absolute inset-24 rounded-full border border-slate-200 dark:border-white/5 opacity-30"
+            >
+            </div>
+
+            <!-- Escaneo (Sonar) -->
+            <div
+              class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_deg,transparent_200deg,rgba(59,130,246,0.1)_360deg)] animate-[spin_4s_linear_infinite] opacity-50"
+            >
+            </div>
+
+            <!-- 404 Central -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span
+                class="text-8xl font-black text-slate-100 dark:text-[#162032] select-none tracking-tighter drop-shadow-sm"
+              >
+                404
+              </span>
+            </div>
+
+            <!-- Puntos parpadeantes (Objetos perdidos) -->
+            <div
+              class="absolute top-[20%] right-[20%] w-3 h-3 bg-red-500 rounded-full animate-ping"
+            >
+            </div>
+            <div
+              class="absolute bottom-[30%] left-[25%] w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+            >
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Ilustración SVG -->
-      <div class="relative w-full mt-16 lg:w-1/2 lg:mt-0">
-        <div class="relative">
-          <!-- Glow effect -->
-          <div
-            class="absolute inset-0 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl"
-          >
-          </div>
+      <!-- NAVEGACIÓN DE RESCATE (BENTO) -->
+      <div class="mt-24 pt-12 border-t border-slate-200 dark:border-white/5">
+        <p
+          class="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-8"
+        >
+          Destinos Frecuentes
+        </p>
 
-          <svg
-            width="514"
-            height="164"
-            viewBox="0 0 514 164"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-full max-w-lg lg:mx-auto relative z-10 opacity-60 dark:opacity-40"
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <a
+            href="/personas"
+            class="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#151e2e] border border-slate-200 dark:border-white/5 p-6 hover:border-blue-300 dark:hover:border-blue-500/50 transition-all hover:-translate-y-1 shadow-sm hover:shadow-lg"
           >
-            <circle
-              cx="101"
-              cy="22"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <circle
-              cx="101"
-              cy="142"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <circle
-              cx="21"
-              cy="102"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <circle
-              cx="141"
-              cy="102"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <circle
-              cx="193"
-              cy="82"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-blue-400 dark:text-blue-600"></circle>
-            <circle
-              cx="313"
-              cy="82"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-blue-400 dark:text-blue-600"></circle>
-            <circle
-              cx="253"
-              cy="22"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <circle
-              cx="253"
-              cy="142"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <path
-              d="M1 102C1 90.9543 9.9543 82 21 82H141C152.046 82 161 90.9543 161 102C161 113.046 152.046 122 141 122H21C9.9543 122 1 113.046 1 102Z"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></path>
-            <path
-              d="M101 162C89.9543 162 81 153.046 81 142L81 22C81 10.9543 89.9543 2 101 2C112.046 2 121 10.9543 121 22L121 142C121 153.046 112.046 162 101 162Z"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></path>
-            <path
-              d="M7.14214 115.995C-0.668351 108.184 -0.668351 95.5211 7.14214 87.7106L86.7107 8.1421C94.5212 0.331614 107.184 0.331607 114.995 8.14209C122.805 15.9526 122.805 28.6159 114.995 36.4264L35.4264 115.995C27.6159 123.805 14.9526 123.805 7.14214 115.995Z"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></path>
-            <circle
-              cx="453"
-              cy="22"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <circle
-              cx="453"
-              cy="142"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <circle
-              cx="373"
-              cy="102"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <circle
-              cx="493"
-              cy="102"
-              r="20"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></circle>
-            <path
-              d="M353 102C353 90.9543 361.954 82 373 82H493C504.046 82 513 90.9543 513 102C513 113.046 504.046 122 493 122H373C361.954 122 353 113.046 353 102Z"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></path>
-            <path
-              d="M453 162C441.954 162 433 153.046 433 142L433 22C433 10.9543 441.954 2 453 2C464.046 2 473 10.9543 473 22L473 142C473 153.046 464.046 162 453 162Z"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></path>
-            <path
-              d="M359.142 115.995C351.332 108.184 351.332 95.5211 359.142 87.7106L438.711 8.1421C446.521 0.331614 459.184 0.331607 466.995 8.14209C474.805 15.9526 474.805 28.6159 466.995 36.4264L387.426 115.995C379.616 123.805 366.953 123.805 359.142 115.995Z"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></path>
-            <circle
-              cx="253"
-              cy="82"
-              r="80"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-blue-500 dark:text-blue-600 animate-pulse"></circle>
-            <circle
-              cx="253"
-              cy="82"
-              r="40"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-blue-600 dark:text-blue-500"></circle>
-            <line
-              x1="8.74228e-08"
-              y1="1"
-              x2="513"
-              y2="1.00004"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></line>
-            <line
-              x1="-8.74228e-08"
-              y1="163"
-              x2="513"
-              y2="163"
-              stroke="currentColor"
-              stroke-width="2"
-              class="text-slate-300 dark:text-slate-700"></line>
-          </svg>
+            <div
+              class="mb-3 w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                ></path></svg
+              >
+            </div>
+            <h3
+              class="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+            >
+              Planes 5G
+            </h3>
+          </a>
+
+          <a
+            href="/asociados"
+            class="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#151e2e] border border-slate-200 dark:border-white/5 p-6 hover:border-blue-300 dark:hover:border-blue-500/50 transition-all hover:-translate-y-1 shadow-sm hover:shadow-lg"
+          >
+            <div
+              class="mb-3 w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 group-hover:scale-110 transition-transform"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z"
+                ></path></svg
+              >
+            </div>
+            <h3
+              class="font-bold text-slate-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors"
+            >
+              Ser Socio
+            </h3>
+          </a>
+
+          <a
+            href="/contacto"
+            class="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#151e2e] border border-slate-200 dark:border-white/5 p-6 hover:border-blue-300 dark:hover:border-blue-500/50 transition-all hover:-translate-y-1 shadow-sm hover:shadow-lg"
+          >
+            <div
+              class="mb-3 w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
+                ></path></svg
+              >
+            </div>
+            <h3
+              class="font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors"
+            >
+              Soporte
+            </h3>
+          </a>
+          <a
+            href="/empresas"
+            class="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#151e2e] border border-slate-200 dark:border-white/5 p-6 hover:border-blue-300 dark:hover:border-blue-500/50 transition-all hover:-translate-y-1 shadow-sm hover:shadow-lg"
+          >
+            <div
+              class="mb-3 w-10 h-10 rounded-full bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                ></path></svg
+              >
+            </div>
+            <h3
+              class="font-bold text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors"
+            >
+              Empresas
+            </h3>
+          </a>
         </div>
       </div>
     </div>
   </section>
+
+  <style>
+    .animate-pulse-slow {
+      animation: pulse 4s infinite;
+    }
+  </style>
 </BaseLayout>

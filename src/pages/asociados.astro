@@ -5,45 +5,81 @@ import AnimatedCounter from "../components/AnimatedCounter.astro";
 
 // --- TYPES & DATA ---
 // Enfoque: Beneficios tangibles para un comerciante físico
+// src/pages/asociados.astro
+
 const FEATURES = [
   {
-    title: "Comisiones Agresivas",
-    desc: "Gana desde el primer peso. Esquema de comisiones por activación, portabilidad y recarga con pago semanal.",
-    icon: "chart", // Money chart
-    colSpan: "md:col-span-2", 
-    colorClass: "text-emerald-500",
-    bgClass: "from-emerald-500/20 to-teal-500/5"
+    id: 1,
+    title: "Ingresos Recurrentes",
+    subtitle: "Comisiones & Bonos",
+    desc: "Esquema escalonado del 7% al 15% en activaciones y recargas. Pagos automáticos a tu saldo semanalmente.",
+    icon: "money",
+    colSpan: "md:col-span-2", // Tarjeta Grande
+    accent: "emerald", // Color tema
+    gradient: "from-emerald-500/20 via-teal-500/5 to-transparent" // Glow de fondo
   },
   {
-    title: "Stock a Consignación",
-    desc: "No descapitalices tu negocio. Te surtimos SIMs y equipos bajo esquema de confianza (sujeto a historial).",
-    icon: "box", // Box
-    colSpan: "md:col-span-1",
-    colorClass: "text-blue-500",
-    bgClass: "from-blue-500/20 to-indigo-500/5"
+    id: 2,
+    title: "Stock Inteligente",
+    subtitle: "Consignación 100%",
+    desc: "Recibe SIMs y equipos sin inversión inicial. Paga solo lo que vendes (Sujeto a buró).",
+    icon: "box",
+    colSpan: "md:col-span-1", // Tarjeta Cuadrada
+    accent: "blue",
+    gradient: "from-blue-600/20 via-indigo-500/5 to-transparent"
   },
   {
-    title: "Portal de Autoservicio",
-    desc: "Plataforma web para realizar recargas, consultar saldo y tramitar garantías 24/7.",
-    icon: "device", // Tablet/Phone
-    colSpan: "md:col-span-1",
-    colorClass: "text-purple-500",
-    bgClass: "from-purple-500/20 to-fuchsia-500/5"
+    id: 3,
+    title: "Control Total",
+    subtitle: "App & Web 24/7",
+    desc: "Plataforma intuitiva para gestionar tus ventas, empleados y solicitar inventario.",
+    icon: "device",
+    colSpan: "md:col-span-1", // Tarjeta Cuadrada
+    accent: "violet",
+    gradient: "from-violet-600/20 via-purple-500/5 to-transparent"
   },
   {
-    title: "Material Publicitario",
-    desc: "Te equipamos con lonas, exhibidores y branding oficial de Telcel para que tu local destaque.",
-    icon: "star", // Badge
-    colSpan: "md:col-span-2",
-    colorClass: "text-cyan-500",
-    bgClass: "from-cyan-500/20 to-sky-500/5"
+    id: 4,
+    title: "Kit de Bienvenida",
+    subtitle: "Branding Oficial",
+    desc: "Transformamos tu fachada con material P.O.P, lonas y exhibidores de Telcel para atraer tráfico.",
+    icon: "star",
+    colSpan: "md:col-span-2", // Tarjeta Grande
+    accent: "amber",
+    gradient: "from-amber-500/20 via-orange-500/5 to-transparent"
   }
 ];
 
+// Nuevas imágenes HD que sí cargan y tienen estilo "Lifestyle"
 const INVENTORY = [
-  { category: "Alta Rotación", title: "Chips Express", metric: "Gana $50/act", image: "https://images.unsplash.com/photo-1562831915-622067ac2cce?q=80&w=1000&auto=format&fit=crop" },
-  { category: "Hardware", title: "Smartphones", metric: "Precio Mayoreo", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop" },
-  { category: "Tendencia", title: "Internet en Casa", metric: "Comisión Recurrente", image: "https://images.unsplash.com/photo-1544197150-b99a580bbcbf?q=80&w=1000&auto=format&fit=crop" }
+  { 
+    category: "Venta de Chips", 
+    title: "Chips Express", 
+    metric: "Gana Comisiones por Portabilidad", 
+    image: "https://images.unsplash.com/photo-1753036051291-cfc20d052c24?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    tagColor: "bg-emerald-500"
+  },
+  { 
+    category: "Venta de Smartphones", 
+    title: "Smartphones", 
+    metric: "Precio Mayoreo desde 3 piezas", 
+    image: "https://images.unsplash.com/photo-1689804847815-50398ac952b2?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    tagColor: "bg-blue-600"
+  },
+  { 
+    category: "Recargas", 
+    title: "Venta a Mayoreo", 
+    metric: "Comisiones por recargas", 
+    image: "https://images.unsplash.com/photo-1760531932521-8eb5a064dbca?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    tagColor: "bg-purple-600"
+  },
+  {
+    category: "Accesorios",
+    title: "Gadgets & Audio",
+    metric: "Con tu propio margen de ganancia",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop",
+    tagColor: "bg-amber-500"
+  }
 ];
 ---
 
@@ -52,222 +88,311 @@ const INVENTORY = [
   description="Vende recargas, chips y equipos Telcel en tu negocio. Precios de mayoreo y altas comisiones."
 >
   
-  <!-- BACKGROUND GLOBAL -->
-  <div class="fixed inset-0 pointer-events-none opacity-[0.4] z-0 mix-blend-overlay">
-      <svg class="w-full h-full"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#noiseFilter)"/></svg>
-  </div>
-  
   <!-- Ambient Glows -->
   <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
       <div class="absolute top-[-10%] right-[20%] w-[40vw] h-[40vw] rounded-full bg-blue-600/10 blur-[120px] mix-blend-screen animate-pulse-slow"></div>
   </div>
 
-  <main class="relative z-10 w-full overflow-hidden">
-    
-    <!-- 1. HERO SECTION: PROPUESTA DE VALOR DIRECTA -->
-    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6 text-center">
-      
-      <!-- Badge de Urgencia/Oportunidad -->
-      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-blue-200/50 bg-white/50 dark:bg-blue-900/10 dark:border-blue-500/30 backdrop-blur-md mb-8 animate-fade-in-up cursor-default shadow-sm">
-        <span class="relative flex h-2.5 w-2.5">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-        </span>
-        <span class="text-[11px] font-bold uppercase tracking-widest text-slate-600 dark:text-blue-300">Altas Nuevas Abiertas</span>
-      </div>
-
-      <h1 class="max-w-5xl mx-auto text-5xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.95] mb-8 animate-fade-in-up animation-delay-100">
-        Haz crecer tu negocio con <br/>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-400">
-          la Red #1 de México.
-        </span>
-      </h1>
-      
-      <p class="max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-12 animate-fade-in-up animation-delay-200">
-        Convierte tu local en un <strong>Punto de Venta Autorizado</strong>. Vende recargas, chips y equipos con precios de mayoreo y soporte local en Chiapas.
-      </p>
-
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-5 animate-fade-in-up animation-delay-300">
-        <!-- CTA Principal: WhatsApp (Conversión directa) -->
-        <a href="https://wa.me/529616189200?text=Hola,%20quiero%20ser%20distribuidor%20Telcel" target="_blank" class="group relative flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-blue-600 px-8 text-sm font-bold uppercase tracking-widest text-white shadow-xl shadow-blue-600/30 transition-all hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98]">
-            <span class="relative z-10">Quiero ser Distribuidor</span>
-            <svg class="relative z-10 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            <div class="absolute inset-0 -translate-x-full group-hover:animate-shine bg-gradient-to-r from-transparent via-white/20 to-transparent z-0"></div>
-        </a>
+<!-- 1. HERO SECTION: NEGOCIO Y OPORTUNIDAD -->
+    <section class="relative pt-12 pb-24 px-6 text-center overflow-hidden">
+      <!-- Contenido -->
+      <div class="relative z-10 max-w-4xl mx-auto">
         
-        <!-- CTA Secundario -->
-        <a href="#beneficios" class="h-14 flex items-center justify-center rounded-full border border-slate-200 bg-white/50 backdrop-blur-md px-8 text-sm font-bold uppercase tracking-widest text-slate-600 transition-colors hover:border-blue-300 hover:text-blue-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">
-            Ver Beneficios
-        </a>
+        <!-- Badge Animado -->
+   <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 dark:bg-blue-900/20 dark:border-blue-500/20 mb-8 backdrop-blur-sm">
+            <span class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
+            <span class="text-xs font-bold uppercase tracking-widest text-blue-700 dark:text-blue-300">Inscripciones Abiertas</span>
+          </div>
+
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter dark:text-white leading-[1.1] mb-8 drop-shadow-xl">
+            Convierte tu local en <br class="hidden md:block" /> una 
+            <span class="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-700 dark:from-blue-400 dark:to-blue-200">máquina de ingresos.</span>
+        </h1>
+        
+        <p class="text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-10 max-w-2xl mx-auto text-balance">
+            Únete a la red de distribución <strong>#1 del Sureste</strong>. Vende tiempo aire y equipos Telcel sin trámites complejos. Tu éxito es nuestro negocio.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+            <!-- CTA Principal con Glow Efectivo -->
+            <a href="https://wa.me/529616189200?text=Quiero%20ser%20distribuidor" target="_blank" class="group relative inline-flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-blue-600 px-10 text-sm font-bold uppercase tracking-widest text-white shadow-lg shadow-blue-600/40 transition-all hover:bg-blue-500 hover:scale-105 active:scale-95">
+                <span class="relative z-10 flex items-center gap-2">
+                    Aplicar Ahora <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </span>
+                <div class="absolute inset-0 -translate-x-full group-hover:animate-shine bg-gradient-to-r from-transparent via-white/25 to-transparent z-0"></div>
+            </a>
+            
+            <a href="#beneficios" class="h-14 inline-flex items-center justify-center rounded-full px-8 text-sm font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 transition-colors dark:hover:text-white hover:text-slate-900 hover:border-slate-900/10 hover:bg-slate-900/5 dark:hover:bg-white/5 border border-transparent dark:hover:border-white/10 ">
+                Ver modelo de negocio
+            </a>
+        </div>
       </div>
     </section>
 
-    <!-- 2. STATS "THE DEAL" (Números Reales para un Socio) -->
-    <div class="container mx-auto px-4 relative z-20 -mt-8 mb-24 animate-fade-in-up animation-delay-300">
-        <div class="bg-white/80 dark:bg-[#151e2e]/90 backdrop-blur-xl border border-slate-200/50 dark:border-white/10 rounded-[2rem] shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden max-w-5xl mx-auto">
+    <!-- 2. STATS DECK (Flotante y Premium) -->
+    <!-- Margen negativo para solapar con el Hero, creando profundidad -->
+    <div class="container mx-auto pt-16 pb-4 relative z-20 -mt-12 mb-32">
+        
+        <div class="bg-white dark:bg-[#101623] backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden max-w-5xl mx-auto relative group">
+            
+            <!-- Borde brillante superior sutil -->
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-300 dark:via-white/20 to-transparent opacity-50"></div>
+
             <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100 dark:divide-white/5">
-                 {/* Socios */}
-                 <div class="py-8 text-center group">
-                    <span class="block text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-1">
-                        <AnimatedCounter end={2500} prefix="+" duration={2000} />
-                    </span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Puntos de Venta</span>
+                 
+                 <!-- STAT 1: PUNTOS DE VENTA -->
+                 <div class="py-10 px-4 text-center hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-300">
+                    <div class="flex items-center justify-center gap-1 text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter">
+                        <span class="text-slate-400 dark:text-slate-500 text-2xl md:text-3xl">+</span>
+                        <AnimatedCounter end={2500} duration={2000} />
+                    </div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        Socios Activos
+                    </p>
                  </div>
                  
-                 {/* Comisión */}
-                 <div class="py-8 text-center group">
-                    <span class="block text-3xl md:text-4xl font-black tracking-tight text-emerald-500 mb-1">
-                        <AnimatedCounter end={15} suffix="%" duration={1500} />
-                    </span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Comisión Máxima</span>
+                 <!-- STAT 2: COMISIÓN (Gancho de Dinero) -->
+                 <div class="py-10 px-4 text-center hover:bg-emerald-50 dark:hover:bg-white/5 transition-colors duration-300 relative overflow-hidden">
+                    <!-- Luz de fondo sutil -->
+                    <div class="absolute inset-0 bg-emerald-500/5 opacity-0 hover:opacity-100 transition-opacity"></div>
+                    
+                    <div class="flex items-center justify-center text-4xl md:text-5xl font-black text-emerald-600 dark:text-emerald-400 mb-2 tracking-tighter shadow-emerald-500/20 drop-shadow-sm">
+                        <AnimatedCounter end={15} duration={2000} /><span class="text-3xl">%</span>
+                    </div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors relative z-10">
+                        Margen de Ganancia
+                    </p>
                  </div>
 
-                 {/* Cobertura */}
-                 <div class="py-8 text-center group">
-                    <span class="block text-3xl md:text-4xl font-black tracking-tight text-blue-500 mb-1">48h</span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Tiempo de Entrega</span>
+                 <!-- STAT 3: VELOCIDAD (Logística) -->
+                 <div class="py-10 px-4 text-center hover:bg-cyan-50 dark:hover:bg-white/5 transition-colors duration-300">
+                    <div class="flex items-center justify-center text-4xl md:text-5xl font-black text-cyan-600 dark:text-cyan-400 mb-2 tracking-tighter">
+                        48<span class="text-2xl">h</span>
+                    </div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">
+                        Envío de Stock
+                    </p>
                  </div>
 
-                 {/* Costo (El gancho más fuerte) */}
-                 <div class="py-8 text-center group bg-blue-50/50 dark:bg-blue-900/10">
-                    <span class="block text-3xl md:text-4xl font-black tracking-tight text-blue-600 dark:text-blue-400 mb-1">
+                 <!-- STAT 4: COSTO CERO (El Cierre) -->
+                 <div class="py-10 px-4 text-center bg-blue-50 dark:bg-blue-600/10 hover:bg-blue-100 dark:hover:bg-blue-600/20 transition-colors duration-300 relative group/cost">
+                    
+                    <div class="flex items-center justify-center text-4xl md:text-5xl font-black text-blue-700 dark:text-white mb-2 tracking-tighter relative z-10">
                         $<AnimatedCounter end={0} duration={1000} />
-                    </span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-blue-700 dark:text-blue-300">Costo de Inscripción</span>
+                    </div>
+                    
+                    <div class="inline-block relative z-10">
+                         <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-200 group-hover/cost:text-blue-800 dark:group-hover/cost:text-white transition-colors">
+                            Costo de Entrada
+                         </p>
+                         <!-- Pill "Gratis" -->
+                         <span class="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-blue-600 dark:bg-blue-500 text-white text-[9px] font-bold px-2 py-0.5 rounded text-center scale-0 group-hover/cost:scale-100 transition-transform origin-top">
+                            ¡GRATIS!
+                         </span>
+                    </div>
                  </div>
             </div>
         </div>
     </div>
+<!-- 3. BENTO GRID: MODELO DE NEGOCIO -->
+  <section id="beneficios" class="py-24 px-6 container mx-auto max-w-7xl">
+      
+      <!-- Header -->
+      <div class="mb-16 max-w-2xl">
+          <span class="text-blue-500 font-bold uppercase tracking-widest text-xs mb-3 block">Propuesta de Valor</span>
+          <h2 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4 leading-tight">
+              Tu éxito, nuestra <span class="text-transparent bg-clip-text bg-gradient-to-b from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-200">infraestructura.</span>
+          </h2>
+          <p class="text-lg md:text-xl leading-relaxed text-slate-600 dark:text-slate-300 mb-10 max-w-xl mx-auto lg:mx-0 text-pretty font-medium">
+              Eliminamos las barreras de entrada para que puedas competir con las grandes cadenas desde el día uno.
+          </p>
+      </div>
 
-    <!-- 3. BENTO GRID: SOLUCIONES REALES -->
-    <section id="beneficios" class="py-24 px-6 container mx-auto max-w-7xl">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-            <div class="max-w-2xl">
-                <span class="text-blue-600 dark:text-blue-400 font-bold uppercase tracking-widest text-xs mb-2 block">Modelo de Negocio</span>
-                <h2 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
-                    Todo lo que necesitas <br/> <span class="text-slate-400">para vender más.</span>
-                </h2>
-                <p class="text-lg text-slate-500 dark:text-slate-400">
-                    Olvídate de trámites complejos. Te damos las herramientas, el stock y el soporte para que tú solo te preocupes por atender a tus clientes.
-                </p>
-            </div>
-        </div>
+      <!-- Grid Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(300px,auto)]">
+          {FEATURES.map((feat) => (
+              <div class={`group relative rounded-[2.5rem] p-[1px] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 ${feat.colSpan}`}>
+                  
+                  <!-- A. Borde Gradiente Animado -->
+                  <div class="absolute inset-0 bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 transition-opacity duration-500 group-hover:opacity-0"></div>
+                  <div class={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-r ${feat.id === 1 ? 'from-emerald-500/50' : feat.id === 2 ? 'from-blue-500/50' : feat.id === 3 ? 'from-violet-500/50' : 'from-amber-500/50'} to-transparent`}></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[320px]">
-            {FEATURES.map((feat) => (
-                <article class={`
-                    relative group rounded-[2.5rem] overflow-hidden 
-                    bg-white dark:bg-[#151e2e]
-                    border border-slate-200 dark:border-white/5
-                    shadow-sm hover:shadow-2xl hover:shadow-blue-900/10 
-                    transition-all duration-500 ease-out hover:-translate-y-2
-                    ${feat.colSpan}
-                `}>
-                    
-                    <!-- Gradient Hover Background -->
-                    <div class={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${feat.bgClass}`}></div>
-                    
-                    <div class="relative z-10 h-full flex flex-col justify-between p-8 md:p-10 select-none">
-                        
-                        <!-- Icon Box -->
-                        <div class="flex items-start justify-between">
-                            <div class={`
-                                w-14 h-14 rounded-2xl 
-                                bg-slate-50 dark:bg-white/5
-                                border border-slate-100 dark:border-white/10
-                                flex items-center justify-center
-                                shadow-sm group-hover:scale-110 group-hover:-rotate-3 
-                                transition-all duration-500
-                                ${feat.colorClass}
-                            `}>
-                                {/* Icon Mapping simple */}
-                                {feat.icon === 'chart' && <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                                {feat.icon === 'box' && <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>}
-                                {feat.icon === 'device' && <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>}
-                                {feat.icon === 'star' && <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>}
-                            </div>
-                        </div>
+                  <!-- B. Contenido Tarjeta (Adaptativo Light/Dark) -->
+                  <div class="relative h-full rounded-[2.45rem] bg-white dark:bg-[#101623] p-8 md:p-10 overflow-hidden flex flex-col justify-between">
+                      
+                      <!-- Background Glow Orb (Dynamic Color) -->
+                      <div class={`absolute -top-20 -right-20 w-64 h-64 rounded-full blur-[80px] bg-gradient-to-br opacity-10 dark:opacity-20 group-hover:opacity-20 dark:group-hover:opacity-30 transition-all duration-700 ${feat.gradient}`}></div>
 
-                        <!-- Text Content -->
-                        <div>
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-3 leading-tight group-hover:translate-x-1 transition-transform">
-                                {feat.title}
-                            </h3>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-relaxed group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors">
-                                {feat.desc}
-                            </p>
-                        </div>
-                    </div>
-                </article>
-            ))}
-        </div>
-    </section>
+                      <!-- Icono Floating (Glass Container) -->
+                      <div class="relative w-16 h-16 mb-8 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-white/5 dark:border-white/10 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 group-hover:bg-white/50 dark:group-hover:bg-white/10 transition-all duration-500 shadow-lg">
+                          
+                          {/* Icon Logic Switch */}
+                          {feat.icon === 'money' && <svg class="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                          
+                          {feat.icon === 'box' && <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>}
+                          
+                          {feat.icon === 'device' && <svg class="w-8 h-8 text-violet-600 dark:text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>}
+                          
+                          {feat.icon === 'star' && <svg class="w-8 h-8 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>}
+                          
+                      </div>
 
-    <!-- 4. INVENTARIO (Slider Visual) -->
-    <section class="py-24 border-y border-slate-200/50 dark:border-white/5 bg-slate-50 dark:bg-[#0f1623]">
-        <div class="container mx-auto px-6 mb-12 flex items-center justify-between">
-            <div>
-                <span class="text-blue-600 dark:text-blue-400 font-bold uppercase tracking-widest text-xs">Catálogo de Productos</span>
-                <h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-2">¿Qué puedes vender?</h2>
-            </div>
-            
-            <div class="hidden md:flex gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest items-center">
-                <span>Desliza para ver</span>
-                <svg class="w-4 h-4 animate-bounce-x" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </div>
-        </div>
+                      <!-- Texto con mejor contraste -->
+                      <div>
+                          <div class={`text-xs font-bold uppercase tracking-widest mb-2 opacity-70 group-hover:opacity-100 transition-opacity ${feat.accent === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' : feat.accent === 'blue' ? 'text-blue-600 dark:text-blue-400' : feat.accent === 'violet' ? 'text-violet-600 dark:text-violet-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                              {feat.subtitle}
+                          </div>
+                          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-4 leading-tight group-hover:translate-x-1 transition-transform duration-300">
+                              {feat.title}
+                          </h3>
+                          <p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed border-l-2 border-slate-200 dark:border-slate-700/50 pl-4 group-hover:border-slate-400/50 dark:group-hover:border-slate-500/50 group-hover:text-slate-900 dark:group-hover:text-slate-300 transition-all">
+                              {feat.desc}
+                          </p>
+                      </div>
 
-        <div class="flex gap-6 overflow-x-auto pb-12 px-6 md:px-[max(2rem,calc((100vw-1280px)/2))] snap-x snap-mandatory hide-scrollbar">
-            {INVENTORY.map((item) => (
-                <div class="group relative flex-shrink-0 w-[85vw] md:w-[380px] aspect-[4/5] rounded-[2.5rem] overflow-hidden snap-center cursor-pointer shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                    <img src={item.image} alt={item.title} class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
-                    
-                    <div class="absolute bottom-0 left-0 w-full p-8">
-                         <div class="mb-3 inline-block px-3 py-1 rounded-lg bg-blue-600/90 text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-md">
-                            {item.category}
-                         </div>
-                         <h3 class="text-3xl font-black text-white mb-2">{item.title}</h3>
-                         <div class="flex items-center gap-2 text-emerald-300 font-bold text-sm">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                            {item.metric}
-                         </div>
-                    </div>
-                </div>
-            ))}
-            
-            <!-- Card "Ver Más" -->
-            <a href="https://wa.me/529616189200" class="group relative flex-shrink-0 w-[85vw] md:w-[380px] aspect-[4/5] rounded-[2.5rem] snap-center bg-white dark:bg-[#151e2e] border-2 border-dashed border-slate-200 dark:border-white/10 flex flex-col items-center justify-center text-center hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all">
-                 <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:scale-110 transition-all mb-4">
-                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                 </div>
-                 <span class="font-bold text-xl text-slate-900 dark:text-white">Solicitar Catálogo <br/> PDF Completo</span>
-            </a>
-        </div>
-    </section>
+                  </div>
+              </div>
+          ))}
+      </div>
+  </section>
 
-    <!-- 5. FINAL CTA (Conversión Retail) -->
-    <section class="py-24 px-4 container mx-auto relative">
-         <div class="relative rounded-[3rem] overflow-hidden bg-gradient-to-br from-blue-900 to-slate-900 p-12 md:p-24 text-center shadow-2xl shadow-blue-900/40 border border-white/10">
+<!-- 4. CATÁLOGO VISUAL (Slider Premium) -->
+  <section class="py-24 bg-slate-50 dark:bg-[#101623] relative overflow-hidden transition-colors duration-500">
+      
+      <!-- Luz Ambiental de Fondo -->
+      <div class="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 dark:bg-blue-900/20 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <div class="container mx-auto px-6 mb-12 relative z-10">
+          <div class="flex flex-col md:flex-row items-end justify-between gap-4">
+              <div>
+                  <span class="text-blue-600 dark:text-blue-500 font-bold uppercase tracking-widest text-xs mb-2 block">Tu Inventario</span>
+                  <h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white leading-tight">
+                      ¿Qué puedes <span class="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-700 dark:from-blue-400 dark:to-blue-200">vender hoy?</span>
+                  </h2>
+              </div>
+              
+              <!-- Navegación Visual -->
+              <!-- Navegación Visual (Botones) -->
+              <div class="hidden md:flex items-center gap-3">
+                  <button id="slide-left" class="w-12 h-12 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-300 group" aria-label="Anterior">
+                      <svg class="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                  </button>
+                  <button id="slide-right" class="w-12 h-12 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-300 group" aria-label="Siguiente">
+                      <svg class="w-5 h-5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                  </button>
+              </div>
+          </div>
+      </div>
+
+      <!-- Slider de Tarjetas -->
+      <div id="inventory-slider" class="flex gap-5 overflow-x-auto pb-12 px-6 md:px-12 snap-x snap-mandatory hide-scrollbar scroll-smooth relative z-10">
+          
+          {INVENTORY.map((item, index) => (
+              <article class="group relative flex-shrink-0 w-[300px] sm:w-[340px] aspect-[9/14] rounded-[2rem] overflow-hidden snap-center cursor-pointer border border-slate-200 dark:border-white/5 hover:border-blue-500/30 transition-all duration-300 shadow-xl shadow-slate-200/50 dark:shadow-black/40 hover:shadow-2xl hover:shadow-blue-500/20">
+                  
+                  <!-- 1. Imagen de Fondo con Zoom Effect -->
+                  <div class="absolute inset-0 w-full h-full bg-slate-900">
+                      <img 
+                        src={item.image} 
+                        alt={item.title} 
+                        class="w-full h-full object-cover transition-transform duration-[800ms] group-hover:scale-110 opacity-90"
+                        loading="lazy" 
+                      />
+                      <!-- Capas de oscurecimiento para legibilidad -->
+                      <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 dark:opacity-90"></div>
+                      <div class="absolute inset-0 bg-blue-600/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+
+                  <!-- 2. Contenido (Texto Flotante) -->
+                  <div class="absolute inset-0 p-8 flex flex-col justify-end items-start">
+                      
+                      <!-- Badge Categoría (Pill) -->
+                      <div class={`mb-4 px-3 py-1.5 rounded-full ${item.tagColor} text-white text-[10px] font-bold uppercase tracking-widest shadow-lg backdrop-blur-md bg-opacity-90 transform -translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100`}>
+                          {item.category}
+                      </div>
+
+                      <!-- Título -->
+                      <h3 class="text-3xl font-black text-white leading-none mb-3 drop-shadow-lg">
+                          {item.title}
+                      </h3>
+
+                      <!-- Separador -->
+                      <div class="w-12 h-1 bg-blue-500 rounded-full mb-3 group-hover:w-full transition-all duration-700 ease-out"></div>
+
+                      <!-- Métrica de Dinero (Gancho Principal) -->
+                      <p class="text-emerald-300 font-medium text-sm flex items-center gap-2">
+                          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          {item.metric}
+                      </p>
+                  </div>
+                  
+                  <!-- Full Click Area Overlay (UX) -->
+                  <a href={`https://wa.me/529616189200?text=Info%20sobre%20${item.title}`} target="_blank" class="absolute inset-0 z-20" aria-label={`Consultar sobre ${item.title}`}></a>
+              </article>
+          ))}
+
+          <!-- Last Card: CTA Descargar Catálogo (Glass Design) -->
+          <article class="group relative flex-shrink-0 w-[300px] sm:w-[340px] aspect-[9/14] rounded-[2rem] overflow-hidden snap-center flex flex-col items-center justify-center text-center bg-white dark:bg-[#111827] border-2 border-dashed border-slate-300 dark:border-slate-800 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all duration-300 group-last shadow-lg shadow-slate-200/50 dark:shadow-none">
+               <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-600 flex items-center justify-center text-slate-400 group-hover:text-blue-600 dark:group-hover:text-white transition-all duration-500 mb-6 shadow-xl group-hover:scale-110 group-hover:shadow-blue-500/20">
+                  <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+               </div>
+               <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Catálogo Completo</h3>
+               <p class="text-slate-500 dark:text-slate-400 text-sm max-w-[200px] mx-auto">Solicita la lista de precios actualizada en PDF.</p>
+               
+               <a href="https://wa.me/529616189200?text=Solicito%20catálogo%20PDF" target="_blank" class="absolute inset-0 z-20" aria-label="Descargar catálogo"></a>
+          </article>
+
+      </div>
+  </section>
+
+<!-- 5. FINAL CTA: CORE DEL NEGOCIO -->
+    <section class="py-32 px-4 container mx-auto relative">
+        
+        <!-- Glow Ambiental de Fondo -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[500px] bg-blue-500/20 dark:bg-blue-900/20 rounded-full blur-[150px] pointer-events-none"></div>
+
+        <div class="relative max-w-5xl mx-auto overflow-hidden rounded-[3rem] border border-white/20 dark:border-white/10 bg-blue-600 dark:bg-[#020617] shadow-2xl shadow-blue-900/30 group">
              
-             <!-- Noise & Orb -->
-             <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/30 rounded-full blur-[100px] animate-pulse-slow"></div>
+             <!-- A. Capa de Ruido Cinematográfico -->
+             <div class="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
+             
+             <!-- B. Haces de Luz (Spotlights) -->
+             <div class="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-white/10 dark:bg-blue-500/10 rounded-full blur-[80px]"></div>
+             <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-indigo-400/20 dark:bg-indigo-500/10 rounded-full blur-[100px] animate-pulse-slow"></div>
 
-             <div class="relative z-10 max-w-3xl mx-auto">
-                 <h2 class="text-4xl md:text-6xl font-black text-white tracking-tighter mb-6 leading-none">
-                     ¿Listo para facturar?
-                 </h2>
-                 <p class="text-xl text-blue-100 mb-10 max-w-xl mx-auto font-medium">
-                     El alta es inmediata. Sin trámites burocráticos. Envíanos un WhatsApp y comienza a vender hoy mismo.
-                 </p>
+             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12 p-12 md:p-20">
                  
-                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="https://wa.me/529616189200" class="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-green-500 text-white font-bold tracking-widest uppercase hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.548 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg>
-                        <span>Contactar Asesor</span>
+                 <!-- Columna Texto -->
+                 <div class="text-center md:text-left max-w-2xl">
+                     <span class="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Activación Inmediata
+                     </span>
+                     
+                     <h2 class="text-4xl md:text-6xl font-black text-white tracking-tighter leading-[1.05] mb-6">
+                         ¿Listo para ver <br/>
+                         <span class="text-transparent bg-clip-text dark:bg-gradient-to-b dark:from-blue-400 dark:to-blue-200 bg-white">resultados hoy?</span>
+                     </h2>
+                     
+                     <p class="text-lg text-blue-100 dark:text-slate-400 font-medium leading-relaxed">
+                         Sin burocracia, sin mínimos imposibles. Damos de alta tu punto de venta en menos de 2 horas para que empieces a facturar.
+                     </p>
+                 </div>
+
+                 <!-- Columna Botones (Stack Vertical/Horizontal) -->
+                 <div class="flex flex-col gap-4 w-full md:w-auto shrink-0">
+                    <!-- WhatsApp Button (Conversion Primary) -->
+                    <a href="https://wa.me/529616189200?text=Quiero%20activar%20mi%20negocio%20hoy" target="_blank" class="group relative flex items-center justify-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#1da851] text-white rounded-2xl transition-all duration-300 shadow-lg shadow-green-900/20 hover:shadow-green-600/30 hover:-translate-y-1">
+                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.548 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg>
+                         <div class="text-left">
+                             <span class="block text-[10px] font-bold uppercase tracking-wide opacity-80">Chat Asesores</span>
+                             <span class="block text-lg font-black tracking-tight leading-none">Contactar por WA</span>
+                         </div>
                     </a>
-                    <a href="tel:9616189200" class="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white text-slate-900 font-bold tracking-widest uppercase hover:bg-slate-100 transition-all">
+
+                    <!-- Secondary Button -->
+                    <a href="tel:9616189200" class="flex items-center justify-center gap-3 px-8 py-4 bg-white/10 hover:bg-white hover:text-blue-900 text-white border border-white/20 hover:border-white rounded-2xl transition-all duration-300 font-bold tracking-wide group/sec">
+                        <svg class="w-5 h-5 text-blue-200 group-hover/sec:text-blue-900 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                         Llamar a Oficina
                     </a>
                  </div>
@@ -275,8 +400,23 @@ const INVENTORY = [
          </div>
     </section>
 
-  </main>
 </BaseLayout>
+
+<script>
+  const slider = document.getElementById('inventory-slider');
+  const leftBtn = document.getElementById('slide-left');
+  const rightBtn = document.getElementById('slide-right');
+
+  if (slider && leftBtn && rightBtn) {
+    leftBtn.addEventListener('click', () => {
+      slider.scrollBy({ left: -360, behavior: 'smooth' });
+    });
+    
+    rightBtn.addEventListener('click', () => {
+      slider.scrollBy({ left: 360, behavior: 'smooth' });
+    });
+  }
+</script>
 
 <style>
   /* Utilities */

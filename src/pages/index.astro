@@ -15,7 +15,7 @@ const pageDesc =
 
 <BaseLayout title={pageTitle} description={pageDesc}>
   <!-- === HERO SECTION: IMPACTO INMEDIATO === -->
-  <section class="relative pt-12 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
+  <section class="relative pt-12 pb-24 overflow-hidden">
     <!-- Elemento Decorativo de Fondo (Glow Telcel) -->
     <div
       class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] blur-[120px] rounded-full pointer-events-none z-0"
@@ -39,7 +39,7 @@ const pageDesc =
 
       <!-- H1: Copywriting Orientado a Beneficio -->
       <h1
-        class="mx-auto max-w-4xl text-5xl font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white mb-6 text-balance"
+        class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter dark:text-white leading-[1.1] mb-8 drop-shadow-xl"
       >
         Conectamos tu mundo <br class="hidden sm:block" />
         <span
@@ -50,7 +50,7 @@ const pageDesc =
       </h1>
 
       <p
-        class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300"
+        class="text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-10 max-w-2xl mx-auto text-center"
       >
         Ya sea para renovar tu smartphone personal, equipar a tu fuerza de
         ventas o iniciar tu propio negocio de recargas. Tenemos la solución
@@ -128,11 +128,13 @@ const pageDesc =
     <div class="mx-auto max-w-7xl">
       <div class="mb-12 md:text-center max-w-3xl mx-auto">
         <h2
-          class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl"
+          class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4 leading-tight"
         >
           Un ecosistema de soluciones.
         </h2>
-        <p class="mt-4 text-lg text-slate-600 dark:text-slate-400">
+        <p
+          class="text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-10 max-w-2xl mx-auto text-center"
+        >
           Diseñamos nuestra oferta para cubrir cada necesidad: desde el usuario
           exigente hasta el corporativo multinacional.
         </p>
@@ -214,7 +216,7 @@ const pageDesc =
               <span class="material-icons-round text-2xl">business_center</span>
             </div>
             <h3 class="text-2xl font-bold text-white mb-2">Empresas</h3>
-            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-md mb-8">
               Planes deducibles, control de flotillas y soluciones IoT para
               monitoreo. Optimiza costos operativos.
             </p>
@@ -242,9 +244,7 @@ const pageDesc =
             <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
               Vende y Gana
             </h3>
-            <p
-              class="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed"
-            >
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-md mb-8">
               Precio especial en Chips, Tiempo Aire y Equipos para revendedores.
               Haz crecer tu negocio con Telcel.
             </p>
@@ -278,7 +278,7 @@ const pageDesc =
             <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-2">
               Nuestras Oficinas
             </h2>
-            <p class="text-slate-600 dark:text-slate-400 mt-2">
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-md mb-8">
               Atención personalizada y soporte técnico.
             </p>
           </div>
@@ -450,12 +450,12 @@ const pageDesc =
               "ring-blue-500",
               "bg-white",
               "dark:bg-[#1a2333]",
-              "shadow-md",
+              "shadow-md"
             );
             btnEl.classList.remove(
               "bg-slate-50",
               "dark:bg-white/5",
-              "border-slate-200",
+              "border-slate-200"
             );
             // Mostrar flecha
             const arrow = btnEl.querySelector(".card-arrow");
@@ -466,12 +466,12 @@ const pageDesc =
               "ring-blue-500",
               "bg-white",
               "dark:bg-[#1a2333]",
-              "shadow-md",
+              "shadow-md"
             );
             btnEl.classList.add(
               "bg-slate-50",
               "dark:bg-white/5",
-              "border-slate-200",
+              "border-slate-200"
             );
             // Ocultar flecha
             const arrow = btnEl.querySelector(".card-arrow");

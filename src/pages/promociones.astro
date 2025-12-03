@@ -17,9 +17,71 @@ interface ContentfulItem {
   fields: PromoField;
 }
 
-// === DATA MOCK (Optimizada para Marketing) ===
+// === DATA MOCK REFINADO (Imágenes HD oscuras) ===
 const responseContentful: ContentfulItem[] = [
-  // HERO ITEMS (Flagships que venden solos)
+  // ... (Mantén tus Hero Items iguales si ya te gustaban)
+  
+  // GRID ITEMS
+  {
+    sys: { id: "grid-1" },
+    fields: {
+      titulo: "Fibra Simétrica 1GB", // Cambié nombre a algo más corto para mobile
+      descripcion: "La conexión que tu empresa merece. IP fija disponible.",
+      // Imagen: Abstracta/Futurista (Network)
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" } } },
+      fechaFin: null,
+      tipo: "Empresas",
+      destacado: false, 
+    },
+  },
+  {
+    sys: { id: "grid-2" },
+    fields: {
+      titulo: "Galaxy S24 Ultra",
+      descripcion: "Titanium Frame. El Android definitivo con IA integrada.",
+      // Imagen: Smartphone Dark Mode
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" } } },
+      fechaFin: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+      tipo: "Smartphone",
+      destacado: false,
+    },
+  },
+  {
+    sys: { id: "grid-3" },
+    fields: {
+      titulo: "Apple Watch Ultra 2",
+      descripcion: "El reloj deportivo definitivo. Caja de titanio de 49mm.",
+      // Imagen: Reloj Close up
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1614106765035-bceac4ac1911?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" } } },
+      fechaFin: null,
+      tipo: "Wearable",
+      destacado: false,
+    },
+  },
+  {
+    sys: { id: "grid-4" },
+    fields: {
+      titulo: "Sony WH-1000XM5",
+      descripcion: "Sumérgete en tu música. Noise Cancelling líder mundial.",
+      // Imagen: Audífonos Studio
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1888&auto=format&fit=crop" } } },
+      fechaFin: new Date(Date.now() + 10 * 3600 * 1000).toISOString(),
+      tipo: "Audio Premium",
+      destacado: false,
+    },
+  },
+  {
+    sys: { id: "grid-5" },
+    fields: {
+      titulo: "iPad Pro M4",
+      descripcion: "Tu próxima computadora no es una computadora.",
+      // Imagen: Tablet en mesa oscura
+      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=2030&auto=format&fit=crop" } } },
+      fechaFin: null,
+      tipo: "Productividad",
+      destacado: false,
+    },
+  },
   {
     sys: { id: "hero-1" },
     fields: {
@@ -42,51 +104,6 @@ const responseContentful: ContentfulItem[] = [
       destacado: true,
     },
   },
-  // GRID ITEMS (Productos Gancho)
-  {
-    sys: { id: "grid-1" },
-    fields: {
-      titulo: "Internet Simétrico 1GB",
-      descripcion: "La fibra óptica más rápida de la región. Instalación express en 24 horas.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" } } },
-      fechaFin: new Date(Date.now() + 120 * 3600 * 1000).toISOString(),
-      tipo: "Servicios",
-      destacado: false, 
-    },
-  },
-  {
-    sys: { id: "grid-2" },
-    fields: {
-      titulo: "Galaxy S24 Ultra",
-      descripcion: "Traduce llamadas en tiempo real con Galaxy AI. Preventa exclusiva.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1610945265078-d86f3d297dfb?q=80&w=2070&auto=format&fit=crop" } } },
-      fechaFin: null,
-      tipo: "Preventa",
-      destacado: false,
-    },
-  },
-  {
-    sys: { id: "grid-3" },
-    fields: {
-      titulo: "Apple Watch Ultra 2",
-      descripcion: "El reloj definitivo para deportistas extremos.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1695646199432-8df7d9d8c67c?q=80&w=2070&auto=format&fit=crop" } } },
-      fechaFin: null,
-      tipo: "Wearable",
-      destacado: false,
-    },
-  },
-  {
-    sys: { id: "grid-4" },
-    fields: {
-      titulo: "Sony WH-1000XM5",
-      descripcion: "Cancelación de ruido líder en la industria. Envío gratis.",
-      imagen: { fields: { file: { url: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1888&auto=format&fit=crop" } } },
-      fechaFin: new Date(Date.now() + 10 * 3600 * 1000).toISOString(),
-      tipo: "Audio",
-      destacado: false,
-    },
-  }
 ];
 
 const heroPromos = responseContentful.filter((p) => p.fields.destacado);
@@ -100,76 +117,99 @@ const WA_NUMBER = "529614603593";
   description="Tecnología de punta y planes exclusivos disponibles por tiempo limitado. Aprovecha nuestras promociones hoy."
 >
   
-  <!-- === HERO SECTION === -->
+<!-- === HERO SECTION: CINEMATIC RETAIL === -->
   {heroPromos.length > 0 && (
-    <section class="relative w-full h-[85vh] min-h-[640px] bg-[#020617] overflow-hidden group">
+    <section class="relative w-full h-[calc(100vh-5rem)] min-h-[700px] bg-[#020617] overflow-hidden group">
         
-      <!-- Background Glow Spot -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-blue-500/10 blur-[120px] rounded-full mix-blend-screen pointer-events-none z-0"></div>
+      <!-- Fondo Atmosférico (Global) -->
+      <div class="absolute -top-20 -left-20 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen z-0 animate-pulse-slow"></div>
 
       <!-- SWIPER CONTAINER -->
       <div class="swiper hero-swiper w-full h-full relative z-10">
         <div class="swiper-wrapper">
           {heroPromos.map((promo, index) => (
-            <div class="swiper-slide relative w-full h-full overflow-hidden">
+            <div class="swiper-slide relative w-full h-full flex items-center">
                 
-                <!-- 1. Imagen (Zoom suave via CSS) -->
-                <div class="absolute inset-0 w-full h-full">
+                <!-- 1. Imagen de Fondo (Optimizada para NO chocar con el texto) -->
+                <div class="absolute inset-0 z-0">
                      <img
                         src={promo.fields.imagen.fields.file.url}
                         alt={promo.fields.titulo}
-                        class="h-full w-full object-cover transition-transform duration-[20s] ease-linear scale-100 group-hover:scale-110" 
+                        
+                        class="w-full h-full object-cover object-[70%_center] md:object-right transition-transform duration-[20000ms] ease-linear scale-100 group-hover:scale-110" 
                         loading={index === 0 ? "eager" : "lazy"}
                     />
-                    <!-- Overlay Gradiente Profesional para legibilidad -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/50 to-transparent opacity-90" />
-                    <div class="absolute inset-0 bg-gradient-to-r from-[#020617]/80 via-transparent to-transparent opacity-80" />
+                    
+                    <!-- MÁSCARAS INTELIGENTES -->
+                    <!-- A. Oscurece TOTALMENTE la izquierda (escritorio) para contraste de texto perfecto -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#101623] via-[#101623]/80 to-transparent md:via-[#101623]/40"></div>
+                    
+                    <!-- B. Oscurece abajo (móvil) -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#101623] via-[#101623]/60 to-transparent md:hidden"></div>
                 </div>
 
-                <!-- 2. Contenido Flotante -->
-                <div class="relative z-10 container mx-auto px-6 h-full flex flex-col justify-end pb-32 md:justify-center md:pb-0">
-                    <div class="max-w-4xl space-y-6 md:space-y-8 pl-0 md:pl-8 border-l-0 md:border-l-4 border-blue-500/0 md:border-blue-500/50 md:backdrop-blur-sm md:bg-white/0 transition-all duration-700">
+                <!-- 2. Contenido "Flotante" -->
+                <div class="relative z-10 container mx-auto px-6 md:px-12 h-full flex flex-col justify-end pb-24 md:justify-center md:pb-0">
+                    <div class="max-w-3xl relative">
                         
-                        <!-- Etiqueta Glass -->
-                        <div class="opacity-0 translate-y-8 slide-content-entry inline-flex">
-                             <div class="relative inline-flex items-center justify-center rounded-full bg-blue-600/20 backdrop-blur-md px-4 py-1.5 border border-blue-400/30 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                                <span class="relative flex h-2 w-2 mr-2">
+                        <!-- Decorative Badge (Capsule) -->
+                        <div class="opacity-0 translate-y-8 slide-content-entry mb-6">
+                             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                                <span class="relative flex h-2.5 w-2.5">
                                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500 shadow-[0_0_10px_#3b82f6]"></span>
                                 </span>
-                                <span class="text-xs font-bold uppercase tracking-[0.2em] text-blue-100">{promo.fields.tipo}</span>
+                                <span class="text-xs font-black uppercase tracking-[0.15em] text-white text-shadow-sm">{promo.fields.tipo}</span>
                              </div>
                         </div>
 
-                        <!-- Título -->
-                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9] drop-shadow-2xl opacity-0 translate-y-8 transition-all duration-700 delay-100 slide-content-entry">
-                            {promo.fields.titulo}
-                        </h1>
+                        <!-- Título Masivo (Outline visual + Fill) -->
+                        <div class="relative opacity-0 translate-y-8 transition-all duration-700 delay-100 slide-content-entry">
+                             <!-- Texto Sombra/Efecto detrás (Opcional para profundidad) -->
+                             <h1 class="absolute -top-1 -left-1 text-5xl md:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-blue-600/20 to-transparent select-none blur-sm pointer-events-none tracking-tighter leading-[0.9]">
+                                {promo.fields.titulo}
+                             </h1>
+                             
+                             <!-- Texto Principal -->
+                             <h1 class="relative text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-[0.95] drop-shadow-2xl">
+                                {promo.fields.titulo}
+                             </h1>
+                        </div>
                         
-                        <!-- Descripción -->
-                        <p class="text-lg md:text-2xl text-slate-300 font-medium leading-relaxed max-w-2xl opacity-0 translate-y-8 transition-all duration-700 delay-200 slide-content-entry">
-                            {promo.fields.descripcion}
-                        </p>
+                        <!-- Descripción con Borde Gradiente -->
+                        <div class="mt-6 pl-6 border-l-4 border-transparent border-image-slice-1 opacity-0 translate-y-8 transition-all duration-700 delay-200 slide-content-entry" 
+                             style="border-image-source: linear-gradient(to bottom, #3b82f6, transparent);">
+                            <p class="text-lg md:text-2xl text-slate-200 font-medium leading-relaxed max-w-2xl text-shadow-sm">
+                                {promo.fields.descripcion}
+                            </p>
+                        </div>
 
-                        <!-- Actions -->
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-4 opacity-0 translate-y-8 transition-all duration-700 delay-300 slide-content-entry">
+                        <!-- ACTIONS AREA -->
+                        <div class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-6 opacity-0 translate-y-8 transition-all duration-700 delay-300 slide-content-entry">
+                            
+                            <!-- Botón Primario "Luminoso" -->
                             <a
-                                href={`https://wa.me/${WA_NUMBER}?text=Hola, me interesa la promoción de: ${promo.fields.titulo}`}
+                                href={`https://wa.me/${WA_NUMBER}?text=¡Hola! Quiero cotizar: ${promo.fields.titulo}`}
                                 target="_blank"
-                                class="group/btn relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-white px-8 py-4 font-bold uppercase tracking-widest text-slate-900 transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+                                class="group/btn relative inline-flex items-center justify-center gap-3 px-10 py-5 overflow-hidden rounded-2xl bg-white text-slate-900 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_-10px_rgba(255,255,255,0.5)] active:scale-95"
                             >
-                                <span class="relative z-10">Cotizar Ahora</span>
-                                <svg class="relative z-10 w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                                <div class="absolute inset-0 -translate-x-full group-hover/btn:animate-[shine_1.5s_infinite] bg-gradient-to-r from-transparent via-slate-200/50 to-transparent z-0"></div>
+                                <span class="relative z-10 font-black uppercase tracking-widest text-sm">Cotizar Ahora</span>
+                                <svg class="relative z-10 w-5 h-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                                
+                                <!-- Shine Interno -->
+                                <div class="absolute inset-0 -translate-x-full group-hover/btn:animate-[shine_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-slate-100 to-transparent z-0"></div>
                             </a>
 
+                            <!-- Timer de Alta Tecnología -->
                             {promo.fields.fechaFin && (
-                                <div class="flex items-center gap-3 px-4 py-2 rounded-xl bg-black/40 backdrop-blur-md border border-white/10" data-timer-target={promo.fields.fechaFin}>
-                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Expira en:</span>
-                                    <div class="font-mono text-lg font-bold flex gap-1 tabular-nums tracking-wider text-red-400">
-                                        <span class="timer-d">00</span>d :
-                                        <span class="timer-h">00</span>h :
-                                        <span class="timer-m">00</span>m
+                                <div class="group/timer relative px-5 py-2.5 rounded-xl bg-black/30 border border-white/10 backdrop-blur-md flex items-center gap-4 select-none transition-all hover:bg-black/50 hover:border-red-500/30" data-timer-target={promo.fields.fechaFin}>
+                                    <div>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Termina en</p>
+                                        <div class="font-mono text-xl font-bold text-white flex items-baseline gap-1 tabular-nums tracking-tight shadow-red-glow">
+                                            <span class="timer-d">00</span><span class="text-xs text-slate-500 font-sans">d</span> :
+                                            <span class="timer-h">00</span><span class="text-xs text-slate-500 font-sans">h</span> :
+                                            <span class="timer-m text-red-400">00</span><span class="text-xs text-red-900/80 font-sans">m</span>
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -180,105 +220,124 @@ const WA_NUMBER = "529614603593";
           ))}
         </div>
 
-        <!-- Pagination (Capsule Style) -->
-        <div class="absolute bottom-10 right-0 left-0 flex justify-center md:justify-end md:right-12 z-30">
-             <div class="swiper-pagination-custom-container bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-3">
-                <!-- Bullets injected via JS -->
-             </div>
+        <!-- Pagination Moderna -->
+        <div class="absolute bottom-8 right-8 z-20 hidden md:flex gap-4">
+            <!-- Flechas Custom o Bullets -->
+            <div class="swiper-pagination-custom-container bg-black/20 backdrop-blur-lg border border-white/10 px-4 py-2 rounded-full flex items-center gap-3 hover:bg-black/40 transition-colors"></div>
         </div>
       </div>
     </section>
   )}
 
-  <!-- === GRID SECTION === -->
-  <section class="py-24 bg-[#F8FAFC] dark:bg-[#020617] relative transition-colors duration-500">
-    <!-- Grid Light/Dark Divider Gradient -->
-    <div class="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#020617] to-transparent pointer-events-none opacity-100 z-10"></div>
+<!-- === GRID SECTION: CATÁLOGO BENTO === -->
+  <section class="py-24 bg-slate-50 dark:bg-[#101623] relative transition-colors duration-500">
+    
+    <!-- Divider visual superior -->
+    <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent opacity-50"></div>
 
-    <!-- Header -->
-    <div class="container mx-auto px-6 mb-16 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div class="max-w-3xl">
-            <span class="text-blue-600 dark:text-blue-400 font-bold uppercase tracking-widest text-xs mb-2 block">Oportunidades</span>
-            <h2 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">
-                Catálogo <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Destacado</span>.
-            </h2>
-            <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">
-                Selección de equipos con alta demanda y disponibilidad inmediata.
-            </p>
+    <div class="container mx-auto px-6">
+        
+        <!-- Header Alineado a la izquierda -->
+        <div class="mb-12 flex flex-col md:flex-row items-end justify-between gap-6 border-b border-slate-200 dark:border-white/5 pb-6">
+            <div>
+                <span class="text-blue-600 dark:text-blue-500 font-bold uppercase tracking-widest text-xs mb-2 block pl-1">Disponibilidad Inmediata</span>
+                <h2 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
+                    Catálogo <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-white">Destacado.</span>
+                </h2>
+            </div>
+            
+            <a href="/catalogo" class="group flex items-center gap-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent hover:border-slate-200 dark:hover:border-white/10">
+                Ver todo el inventario
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
         </div>
-    </div>
 
-    <!-- BENTO GRID -->
-    <div class="container mx-auto px-6 pb-20 relative z-10">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[450px]">
-        {gridPromos.map((promo, index) => {
-            // Diseño asimétrico: el primer elemento de cada fila de 3 ocupa 2 columnas en MD
-            const isWide = index % 3 === 0;
-            return (
-                <article 
-                    class={`
-                        group relative rounded-[2.5rem] overflow-hidden 
-                        bg-white dark:bg-[#0f172a] 
-                        border border-slate-200 dark:border-white/5
-                        shadow-lg shadow-slate-200/50 dark:shadow-none
-                        hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2
-                        transition-all duration-500 ease-out
-                        ${isWide ? "md:col-span-2" : "md:col-span-1"}
-                    `}
-                >
-                  <!-- Full Card Link (Clickable area) -->
-                  <a 
-                    href={`https://wa.me/${WA_NUMBER}?text=Me interesa: ${promo.fields.titulo}`}
-                    target="_blank" 
-                    class="absolute inset-0 z-40 cursor-pointer"
-                    aria-label={`Ver oferta de ${promo.fields.titulo}`}
-                  ></a>
+        <!-- BENTO GRID RESPONSIVE -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[380px] md:auto-rows-[450px]">
+            
+            {gridPromos.map((promo, index) => {
+                // Patrón: 1er elemento de cada fila de 3 ocupa 2 columnas
+                const isWide = index % 3 === 0;
+                
+                return (
+                    <article 
+                        class={`
+                            group relative overflow-hidden rounded-[2.5rem] 
+                            bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 hover:border-blue-500/30 dark:hover:border-white/20
+                            shadow-xl shadow-slate-200/50 dark:shadow-black/40 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/20
+                            transition-all duration-500 ease-out hover:-translate-y-1
+                            ${isWide ? "md:col-span-2" : "md:col-span-1"}
+                        `}
+                    >
+                        <!-- Full Click Overlay -->
+                        <a 
+                            href={`https://wa.me/${WA_NUMBER}?text=Me interesa cotizar: ${promo.fields.titulo}`}
+                            target="_blank" 
+                            class="absolute inset-0 z-30 cursor-pointer"
+                            aria-label={`Ver detalles de ${promo.fields.titulo}`}
+                        ></a>
 
-                  <!-- Image Container -->
-                  <div class="absolute inset-0 z-0 h-full w-full bg-slate-900">
-                    <img
-                      src={promo.fields.imagen.fields.file.url}
-                      alt=""
-                      class="h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110 opacity-80 group-hover:opacity-60"
-                      loading="lazy"
-                    />
-                    <!-- Gradients para legibilidad -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent opacity-90 transition-opacity" />
-                  </div>
-
-                  <!-- Text Content -->
-                  <div class="relative z-20 h-full flex flex-col justify-between p-8 md:p-10 select-none pointer-events-none">
-                    
-                    <!-- Tag Badge -->
-                    <div class="flex justify-start">
-                        <span class="inline-flex items-center rounded-lg bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
-                            {promo.fields.tipo}
-                        </span>
-                    </div>
-
-                    <!-- Bottom Info -->
-                    <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                        <h3 class={`text-white font-black leading-tight mb-2 drop-shadow-lg ${isWide ? 'text-4xl md:text-5xl' : 'text-3xl'}`}>
-                            {promo.fields.titulo}
-                        </h3>
-                        
-                        <div class="h-0 group-hover:h-auto overflow-hidden transition-all duration-500">
-                             <p class="text-slate-300 text-sm font-medium leading-relaxed max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-6 border-l-2 border-blue-500 pl-3">
-                                {promo.fields.descripcion}
-                             </p>
+                        <!-- 1. Imagen con Zoom Effect -->
+                        <div class="absolute inset-0 z-0 w-full h-full bg-slate-100 dark:bg-slate-900">
+                            <img
+                                src={promo.fields.imagen.fields.file.url}
+                                alt={promo.fields.titulo}
+                                class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 dark:opacity-80 group-hover:opacity-80 dark:group-hover:opacity-60"
+                                loading="lazy"
+                            />
+                            
+                            <!-- Capas de Degradado (Crucial para legibilidad) -->
+                            <!-- Gradiente inferior fuerte para el texto -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent dark:from-[#020617] dark:via-transparent dark:to-transparent opacity-90"></div>
+                            <!-- Gradiente superior sutil -->
+                            <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent opacity-40"></div>
                         </div>
-                        
-                        <!-- Botón Simulado (Visual only, el link es la card entera) -->
-                        <div class="flex items-center gap-2 text-blue-300 text-xs font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 group-hover:text-white transition-colors">
-                             <span>Consultar Precio</span>
-                             <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+
+                        <!-- 2. Contenido Informativo -->
+                        <div class="relative z-10 h-full flex flex-col justify-between p-8 select-none pointer-events-none">
+                            
+                            <!-- Top: Badge -->
+                            <div class="flex items-start justify-between">
+                                <span class="inline-flex items-center px-3 py-1 rounded-lg bg-white/20 backdrop-blur-md border border-white/20 text-[10px] font-black uppercase tracking-widest text-white shadow-sm group-hover:bg-blue-600 group-hover:border-blue-500 transition-colors duration-300">
+                                    {promo.fields.tipo}
+                                </span>
+                                
+                                <!-- Icono Flecha Top Right (Visual cue) -->
+                                <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-y-2 group-hover:translate-y-0 transition-all duration-500 border border-white/20">
+                                    <svg class="w-5 h-5 text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </div>
+                            </div>
+
+                            <!-- Bottom: Info -->
+                            <div class="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                                
+                                <!-- Título -->
+                                <h3 class={`text-white font-black leading-[0.95] mb-2 drop-shadow-lg ${isWide ? 'text-4xl md:text-5xl' : 'text-3xl'}`}>
+                                    {promo.fields.titulo}
+                                </h3>
+                                
+                                <!-- Reveal Container (Height animation) -->
+                                <div class="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
+                                     <div class="overflow-hidden">
+                                         <p class="text-slate-200 text-sm font-medium leading-relaxed pt-2 border-l-2 border-blue-500 pl-3 mb-4 opacity-0 group-hover:opacity-100 transition-opacity delay-100 duration-500">
+                                            {promo.fields.descripcion}
+                                         </p>
+                                         
+                                         <!-- Call to Action Link Visual -->
+                                         <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-300 group-hover:text-white transition-colors">
+                                            Solicitar Cotización 
+                                            <span class="w-4 h-px bg-current"></span>
+                                         </span>
+                                     </div>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
-                  </div>
-                </article>
-            );
-        })}
-      </div>
+                    </article>
+                );
+            })}
+        </div>
+
     </div>
   </section>
 </BaseLayout>
