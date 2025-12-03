@@ -95,7 +95,7 @@ const VectorMap = () => {
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border-2 border-white dark:border-[#1a2333]"></span>
           </span>
           <span className="text-[10px] font-bold tracking-widest text-slate-700 dark:text-slate-200 uppercase">
-            Red 5G Chiapas
+            Red 5G
           </span>
         </div>
       </div>
