@@ -1,467 +1,257 @@
 ---
-// src/pages/faq.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
 import Button from "../components/ui/Button.astro";
 
+// === DATA (Optimized for SEO & Clarity) ===
 const faqs = {
-  planes: [
-    {
-      question: "¿Qué incluyen los Planes Telcel Plus?",
-      answer:
-        "Los Planes Telcel Plus incluyen minutos y SMS ilimitados en México, Estados Unidos y Canadá, además de redes sociales ilimitadas (WhatsApp, Facebook, X, Instagram, Snapchat y Uber) y una cantidad de Gigas para navegar libremente.",
-    },
-    {
-      question: "¿Puedo conservar mi número si me cambio a Telcel?",
-      answer:
-        "¡Sí! El trámite se llama Portabilidad y es totalmente gratuito. Solo necesitas tu NIP de portabilidad (envía NIP al 051) y una identificación oficial. Nosotros nos encargamos de todo el proceso en menos de 24 horas.",
-    },
-    {
-      question: "¿Cuál es la vigencia de mi plan?",
-      answer:
-        "Manejamos planes libres (sin plazo forzoso) y planes con equipo incluido a 12, 18, 24 o 36 meses. Tú eliges la opción que mejor se adapte a tus necesidades.",
-    },
-  ],
-  internet: [
-    {
-      question: "¿Cómo funciona el Internet en Casa?",
-      answer:
-        "Es muy sencillo: te entregamos un módem que solo necesitas conectar a la luz y ¡listo! No requiere instalación técnica ni cableado. Funciona a través de la red 4G/5G de Telcel.",
-    },
-    {
-      question: "¿Puedo mover el módem a otra casa?",
-      answer:
-        "El servicio está diseñado para funcionar en una ubicación específica (la que registraste al contratar). Si necesitas cambiar de domicilio, debes notificarlo para actualizar la ubicación del servicio ($100 costo por cambio de ubicación).",
-    },
-  ],
-  pagos: [
-    {
-      question: "¿Dónde puedo pagar mi factura?",
-      answer:
-        "Puedes pagar en nuestra app Mi Telcel, en cualquiera de nuestras sucursales, bancos, OXXO, o domiciliar el cargo a tu tarjeta de crédito/débito para mayor comodidad.",
-    },
-    {
-      question: "¿Qué pasa si me atraso en mi pago?",
-      answer:
-        "Si no realizas el pago antes de tu fecha límite, el servicio podría suspenderse temporalmente. Te recomendamos domiciliar tu pago para evitar interrupciones y cargos por reconexión.",
-    },
-  ],
+  planes: {
+    id: "planes",
+    title: "Planes Telcel Plus",
+    desc: "Información sobre minutos, datos 5G y redes sociales ilimitadas.",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />`,
+    items: [
+      { question: "¿Qué incluyen los Planes Telcel Plus?", answer: "Todos los planes incluyen Minutos y SMS ilimitados en México, EE.UU. y Canadá. Además, obtienes redes sociales ilimitadas (WhatsApp, Facebook, X, Instagram, Snapchat y Uber) y una bolsa de Gigas para navegación libre en la Red 5G." },
+      { question: "¿Puedo conservar mi número si me cambio?", answer: "¡Claro! El trámite se llama Portabilidad y es gratis. Solo envíanos tu NIP de portabilidad (obtenlo enviando NIP al 051) y una identificación oficial. Nosotros hacemos el cambio en 24 horas sin interrumpir tu servicio." },
+      { question: "¿Hay plazos forzosos?", answer: "Tú decides. Manejamos planes libres (sin plazo forzoso, solo servicio) y planes con equipo incluido a 12, 18, 24 o 36 meses. Si ya tienes equipo, el plan libre es la opción más flexible." },
+    ]
+  },
+  internet: {
+    id: "internet",
+    title: "Internet en Casa",
+    desc: "Soluciones de conectividad inalámbrica plug & play.",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />`,
+    items: [
+      { question: "¿Requiere instalación técnica?", answer: "No. Es tecnología 'Plug & Play'. Te entregamos el módem, lo conectas a la luz y listo. Sin cables en la fachada ni visitas de técnicos. Ideal para rentas o zonas de difícil acceso." },
+      { question: "¿Puedo mover el módem a otra casa?", answer: "El servicio tiene 'Movilidad Restringida' a la zona de cobertura contratada. Si te mudas, contáctanos para actualizar tu ubicación por un costo único de $100 pesos." },
+    ]
+  },
+  pagos: {
+    id: "pagos",
+    title: "Facturación & Trámites",
+    desc: "Gestión de cuentas, pagos y reactivaciones.",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />`,
+    items: [
+      { question: "¿Dónde puedo pagar mi factura?", answer: "La forma más rápida es en la App Mi Telcel. También puedes pagar en bancos, OXXO, o domiciliar a tu tarjeta de crédito/débito para evitar cortes y asegurar tu servicio continuo." },
+      { question: "¿Qué pasa si me cortan la línea?", answer: "Si se suspende por falta de pago, deberás cubrir el saldo pendiente más una cuota de reconexión. El servicio se restablece automáticamente al registrarse el pago en sistema." },
+    ]
+  }
 };
 
-// Schema.org
+// JSON-LD Schema para SEO
 const schema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: Object.values(faqs)
-    .flat()
-    .map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
+  mainEntity: Object.values(faqs).flatMap(cat => cat.items.map(item => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer }
+  })))
 };
 ---
 
 <BaseLayout
   title="Centro de Ayuda | Línea Digital"
-  description="Resuelve tus dudas sobre planes Telcel, internet en casa, pagos y más."
+  description="Respuestas rápidas sobre planes, equipos, portabilidad y soporte técnico Telcel."
 >
-  <!-- HERO HEADER (Atmosphere) -->
-  <section
-    class="relative pb-12 px-4 overflow-hidden transition-colors duration-500"
-  >
-    <!-- Glow Background -->
-    <div class="absolute inset-0 pointer-events-none">
-      <div
-        class="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] blur-[120px] rounded-full"
-      >
-      </div>
-    </div>
+  
+  <!-- 1. HERO SEARCH (High Impact) -->
+  <section class="relative pt-36 pb-20 px-6 overflow-hidden bg-slate-50 dark:bg-[#0B1120] border-b border-slate-200 dark:border-white/5 transition-colors duration-500">
+    
+    <!-- Background Texture -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-50"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-blue-500/10 dark:bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
 
-    <div class="relative z-10 max-w-3xl mx-auto text-center">
-      <div
-        class="inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-white/10 px-4 py-1.5 mb-8 backdrop-blur-md shadow-sm"
-      >
-        <span class="relative flex h-2.5 w-2.5">
-          <span
-            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
-          ></span>
-          <span
-            class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600 dark:bg-blue-400"
-          ></span>
-        </span>
-        <span
-          class="text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300"
-          >Knowledge Base</span
-        >
+    <div class="relative z-10 max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-blue-600 text-[11px] font-bold uppercase tracking-widest mb-8 dark:bg-blue-900/20 dark:border-blue-500/20 dark:text-blue-400">
+        Soporte y Ayuda
       </div>
-
-      <h1
-        class="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 dark:text-white mb-6"
-      >
-        ¿En qué podemos <br />
-        <span
-          class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500"
-          >ayudarte hoy?</span
-        >
+      
+      <h1 class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tighter leading-tight">
+        ¿Cómo podemos <br class="hidden sm:block" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300">ayudarte hoy?</span>
       </h1>
-
-      <p
-        class="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400 md:text-xl"
-      >
-        Encuentra respuestas rápidas a las preguntas más frecuentes.
+      
+      <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+        Encuentra soluciones rápidas sobre tu línea, facturación o renovaciones.
       </p>
 
-      <!-- LIVE SEARCH INPUT -->
-      <div
-        class="relative group max-w-2xl mx-auto transform transition-all hover:-translate-y-1"
-      >
-        <div
-          class="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        >
-        </div>
-
-        <div
-          class="relative flex items-center w-full h-16 rounded-[2rem] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl shadow-slate-200/40 dark:shadow-black/40 overflow-hidden"
-        >
-          <div class="pl-6 text-slate-400">
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg
-            >
+      <!-- SEARCH BAR (Interactive) -->
+      <div class="relative max-w-2xl mx-auto group">
+        <!-- Glow effect on focus -->
+        <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl opacity-0 group-focus-within:opacity-30 transition duration-500 blur-lg"></div>
+        
+        <div class="relative flex items-center bg-white dark:bg-[#151e2e] rounded-2xl shadow-2xl shadow-slate-200/50 dark:shadow-black/40 border border-slate-200 dark:border-white/10 focus-within:border-blue-500 dark:focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-500/20 transition-all overflow-hidden">
+          <div class="pl-6 text-slate-400 dark:text-slate-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           </div>
-          <input
-            type="text"
-            id="faq-search"
-            placeholder="Busca 'portabilidad', 'recargas', 'internet'..."
-            class="w-full h-full px-4 bg-transparent text-lg text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:outline-none font-medium"
+          <input 
+            type="text" 
+            id="faq-search" 
+            placeholder="Busca 'portabilidad', 'factura', 'internet'..." 
+            class="w-full h-16 px-4 bg-transparent text-lg font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none"
+            autocomplete="off"
           />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTENT SPLIT VIEW -->
-  <section class="pb-24 min-h-[60vh]">
-    <div class="container mx-auto px-4 max-w-7xl">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-        <!-- 1. SIDEBAR NAVIGATION (STICKY) -->
-        <div class="lg:col-span-3 relative z-20">
-          <nav
-            class="lg:sticky lg:top-32 space-y-1 p-2 rounded-3xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-lg border border-slate-200/50 dark:border-slate-800"
-          >
-            <p
-              class="px-4 py-4 text-2xs uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500"
-            >
-              Explorar Temas
-            </p>
-
-            <a
-              href="#planes"
-              class="faq-nav-link group flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-white hover:shadow-md transition-all"
-              data-target="planes"
-            >
-              <span>📱 Planes Móviles</span>
-              <span
-                class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
-                >→</span
-              >
-            </a>
-
-            <a
-              href="#internet"
-              class="faq-nav-link group flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-indigo-600 dark:hover:text-white hover:shadow-md transition-all"
-              data-target="internet"
-            >
-              <span>🏠 Internet en Casa</span>
-              <span
-                class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
-                >→</span
-              >
-            </a>
-
-            <a
-              href="#pagos"
-              class="faq-nav-link group flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-white hover:shadow-md transition-all"
-              data-target="pagos"
-            >
-              <span>💳 Pagos y Facturas</span>
-              <span
-                class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
-                >→</span
-              >
-            </a>
-          </nav>
-        </div>
-
-        <!-- 2. QUESTIONS CONTENT AREA -->
-        <div class="lg:col-span-9 space-y-12">
-          <!-- Category: Planes -->
-          <div
-            id="planes"
-            class="faq-section scroll-mt-32 p-8 rounded-[2.5rem] bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border border-slate-100 dark:border-white/5 shadow-xl shadow-slate-200/50 dark:shadow-none transition-all hover:border-blue-100 dark:hover:border-blue-900/30"
-          >
-            <div
-              class="flex items-center gap-4 mb-8 border-b border-slate-100 dark:border-white/5 pb-6"
-            >
-              <div
-                class="h-12 w-12 flex items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-              >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                  ></path></svg
-                >
-              </div>
-              <div>
-                <h2
-                  class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white"
-                >
-                  Planes Móviles
-                </h2>
-                <p class="text-sm text-slate-500">
-                  Telefonía celular, Gigas y redes sociales.
-                </p>
-              </div>
-            </div>
-            <FAQAccordion items={faqs.planes} />
-          </div>
-
-          <!-- Category: Internet -->
-          <div
-            id="internet"
-            class="faq-section scroll-mt-32 p-8 rounded-[2.5rem] bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border border-slate-100 dark:border-white/5 shadow-xl shadow-slate-200/50 dark:shadow-none transition-all hover:border-indigo-100 dark:hover:border-indigo-900/30"
-          >
-            <div
-              class="flex items-center gap-4 mb-8 border-b border-slate-100 dark:border-white/5 pb-6"
-            >
-              <div
-                class="h-12 w-12 flex items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400"
-              >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"
-                  ></path></svg
-                >
-              </div>
-              <div>
-                <h2
-                  class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white"
-                >
-                  Internet en Casa
-                </h2>
-                <p class="text-sm text-slate-500">
-                  Módems inalámbricos y configuración.
-                </p>
-              </div>
-            </div>
-            <FAQAccordion items={faqs.internet} />
-          </div>
-
-          <!-- Category: Pagos -->
-          <div
-            id="pagos"
-            class="faq-section scroll-mt-32 p-8 rounded-[2.5rem] bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border border-slate-100 dark:border-white/5 shadow-xl shadow-slate-200/50 dark:shadow-none transition-all hover:border-emerald-100 dark:hover:border-emerald-900/30"
-          >
-            <div
-              class="flex items-center gap-4 mb-8 border-b border-slate-100 dark:border-white/5 pb-6"
-            >
-              <div
-                class="h-12 w-12 flex items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400"
-              >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                  ></path></svg
-                >
-              </div>
-              <div>
-                <h2
-                  class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white"
-                >
-                  Pagos y Facturación
-                </h2>
-                <p class="text-sm text-slate-500">
-                  Dónde pagar y cortes de servicio.
-                </p>
-              </div>
-            </div>
-            <FAQAccordion items={faqs.pagos} />
+          <div class="pr-4 hidden sm:block">
+             <kbd class="inline-flex items-center px-2 py-1 text-xs font-sans font-semibold text-slate-400 bg-slate-100 dark:bg-white/5 rounded border border-slate-200 dark:border-white/10 shadow-sm">ESC</kbd>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3. HELP CTA -->
-  <section
-    class="py-20 px-4 border-t border-slate-200/50 dark:border-white/5 relative overflow-hidden"
-  >
-    <div class="max-w-5xl mx-auto relative z-10">
-      <div
-        class="relative rounded-[3rem] overflow-hidden px-8 py-16 text-center shadow-2xl shadow-slate-900/20 dark:shadow-none"
-      >
-        <!-- Deco Glows Internal -->
-        <div
-          class="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none"
-        >
-        </div>
-        <div
-          class="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px] pointer-events-none"
-        >
-        </div>
-
-        <h3
-          class="text-3xl md:text-5xl font-black text-white mb-6 relative z-10"
-        >
-          ¿Aún tienes dudas?
-        </h3>
-        <p class="text-slate-300 text-lg mb-10 max-w-xl mx-auto relative z-10">
-          Nuestro chatbot inteligente puede responderte al instante, o puedes
-          hablar con un experto.
-        </p>
-
-        <div
-          class="flex flex-col sm:flex-row justify-center gap-4 relative z-10"
-        >
-          <Button
-            onclick="document.getElementById('chatbot-toggle').click()"
-            variant="primary"
-            class="bg-white text-slate-900 hover:bg-blue-50 shadow-lg border-transparent"
-          >
-            Abrir Chat de Soporte
-          </Button>
-          <Button
-            href="https://wa.me/529616189200"
-            variant="secondary"
-            class="border-slate-700 text-white hover:bg-white/10"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
-              ><path
-                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.548 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
-              ></path></svg
+  <!-- 2. MAIN CONTENT -->
+  <section class="py-24 px-6 bg-white dark:bg-[#0B1120] min-h-screen transition-colors duration-500">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
+      
+      <!-- SIDEBAR NAV (Sticky on Desktop) -->
+      <div class="lg:col-span-3 hidden lg:block h-full">
+        <div class="sticky top-32 space-y-1">
+          <p class="px-4 mb-4 text-xs font-bold uppercase tracking-widest text-slate-400">Categorías</p>
+          {Object.values(faqs).map((category) => (
+            <a 
+              href={`#${category.id}`} 
+              class="nav-link group flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-blue-600 dark:hover:text-white transition-all"
+              data-target={category.id}
             >
-            WhatsApp Directo
-          </Button>
+              <span>{category.title}</span>
+              <svg class="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+          ))}
         </div>
+      </div>
+
+      <!-- FAQ LIST -->
+      <div class="lg:col-span-9 space-y-20" id="faq-container">
+        
+        {Object.values(faqs).map((category) => (
+          <div id={category.id} class="faq-category scroll-mt-32">
+            
+            <!-- Category Header -->
+            <div class="flex items-center gap-5 mb-10 pb-6 border-b border-slate-100 dark:border-white/5">
+              <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-white/5">
+                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <Fragment set:html={category.icon} />
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">{category.title}</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base mt-1">{category.desc}</p>
+              </div>
+            </div>
+
+            <!-- Accordion Component -->
+            <div class="faq-items-wrapper">
+               <FAQAccordion items={category.items} />
+            </div>
+          </div>
+        ))}
+
+        <!-- Empty State (JS Toggled) -->
+        <div id="no-results" class="hidden text-center py-20 animate-fade-in">
+           <div class="inline-flex h-24 w-24 items-center justify-center rounded-full bg-slate-50 dark:bg-white/5 mb-6 border border-slate-200 dark:border-white/10">
+              <svg class="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+           </div>
+           <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">No encontramos respuestas</h3>
+           <p class="text-slate-500 dark:text-slate-400 mb-8 max-w-md mx-auto">
+             Intenta usar palabras clave más generales como "pagos" o "plan". Si no encuentras lo que buscas, estamos para ayudarte.
+           </p>
+           <div class="flex justify-center gap-4">
+             <Button href="/contacto" variant="primary" size="md">Contactar Soporte</Button>
+           </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. FOOTER CTA -->
+  <section class="py-24 border-t border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#0f1520] text-center">
+    <div class="max-w-3xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">¿Aún tienes dudas?</h2>
+      <p class="text-slate-500 dark:text-slate-400 mb-10 text-lg">
+        Nuestro equipo de soporte está disponible para resolver tus inquietudes por WhatsApp o llamada.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <Button href="https://wa.me/529616189200" variant="primary" size="lg" class="shadow-lg shadow-blue-500/25">
+          <span class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.548 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            WhatsApp
+          </span>
+        </Button>
+        <Button href="tel:9616189200" variant="secondary" size="lg">
+          Llamar al Corporativo
+        </Button>
       </div>
     </div>
   </section>
 
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-  <!-- INTERACTIVE LOGIC -->
+  <!-- SEARCH LOGIC -->
   <script>
-    document.addEventListener("astro:page-load", () => {
-      // 1. SEARCH FUNCTIONALITY
-      const searchInput = document.getElementById(
-        "faq-search",
-      ) as HTMLInputElement;
+    const initFAQ = () => {
+      const searchInput = document.getElementById("faq-search") as HTMLInputElement;
+      const noResults = document.getElementById("no-results");
+      
       if (searchInput) {
-        searchInput.addEventListener("keyup", (e) => {
-          const term = (e.target as HTMLInputElement).value.toLowerCase();
-          const details = document.querySelectorAll("details");
-          let sections = document.querySelectorAll(".faq-section");
+        let timeout: any;
+        
+        searchInput.addEventListener("input", (e) => {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            const term = (e.target as HTMLInputElement).value.toLowerCase().trim();
+            const categories = document.querySelectorAll(".faq-category");
+            let globalMatches = 0;
 
-          // Filter individual questions
-          details.forEach((detail) => {
-            const text = detail.innerText.toLowerCase();
-            if (text.includes(term)) {
-              detail.parentElement!.style.display = "block";
-              if (term.length > 2) detail.open = true;
-            } else {
-              detail.parentElement!.style.display = "none";
-              detail.open = false;
+            categories.forEach((cat) => {
+              // Buscar en items individuales dentro del componente hijo
+              // NOTA: Depende de la estructura del componente FAQAccordion
+              const accordionItems = cat.querySelectorAll("[data-faq-item]"); 
+              let catMatches = 0;
+
+              accordionItems.forEach((item) => {
+                const question = item.getAttribute("data-question")?.toLowerCase() || "";
+                const answer = item.getAttribute("data-answer")?.toLowerCase() || "";
+                
+                if (question.includes(term) || answer.includes(term)) {
+                  (item as HTMLElement).style.display = "block";
+                  catMatches++;
+                  globalMatches++;
+                } else {
+                  (item as HTMLElement).style.display = "none";
+                }
+              });
+
+              // Mostrar/Ocultar Categoría entera si no tiene resultados
+              (cat as HTMLElement).style.display = catMatches > 0 ? "block" : "none";
+            });
+
+            if (noResults) {
+                noResults.classList.toggle("hidden", globalMatches > 0);
             }
-          });
-
-          // Opcional: Ocultar secciones vacías si quisieras ir más lejos
+          }, 300);
         });
       }
 
-      // 2. ACTIVE SCROLLSPY (Sidebar Highlighting)
-      const sections = document.querySelectorAll(".faq-section");
-      const navLinks = document.querySelectorAll(".faq-nav-link");
-
-      if (sections.length > 0 && navLinks.length > 0) {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                // Remove active from all
-                navLinks.forEach((link) => {
-                  link.classList.remove(
-                    "bg-blue-50",
-                    "text-blue-700",
-                    "dark:bg-blue-900/30",
-                    "dark:text-blue-400",
-                    "shadow-inner",
-                  );
-                  link.classList.add("hover:bg-white");
+      // Highlight Navigation
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('bg-blue-50', 'text-blue-600', 'dark:bg-white/5', 'dark:text-white');
+                    if (link.getAttribute('data-target') === entry.target.id) {
+                        link.classList.add('bg-blue-50', 'text-blue-600', 'dark:bg-white/5', 'dark:text-white');
+                    }
                 });
+            }
+        });
+      }, { threshold: 0.2, rootMargin: "-20% 0px -60% 0px" });
+      
+      document.querySelectorAll('.faq-category').forEach(s => observer.observe(s));
+    };
 
-                // Add active to current
-                const id = entry.target.id;
-                const activeLink = document.querySelector(
-                  `.faq-nav-link[data-target="${id}"]`,
-                );
-                if (activeLink) {
-                  activeLink.classList.add(
-                    "bg-blue-50",
-                    "text-blue-700",
-                    "dark:bg-blue-900/30",
-                    "dark:text-blue-400",
-                    "shadow-inner",
-                  );
-                  activeLink.classList.remove("hover:bg-white");
-                }
-              }
-            });
-          },
-          { threshold: 0.5 },
-        ); // 50% visibility
-
-        sections.forEach((section) => observer.observe(section));
-      }
-    });
-
-    // Fallback setup
-    if (document.readyState === "complete")
-      document.dispatchEvent(new Event("astro:page-load"));
-    else
-      document.addEventListener("DOMContentLoaded", () =>
-        document.dispatchEvent(new Event("astro:page-load")),
-      );
+    document.addEventListener("astro:page-load", initFAQ);
+    document.addEventListener("DOMContentLoaded", initFAQ);
   </script>
 </BaseLayout>

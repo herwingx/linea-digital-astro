@@ -1,4 +1,5 @@
 ---
+// src/components/FAQAccordion.astro
 interface Props {
   items: {
     question: string;
@@ -9,96 +10,97 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<div class="space-y-4">
-  {
-    items.map((item, index) => (
-      <div class="group border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800 overflow-hidden transition-all duration-300 hover:shadow-md">
-        <button
-          class="faq-toggle flex items-center justify-between w-full p-5 text-left focus:outline-none"
-          aria-expanded="false"
-          aria-controls={`faq-answer-${index}`}
-        >
-          <span class="text-lg font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            {item.question}
-          </span>
-          <span class="icon-wrapper relative flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 transition-all duration-300 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-            <svg
-              class="w-5 h-5 transform transition-transform duration-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </button>
+<div class="flex flex-col gap-4">
+  {items.map((item, index) => {
+    const id = `accordion-${Math.random().toString(36).substr(2, 9)}`;
+    
+    return (
+      <div 
+        class="group rounded-2xl bg-white dark:bg-[#151e2e] border border-slate-200 dark:border-white/5 transition-all duration-300 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-500/30 hover:shadow-blue-900/5"
+        data-faq-item
+        data-question={item.question}
+        data-answer={item.answer}
+      >
+        <h2>
+          <button
+            type="button"
+            class="faq-trigger flex w-full items-start justify-between gap-4 p-6 text-left focus:outline-none"
+            aria-expanded="false"
+            aria-controls={id}
+          >
+            <span class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-200 transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
+              {item.question}
+            </span>
+            
+            <!-- Animated Icon (+/-) -->
+            <span class="relative ml-4 flex h-6 w-6 shrink-0 items-center justify-center text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              <span class="absolute h-0.5 w-full bg-current rounded-full transform transition-transform duration-300 icon-h"></span>
+              <span class="absolute h-full w-0.5 bg-current rounded-full transform transition-transform duration-300 icon-v"></span>
+            </span>
+          </button>
+        </h2>
+        
         <div
-          id={`faq-answer-${index}`}
-          class="faq-content hidden px-5 pb-5 text-slate-600 dark:text-slate-300 leading-relaxed"
+          id={id}
+          class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
         >
-          <div class="pt-2 border-t border-slate-100 dark:border-slate-700/50">
-            <p>{item.answer}</p>
+          <div class="overflow-hidden">
+            <div class="px-6 pb-6 pt-0">
+              <div class="border-t border-slate-100 dark:border-white/5 pt-4 text-slate-600 dark:text-slate-400 text-base leading-relaxed">
+                {item.answer}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    ))
-  }
+    );
+  })}
 </div>
 
 <script>
-  // Lógica simple para el acordeón
-  const toggles = document.querySelectorAll(".faq-toggle");
+  function initAccordion() {
+    const triggers = document.querySelectorAll('.faq-trigger');
 
-  toggles.forEach((toggle) => {
-    toggle.addEventListener("click", () => {
-      const content = toggle.nextElementSibling;
-      const icon = toggle.querySelector("svg");
-      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+    triggers.forEach((btn) => {
+      // Limpieza para evitar listeners duplicados en ViewTransitions
+      const newBtn = btn.cloneNode(true) as HTMLElement;
+      btn.parentNode?.replaceChild(newBtn, btn);
 
-      // Cerrar otros (opcional, estilo acordeón estricto)
-      // document.querySelectorAll('.faq-content').forEach(el => {
-      //   if (el !== content) el.classList.add('hidden');
-      // });
-      // document.querySelectorAll('.faq-toggle').forEach(el => {
-      //   if (el !== toggle) {
-      //     el.setAttribute('aria-expanded', 'false');
-      //     el.querySelector('svg')?.classList.remove('rotate-180');
-      //   }
-      // });
+      newBtn.addEventListener('click', function(this: HTMLElement) {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        const controlsId = this.getAttribute('aria-controls');
+        const content = document.getElementById(controlsId!);
+        const verticalIcon = this.querySelector('.icon-v');
+        
+        // Update ARIA
+        this.setAttribute('aria-expanded', (!isExpanded).toString());
+        
+        // Toggle Content
+        if (content) {
+            content.classList.toggle('grid-rows-[1fr]');
+            content.classList.toggle('grid-rows-[0fr]');
+        }
 
-      // Toggle actual
-      toggle.setAttribute("aria-expanded", (!isExpanded).toString());
-      content?.classList.toggle("hidden");
-      icon?.classList.toggle("rotate-180");
-
-      // Animación suave de entrada
-      if (!isExpanded) {
-        content?.classList.add("animate-fade-down");
-      } else {
-        content?.classList.remove("animate-fade-down");
-      }
+        // Animate Icon (+ to -)
+        if (verticalIcon) {
+            // Si rotamos 90 grados la barra vertical, se alinea con la horizontal y desaparece visualmente (forma un menos)
+            // O la opacidad a 0.
+            verticalIcon.classList.toggle('rotate-90'); 
+            verticalIcon.classList.toggle('opacity-0');
+        }
+        
+        // Optional: Close others (Accordion behavior instead of multiple expand)
+        /* 
+        document.querySelectorAll('.faq-trigger').forEach(otherBtn => {
+           if(otherBtn !== this && otherBtn.getAttribute('aria-expanded') === 'true') {
+               // Close logic...
+           }
+        });
+        */
+      });
     });
-  });
+  }
+
+  document.addEventListener('astro:page-load', initAccordion);
+  document.addEventListener('DOMContentLoaded', initAccordion);
 </script>
-
-<style>
-  .animate-fade-down {
-    animation: fadeDown 0.3s ease-out forwards;
-  }
-
-  @keyframes fadeDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-</style>

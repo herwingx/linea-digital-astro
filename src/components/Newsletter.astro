@@ -1,118 +1,86 @@
 ---
 // src/components/Newsletter.astro
+// Diseño: "Deep Brand Card" - Alto contraste consistente en ambos temas.
 ---
 
-<section class="relative py-16 sm:py-24 px-4 sm:px-6">
+<section class="relative px-4 sm:px-6 lg:px-8 py-12">
   <div
-    class="relative mx-auto max-w-7xl overflow-hidden rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-br from-slate-100 via-white to-slate-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950 shadow-2xl shadow-slate-200/50 dark:shadow-blue-900/30 ring-1 ring-slate-200 dark:ring-white/10"
+    class="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-[#0B1120] dark:bg-[#151e2e] shadow-2xl shadow-blue-900/30 ring-1 ring-white/10 isolate"
   >
-    <!-- 1. FONDO ATMOSFÉRICO (GLOWS) -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <!-- Malla de ruido sutil para textura -->
+    <!-- 1. FONDO DEEP ATMOSPHERE (Optimized CSS Gradients) -->
+    <div class="absolute inset-0 -z-10">
+      <!-- Gradiente base Deep Navy -->
       <div
-        class="absolute inset-0 opacity-20 mix-blend-overlay"
-        style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAiLz4KPC9zdmc+');"
+        class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#0B1120] to-blue-950/50"
       >
       </div>
 
-      <!-- Luces animadas -->
+      <!-- Glow Azul Telcel (Brand Accent) -->
       <div
-        class="absolute -left-20 top-0 h-[500px] w-[500px] rounded-full bg-blue-600/30 blur-[120px] animate-pulse"
-      >
-      </div>
-      <div
-        class="absolute -right-20 bottom-0 h-[400px] w-[400px] rounded-full bg-indigo-600/20 blur-[100px]"
-        style="animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 2s"
+        class="absolute -top-24 -left-24 h-[500px] w-[500px] rounded-full bg-blue-600/20 blur-[120px] mix-blend-screen"
       >
       </div>
 
-      <!-- Rayos de luz decorativos -->
+      <!-- Glow Secundario Cyan -->
       <div
-        class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.1),transparent_70%)]"
+        class="absolute -bottom-24 -right-24 h-[500px] w-[500px] rounded-full bg-cyan-600/10 blur-[100px] mix-blend-screen"
+      >
+      </div>
+
+      <!-- Malla de ruido sutil para textura "Premium" -->
+      <div
+        class="absolute inset-0 opacity-20 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"
       >
       </div>
     </div>
 
-    <!-- 2. CONTENIDO -->
+    <!-- 2. CONTENIDO (Grid Layout) -->
     <div
-      class="relative z-10 px-4 py-12 sm:px-8 sm:py-16 lg:py-20 lg:px-20 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12"
+      class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 px-6 py-16 sm:px-12 lg:p-20 items-center"
     >
-      <!-- Texto de Venta -->
-      <div class="max-w-xl text-center lg:text-left space-y-4 sm:space-y-6">
-        <!-- Badge mejorado -->
+      <!-- Columna Izquierda: Copy de Venta -->
+      <div
+        class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6"
+      >
+        <!-- Badge Exclusividad -->
         <div
-          class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 dark:from-blue-500/20 dark:to-purple-500/20 border border-blue-200 dark:border-blue-500/30 px-3 sm:px-4 py-1 sm:py-1.5 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest backdrop-blur-sm"
+          class="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-300 backdrop-blur-md shadow-sm"
         >
           <span class="relative flex h-2 w-2">
             <span
-              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 dark:bg-blue-400 opacity-75"
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
             ></span>
-            <span
-              class="relative inline-flex rounded-full h-2 w-2 bg-blue-600 dark:bg-blue-400"
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"
             ></span>
           </span>
-          🎁 Ofertas Exclusivas
+          Círculo Telcel VIP
         </div>
 
         <h2
-          class="text-4xl md:text-5xl font-bold tracking-tighter text-slate-900 dark:text-white leading-tight"
+          class="text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]"
         >
-          Recibe las mejores <br class="hidden sm:block" />
+          Domina tu comunicación. <br />
           <span
-            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-600 dark:from-blue-400 dark:via-cyan-300 dark:to-indigo-300"
-            >ofertas antes que nadie</span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300"
           >
+            Ahorra como experto.
+          </span>
         </h2>
 
-        <p
-          class="text-base sm:text-lg leading-relaxed text-slate-600 dark:text-slate-300 max-w-lg mx-auto lg:mx-0"
-        >
-          Únete a nuestra comunidad y recibe alertas de promociones flash,
-          nuevos equipos y descuentos de hasta <strong
-            class="text-blue-600 dark:text-blue-400">40% OFF</strong
-          > directo en tu correo.
+        <p class="text-lg leading-relaxed text-slate-300 max-w-lg">
+          Únete a nuestra lista exclusiva. Recibe alertas de <strong
+            >iPhone 15 en oferta</strong
+          >, promociones de doble de gigas y descuentos corporativos antes que
+          nadie.
         </p>
 
-        <!-- Prueba Social (sin números específicos) -->
+        <!-- Trust Signals (Minimalistas) -->
         <div
-          class="flex items-center justify-center lg:justify-start gap-3 pt-2"
+          class="flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-3 pt-2 text-sm font-medium text-slate-400"
         >
-          <div class="flex -space-x-2">
-            <div
-              class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 ring-2 ring-white dark:ring-slate-900 flex items-center justify-center text-white text-xs font-bold"
-            >
-              A
-            </div>
-            <div
-              class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 ring-2 ring-white dark:ring-slate-900 flex items-center justify-center text-white text-xs font-bold"
-            >
-              M
-            </div>
-            <div
-              class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 ring-2 ring-white dark:ring-slate-900 flex items-center justify-center text-white text-xs font-bold"
-            >
-              J
-            </div>
-            <div
-              class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 ring-2 ring-white dark:ring-slate-900 flex items-center justify-center text-white text-xs font-bold"
-            >
-              R
-            </div>
-          </div>
-          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-            <span class="text-slate-900 dark:text-white font-semibold"
-              >Cientos de clientes</span
-            > ya reciben nuestras ofertas
-          </p>
-        </div>
-
-        <!-- Beneficios -->
-        <div
-          class="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 text-xs font-medium text-slate-600 dark:text-slate-400 pt-2"
-        >
-          <span class="flex items-center gap-1.5"
-            ><svg
-              class="w-4 h-4 text-emerald-500 dark:text-emerald-400"
+          <span class="flex items-center gap-2">
+            <svg
+              class="w-5 h-5 text-emerald-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -121,11 +89,12 @@
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M5 13l4 4L19 7"></path></svg
-            > Sin spam</span
-          >
-          <span class="flex items-center gap-1.5"
-            ><svg
-              class="w-4 h-4 text-emerald-500 dark:text-emerald-400"
+            >
+            Sin Spam
+          </span>
+          <span class="flex items-center gap-2">
+            <svg
+              class="w-5 h-5 text-emerald-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -133,70 +102,28 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M5 13l4 4L19 7"></path></svg
-            > Cancelas cuando quieras</span
-          >
-          <span class="flex items-center gap-1.5"
-            ><svg
-              class="w-4 h-4 text-emerald-500 dark:text-emerald-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
               ></path></svg
-            > 100% seguro</span
-          >
+            >
+            Datos Seguros
+          </span>
         </div>
       </div>
 
-      <!-- 3. FORMULARIO PILL (Estilo Apple) -->
-      <div class="w-full max-w-md">
+      <!-- Columna Derecha: Formulario de Alta Conversión -->
+      <div class="w-full max-w-md mx-auto lg:mx-0">
         <form id="newsletter-form" class="relative group">
-          <!-- Contenedor Glass Unificado -->
+          <!-- Card del Input (Glassmorphism sobre oscuro) -->
           <div
-            class="relative flex flex-col sm:flex-row items-center gap-3 rounded-xl sm:rounded-[1.5rem] bg-slate-200/50 dark:bg-white/5 border border-slate-300 dark:border-white/10 p-2 shadow-xl transition-all duration-300 focus-within:bg-slate-100 dark:focus-within:bg-white/10 focus-within:border-blue-500 dark:focus-within:border-blue-400/50 focus-within:ring-4 focus-within:ring-blue-500/20 hover:border-blue-200 dark:hover:border-blue-500/30"
+            class="flex flex-col gap-4 p-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm shadow-xl transition-all focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:bg-white/10"
           >
-            <!-- Input Email -->
-            <div class="relative w-full flex items-center pl-3 sm:pl-4">
-              <svg
-                class="w-5 h-5 text-slate-500 dark:text-slate-400 mr-2 sm:mr-3 shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                ></path></svg
+            <!-- Email Input -->
+            <div class="relative w-full">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
               >
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autocomplete="email"
-                required
-                class="w-full bg-transparent border-0 py-3 sm:py-3.5 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:ring-0 text-sm sm:text-sm sm:leading-6 outline-none"
-                placeholder="tu@correo.com"
-              />
-            </div>
-
-            <!-- Botón integrado -->
-            <button
-              type="submit"
-              class="w-full sm:w-auto flex-none rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 px-6 sm:px-8 py-3 sm:py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all hover:shadow-blue-600/50 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
-            >
-              <span
-                id="btn-text"
-                class="flex items-center justify-center gap-2"
-              >
-                Suscribirme gratis
                 <svg
-                  class="w-4 h-4 hidden sm:inline"
+                  class="h-5 w-5 text-slate-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -205,12 +132,30 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  ></path>
                 </svg>
-              </span>
+              </div>
+              <input
+                id="email-address"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                class="block w-full rounded-xl border-0 bg-transparent py-4 pl-12 pr-4 text-white placeholder:text-slate-500 focus:ring-0 sm:text-sm sm:leading-6"
+                placeholder="tucorreo@empresa.com"
+              />
+            </div>
+
+            <!-- Submit Button (Full Width Mobile) -->
+            <button
+              type="submit"
+              class="flex w-full items-center justify-center rounded-xl bg-blue-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/40 hover:bg-blue-500 hover:shadow-blue-500/50 transition-all duration-300 active:scale-[0.98]"
+            >
+              <span id="btn-text">Quiero Acceso VIP</span>
               <svg
                 id="btn-spinner"
-                class="w-5 h-5 hidden animate-spin mx-auto"
+                class="w-5 h-5 hidden animate-spin text-white/80"
                 fill="none"
                 viewBox="0 0 24 24"
                 ><circle
@@ -228,171 +173,128 @@
             </button>
           </div>
 
-          <!-- Feedback Message -->
+          <!-- Feedback dinámico -->
           <div
             id="newsletter-feedback"
-            class="mt-3 text-xs font-medium text-center sm:text-left text-slate-600 dark:text-slate-400 transition-all opacity-0 translate-y-2 min-h-[20px]"
+            class="absolute -bottom-8 left-0 right-0 text-center text-xs font-medium min-h-[1.5rem] transition-all duration-300 opacity-0 translate-y-2"
           >
-            <!-- Inyectado por JS -->
           </div>
-        </form>
 
-        <!-- Texto de privacidad -->
-        <p
-          class="mt-3 sm:mt-4 text-xs text-center sm:text-left text-slate-500 dark:text-slate-500 flex items-center justify-center sm:justify-start gap-1"
-        >
-          <svg
-            class="w-3 h-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            ></path>
-          </svg>
-          Respetamos tu privacidad. Lee nuestra <a
-            href="#"
-            class="underline hover:text-slate-400 dark:hover:text-slate-300"
-            >política de datos</a
-          >.
-        </p>
+          <p class="mt-4 text-center text-xs text-slate-500">
+            Respetamos tu privacidad. Puedes darte de baja en cualquier momento.
+          </p>
+        </form>
       </div>
     </div>
   </div>
 </section>
 
 <script>
-  // Flag to prevent duplicate initialization
-  let newsletterInitialized = false;
+  // Estado global para evitar múltiples inicializaciones
+  let isInitialized = false;
 
   function initNewsletter() {
-    if (newsletterInitialized) return;
-    newsletterInitialized = true;
+    if (isInitialized) return;
 
     const form = document.getElementById("newsletter-form") as HTMLFormElement;
     const feedback = document.getElementById("newsletter-feedback");
     const input = document.getElementById("email-address") as HTMLInputElement;
-    const btn = form?.querySelector("button");
+    const btn = form?.querySelector("button") as HTMLButtonElement;
     const btnText = document.getElementById("btn-text");
     const btnSpinner = document.getElementById("btn-spinner");
 
-    if (!form || !btn || !btnText || !btnSpinner) return;
+    if (!form || !feedback || !btn || !input || !btnText || !btnSpinner) {
+      return;
+    }
 
+    isInitialized = true;
+
+    // Función para mostrar feedback
+    const showFeedback = (message: string, isSuccess: boolean) => {
+      const color = isSuccess ? "text-emerald-400" : "text-red-400";
+      feedback.innerHTML = `<span class="${color} font-bold">${message}</span>`;
+      feedback.classList.remove("opacity-0", "translate-y-2");
+      feedback.classList.add("opacity-100", "translate-y-0");
+    };
+
+    // Función para ocultar feedback
+    const hideFeedback = () => {
+      feedback.classList.add("opacity-0", "translate-y-2");
+      feedback.classList.remove("opacity-100", "translate-y-0");
+    };
+
+    // Función para cambiar estado del botón
+    const setButtonState = (loading: boolean, success?: boolean) => {
+      btn.disabled = loading || success === true;
+
+      if (loading) {
+        btnText.classList.add("hidden");
+        btnSpinner.classList.remove("hidden");
+      } else {
+        btnSpinner.classList.add("hidden");
+        btnText.classList.remove("hidden");
+
+        if (success) {
+          btnText.textContent = "¡Listo!";
+          btn.classList.add("bg-emerald-600");
+          btn.classList.remove("bg-blue-600");
+        } else {
+          btnText.textContent = "Quiero Acceso VIP";
+          btn.classList.remove("bg-emerald-600");
+          btn.classList.add("bg-blue-600");
+        }
+      }
+    };
+
+    // Handler del formulario
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Prevent double submission
-      if (btn.disabled) return;
+      if (!input.value.trim()) return;
 
-      // 1. Loading State
-      btn.disabled = true;
-      btnText.classList.add("hidden");
-      btnSpinner.classList.remove("hidden");
-
-      // Reset feedback visual
-      if (feedback) {
-        feedback.className =
-          "mt-3 text-xs font-medium text-center sm:text-left text-slate-400 transition-all opacity-0 translate-y-2 min-h-[20px]";
-        feedback.textContent = "";
-      }
+      // Estado de carga
+      setButtonState(true);
+      hideFeedback();
 
       try {
-        const formData = new FormData(form);
-
         const response = await fetch("/api/subscribe", {
           method: "POST",
-          body: formData,
+          body: new FormData(form),
         });
 
         const data = await response.json();
+        const isSuccess = data.success === true;
 
-        if (response.ok) {
-          try {
-            // Check if user was already subscribed
-            const isAlreadySubscribed = data.message === "Ya estás suscrito";
+        // Mostrar resultado
+        showFeedback(data.message, isSuccess);
 
-            // 2. Success Animation
-            if (feedback) {
-              const icon = isAlreadySubscribed
-                ? `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`
-                : `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+        if (isSuccess) {
+          input.value = "";
+          setButtonState(false, true);
 
-              const color = isAlreadySubscribed
-                ? "text-blue-400"
-                : "text-emerald-400";
-
-              feedback.innerHTML = `<span class="flex items-center justify-center sm:justify-start gap-1.5 ${color}">${icon} ${data.message}</span>`;
-              feedback.classList.remove("opacity-0", "translate-y-2");
-              feedback.classList.add("opacity-100", "translate-y-0");
-            }
-
-            if (!isAlreadySubscribed) {
-              // Only clear input and show celebration for new subscriptions
-              input.value = "";
-              btn.classList.remove("from-blue-600", "to-blue-500");
-              btn.classList.add(
-                "from-green-500",
-                "to-green-600",
-                "pointer-events-none",
-              );
-
-              btnSpinner.classList.add("hidden");
-              btnText.innerHTML = `<span class="flex items-center justify-center gap-2">¡Suscrito! 🎉</span>`;
-              btnText.classList.remove("hidden");
-            } else {
-              // For already subscribed, just reset the button
-              btnSpinner.classList.add("hidden");
-              btnText.classList.remove("hidden");
-              btn.disabled = false;
-            }
-
-            // Reset
-            setTimeout(() => {
-              if (feedback) {
-                feedback.classList.add("opacity-0");
-                feedback.classList.remove("opacity-100");
-              }
-              if (!isAlreadySubscribed) {
-                btn.classList.remove(
-                  "from-green-500",
-                  "to-green-600",
-                  "pointer-events-none",
-                );
-                btn.classList.add("from-blue-600", "to-blue-500");
-                btn.disabled = false;
-                btnText.innerHTML = `Suscribirme gratis <svg class="w-4 h-4 inline ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>`;
-              }
-            }, 5000);
-          } catch (uiError) {
-            console.error("Error updating UI:", uiError);
-            throw uiError;
-          }
+          // Restaurar después de 4 segundos
+          setTimeout(() => {
+            setButtonState(false, false);
+            hideFeedback();
+          }, 4000);
         } else {
-          throw new Error(data.message || "Error");
+          setButtonState(false, false);
+          setTimeout(hideFeedback, 5000);
         }
       } catch (error) {
-        // 3. Error State
-        console.error(error);
-        if (feedback) {
-          feedback.innerHTML = `<span class="flex items-center justify-center sm:justify-start gap-1.5 text-red-400"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Algo salió mal. Intenta de nuevo.</span>`;
-          feedback.classList.remove("opacity-0", "translate-y-2");
-          feedback.classList.add("opacity-100", "translate-y-0");
-        }
-        btn.disabled = false;
-        btnSpinner.classList.add("hidden");
-        btnText.classList.remove("hidden");
+        showFeedback("Error de conexión. Intenta más tarde.", false);
+        setButtonState(false, false);
+        setTimeout(hideFeedback, 5000);
       }
     });
   }
 
-  // Initialize on Astro page load (for view transitions)
-  document.addEventListener("astro:page-load", initNewsletter);
+  // Inicializar en carga de página
+  document.addEventListener("astro:page-load", () => {
+    isInitialized = false;
+    initNewsletter();
+  });
 
-  // Initialize immediately if page is already loaded
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initNewsletter);
   } else {

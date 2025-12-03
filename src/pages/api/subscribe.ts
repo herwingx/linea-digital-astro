@@ -1,120 +1,113 @@
-export const prerender = false; // Server-side only
+export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { ContactsApi, CreateContact } from "@getbrevo/brevo";
+import * as Brevo from "@getbrevo/brevo";
+
+// Validación de email mejorada
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const data = await request.formData();
     const email = data.get("email");
 
-    if (!email || typeof email !== "string") {
-      return new Response(JSON.stringify({ message: "Email inválido" }), {
-        status: 400,
-      });
-    }
-
-    const BREVO_API_KEY = import.meta.env.BREVO_API_KEY;
-    const BREVO_LIST_ID = import.meta.env.BREVO_LIST_ID;
-
-    if (!BREVO_API_KEY || !BREVO_LIST_ID) {
-      console.error("Brevo API Key or List ID not configured.");
+    // Validación de entrada
+    if (!email || typeof email !== "string" || !isValidEmail(email)) {
       return new Response(
-        JSON.stringify({ message: "Error de configuración del servidor" }),
-        { status: 500 }
+        JSON.stringify({
+          success: false,
+          message: "Por favor ingresa un correo válido."
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    const apiInstance = new ContactsApi();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (apiInstance as any).authentications.apiKey.apiKey = BREVO_API_KEY;
+    // Validación de configuración
+    const BREVO_API_KEY = import.meta.env.BREVO_API_KEY;
+    const BREVO_LIST_ID = Number(import.meta.env.BREVO_LIST_ID);
 
-    // Strategy: Try to create first, if duplicate then check if already in list or update
+    if (!BREVO_API_KEY || !BREVO_LIST_ID) {
+      console.error("Missing Brevo configuration");
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Error de configuración del servidor."
+        }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Configurar API de Brevo
+    const apiInstance = new Brevo.ContactsApi();
+    apiInstance.setApiKey(Brevo.ContactsApiApiKeys.apiKey, BREVO_API_KEY);
+
+    // Intentar crear contacto
+    const createContact = new Brevo.CreateContact();
+    createContact.email = email;
+    createContact.listIds = [BREVO_LIST_ID];
+    createContact.updateEnabled = true;
+
     try {
-      const createContact = new CreateContact();
-      createContact.email = email;
-      createContact.listIds = [Number(BREVO_LIST_ID)];
-
       await apiInstance.createContact(createContact);
 
       return new Response(
         JSON.stringify({
-          message: "¡Suscripción exitosa!",
-          detail: "Tu correo ha sido registrado correctamente.",
+          success: true,
+          message: "¡Gracias por unirte al Círculo VIP!",
         }),
-        { status: 200 }
+        { status: 200, headers: { "Content-Type": "application/json" } }
       );
-    } catch (createError: unknown) {
-      // Check if it's a duplicate error
-      const isDuplicateError =
-        typeof createError === 'object' &&
-        createError !== null &&
-        'response' in createError &&
-        typeof (createError as { response?: { data?: { code?: string } } }).response === 'object' &&
-        (createError as { response?: { data?: { code?: string } } }).response?.data?.code === 'duplicate_parameter';
 
-      if (isDuplicateError) {
-        // Contact exists, check if already in this list
+    } catch (apiError: any) {
+      // Si el contacto ya existe (error 400), intentar actualizar
+      if (apiError.response?.statusCode === 400) {
         try {
-          const existingContact = await apiInstance.getContactInfo(email);
+          const updateContact = new Brevo.UpdateContact();
+          updateContact.listIds = [BREVO_LIST_ID];
 
-          // Check if already in the target list
-          if (existingContact.body.listIds?.includes(Number(BREVO_LIST_ID))) {
-            return new Response(
-              JSON.stringify({
-                message: "Ya estás suscrito",
-                detail: "Este correo ya está registrado en nuestra lista de suscriptores.",
-              }),
-              { status: 200 }
-            );
-          }
-
-          // Not in this list, add them
-          const currentLists = existingContact.body.listIds || [];
-          const updatedLists = [...currentLists, Number(BREVO_LIST_ID)];
-
-          await apiInstance.updateContact(email, {
-            listIds: updatedLists
-          });
+          await apiInstance.updateContact(email, updateContact);
 
           return new Response(
             JSON.stringify({
-              message: "¡Suscripción exitosa!",
-              detail: "Tu correo ha sido registrado correctamente.",
+              success: true,
+              message: "¡Ya estás en la lista! Datos actualizados.",
             }),
-            { status: 200 }
+            { status: 200, headers: { "Content-Type": "application/json" } }
           );
-        } catch (getError) {
-          console.error('❌ Error al obtener info del contacto:', getError);
-          throw getError;
+        } catch {
+          // Si falla la actualización, asumir que ya está suscrito
+          return new Response(
+            JSON.stringify({
+              success: true,
+              message: "Ya estás suscrito a nuestro boletín.",
+            }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+          );
         }
       }
 
-      // If it's not a duplicate error, throw it
-      console.error('❌ Error no manejado al crear contacto:', createError);
-      throw createError;
+      // Error desconocido de la API
+      console.error("Brevo API error:", apiError.response?.statusCode);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Hubo un problema al registrarte. Intenta de nuevo.",
+        }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
     }
+
   } catch (error) {
-    console.error("Error en suscripción de Brevo:", error);
-
-    let detail = "Ocurrió un error inesperado.";
-    if (error instanceof Error) {
-      detail = error.message;
-    }
-
-    if (typeof error === 'object' && error !== null && 'body' in error) {
-      const brevoError = error as { body?: unknown };
-      if (brevoError.body) {
-        detail = JSON.stringify(brevoError.body);
-      }
-    }
-
+    console.error("Subscription error:", error);
     return new Response(
       JSON.stringify({
-        message: "Error al procesar la suscripción",
-        detail,
+        success: false,
+        message: "Error inesperado. Por favor intenta más tarde."
       }),
-      { status: 500 }
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 };

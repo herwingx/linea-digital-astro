@@ -1,51 +1,129 @@
 ---
+import type { HTMLAttributes } from "astro/types";
+
+// Props del botón - Usamos Partial para hacer todos los atributos opcionales
 interface Props {
-  variant?: "primary" | "secondary" | "ghost" | "outline";
-  size?: "sm" | "md" | "lg";
-  class?: string;
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "glass";
+  size?: "sm" | "md" | "lg" | "xl";
   href?: string;
+  class?: string;
+  fullWidth?: boolean;
+  withArrow?: boolean;
   type?: "button" | "submit" | "reset";
-  onclick?: string;
   target?: string;
+  rel?: string;
   id?: string;
+  disabled?: boolean;
+  [key: string]: any; // Permitir otros atributos HTML
 }
 
 const {
   variant = "primary",
   size = "md",
-  class: className,
   href,
-  type = "button",
+  class: className,
+  fullWidth = false,
+  withArrow = false,
+  type: buttonType,
   ...rest
 } = Astro.props;
 
+// 1. BASE: Estructura y Animaciones Globales
+// 'group' permite animar hijos (como iconos) al hacer hover en el botón
 const baseStyles =
-  "inline-flex items-center justify-center rounded-full font-bold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+  "group relative inline-flex items-center justify-center rounded-full font-bold tracking-wide transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed active:scale-[0.98] select-none";
 
+// 2. VARIANTS: El "Look & Feel" Premium
 const variants = {
-  primary:
-    "bg-blue-700 text-white shadow-xl shadow-blue-900/20 hover:bg-blue-800 hover:scale-105 hover:-translate-y-0.5 focus:ring-blue-400 dark:bg-blue-500 dark:hover:bg-blue-400 dark:shadow-blue-900/40 dark:focus:ring-offset-slate-900",
-  secondary:
-    "bg-white text-slate-700 border border-slate-200 hover:border-blue-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm hover:scale-105 dark:bg-transparent dark:border-slate-700 dark:text-slate-300 dark:hover:text-white dark:hover:border-blue-500 dark:focus:ring-offset-slate-900",
-  outline:
-    "border-2 border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20",
-  ghost:
-    "text-slate-600 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400 dark:hover:text-blue-400 dark:hover:bg-white/5",
+  // PRIMARY: Gradiente sutil + Sombra de color (Glow) + Borde interno (Ring)
+  primary: `
+    bg-gradient-to-b from-blue-600 to-blue-700 text-white 
+    shadow-[0_10px_20px_-10px_rgba(37,99,235,0.4)]
+    hover:shadow-[0_15px_30px_-10px_rgba(37,99,235,0.5)] hover:to-blue-600 hover:brightness-110
+    ring-1 ring-inset ring-white/20 
+    dark:from-blue-500 dark:to-blue-600 dark:shadow-blue-900/40 dark:hover:shadow-blue-500/30
+    dark:ring-white/10
+  `,
+
+  // SECONDARY: Superficie limpia para B2B. Blanco en Light, Glass en Dark.
+  secondary: `
+    bg-white text-slate-700 border border-slate-200 
+    shadow-sm hover:border-blue-300 hover:text-blue-600 hover:bg-slate-50 hover:shadow-md
+    dark:bg-white/5 dark:text-white dark:border-white/10 dark:hover:bg-white/10 dark:hover:border-white/20
+    backdrop-blur-sm
+  `,
+
+  // OUTLINE: Para acciones terciarias, borde marcado.
+  outline: `
+    border-2 border-blue-600 text-blue-700 bg-transparent
+    hover:bg-blue-50
+    dark:border-blue-500 dark:text-blue-400 dark:hover:bg-blue-950/30
+  `,
+
+  // GHOST: Enlaces simples que parecen botones.
+  ghost: `
+    text-slate-600 hover:text-blue-600 hover:bg-slate-100/50
+    dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5
+  `,
+
+  // GLASS: Especial para sobreponer en imágenes o fondos complejos (Hero Sections).
+  glass: `
+    bg-white/10 text-white border border-white/20 backdrop-blur-md
+    hover:bg-white/20 hover:border-white/30 shadow-lg
+  `,
 };
 
+// 3. SIZES: Espaciado generoso para tacto móvil
 const sizes = {
-  sm: "px-4 py-2 text-xs",
-  md: "px-6 py-3 text-sm",
-  lg: "px-8 py-4 text-base",
+  sm: "px-4 py-2 text-xs gap-1.5",
+  md: "px-6 py-2.5 text-sm gap-2",
+  lg: "px-8 py-3.5 text-base gap-2.5",
+  xl: "px-10 py-4 text-lg gap-3",
 };
 
-const classes = [baseStyles, variants[variant], sizes[size], className]
+// 4. Construcción de clases
+const classes = [
+  baseStyles,
+  variants[variant],
+  sizes[size],
+  fullWidth ? "w-full" : "",
+  className,
+]
   .filter(Boolean)
   .join(" ");
 
 const Element = href ? "a" : "button";
+const elementType = !href ? buttonType || "button" : undefined;
 ---
 
-<Element href={href} type={!href ? type : undefined} class={classes} {...rest}>
+<Element href={href} type={elementType} class={classes} {...rest}>
+  <!-- Shine Effect (Solo visible en Primary para dar sensación de 'nuevo') -->
+  {
+    variant === "primary" && (
+      <span class="absolute inset-0 overflow-hidden rounded-full">
+        <span class="absolute top-0 left-0 h-full w-[200%] translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-[100%]" />
+      </span>
+    )
+  }
+
   <slot />
+
+  <!-- Arrow automática si se pide -->
+  {
+    withArrow && (
+      <svg
+        class={`transition-transform duration-300 group-hover:translate-x-1 ${size === "sm" ? "w-3 h-3" : "w-4 h-4"}`}
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M14 5l7 7m0 0l-7 7m7-7H3"
+        />
+      </svg>
+    )
+  }
 </Element>

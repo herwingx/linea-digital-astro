@@ -1,5 +1,5 @@
 ---
-// src/components/Reviews.astro
+// src/components/Testimonials.astro
 import Button from "./ui/Button.astro";
 
 // --- 1. DEFINICIÓN DE TIPOS ---
@@ -12,8 +12,7 @@ interface Review {
   time?: number;
 }
 
-// --- 2. DATOS DE RESPALDO (FALLBACK) ACTUALIZADOS ---
-// Mantenidos intactos según tu código
+// --- 2. DATOS DE RESPALDO (FALLBACK) ---
 let fallbackReviews: Review[] = [
   {
     author_name: "Ana María García",
@@ -65,6 +64,7 @@ const PLACE_ID = import.meta.env.GOOGLE_PLACE_ID;
 
 let finalReviews: Review[] = [];
 
+// Fetch solo en build/server time
 if (API_KEY && PLACE_ID) {
   try {
     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=reviews&key=${API_KEY}&language=es`;
@@ -74,146 +74,150 @@ if (API_KEY && PLACE_ID) {
     if (data.result && data.result.reviews) {
       let googleReviews: Review[] = data.result.reviews;
 
-      // Filtro estricto (Mantenido intacto)
+      // Filtro de Calidad
       googleReviews = googleReviews.filter(
         (review) =>
           review.rating >= 4 &&
           review.text &&
-          review.text.length > 100,
+          review.text.length > 50, // Ajustado a 50 chars para permitir reviews concisas pero útiles
       );
 
-      // Orden
+      // Orden Cronológico Inverso
       googleReviews.sort((a, b) => (b.time || 0) - (a.time || 0));
       finalReviews = googleReviews;
     }
   } catch (error) {
-    console.error("Error conectando a Google Reviews", error);
+    console.error("Error conectando a Google Reviews:", error);
+    // Silent fail -> usa fallback
   }
 }
 
 // --- 4. FUSIÓN Y RELLENO ---
-const espaciosFaltantes = 3 - finalReviews.length;
+const displayCount = 3;
+const espaciosFaltantes = displayCount - finalReviews.length;
+
 if (espaciosFaltantes > 0) {
   finalReviews = [
     ...finalReviews,
     ...fallbackReviews.slice(0, espaciosFaltantes),
   ];
 } else {
-  finalReviews = finalReviews.slice(0, 3);
+  finalReviews = finalReviews.slice(0, displayCount);
 }
 
 // --- 5. UTILIDADES ---
-const getInitial = (name: string) => (name ? name.charAt(0).toUpperCase() : "U");
+const getInitial = (name: string) => (name ? name.charAt(0).toUpperCase() : "C");
 const getStars = (rating: number) => Array.from({ length: 5 }, (_, i) => i < rating);
 ---
 
-<section class="relative overflow-hidden py-16 md:py-24 px-6 transition-colors duration-500">
+<section class="relative py-20 md:py-32 px-6 overflow-hidden">
   
-  <!-- Glow Effects (Ambient) -->
-<!--   <div class="pointer-events-none absolute -top-20 left-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
-  <div class="pointer-events-none absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-blue-400/5 blur-[100px] mix-blend-multiply dark:mix-blend-screen dark:opacity-20"></div> -->
+  <!-- Fondo Decorativo Sutil (Solo Light Mode para limpieza, Dark mode usa fondo sólido del layout) -->
+  <div class="absolute inset-0 -z-10 bg-slate-50 dark:bg-[#0B1120] transition-colors duration-500"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none opacity-40 dark:opacity-20 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-transparent to-transparent dark:from-blue-900/20"></div>
 
-  <div class="container relative z-10 mx-auto px-6 md:px-8">
+  <div class="mx-auto max-w-7xl">
     
-    <!-- Header Section -->
-    <div class="mx-auto mb-16 max-w-3xl text-center animate-fade-up">
-      <span class="mb-4 inline-block rounded-full border border-blue-200/50 bg-blue-50/50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600 backdrop-blur-sm dark:border-blue-500/20 dark:bg-blue-900/20 dark:text-blue-400">
-        Testimonios Reales
-      </span>
-      <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl mb-6">
-        La confianza se construye con resultados
+    <!-- Section Header -->
+    <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+      <div class="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700 backdrop-blur-md mb-6 dark:border-blue-500/20 dark:bg-blue-900/10 dark:text-blue-300 shadow-sm">
+        <span class="flex h-2 w-2 rounded-full bg-blue-500"></span>
+        Experiencias Reales
+      </div>
+      
+      <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-6">
+        La confianza se gana <br class="hidden md:block"/> con resultados.
       </h2>
-      <p class="text-lg md:text-xl leading-relaxed text-slate-500 dark:text-slate-400">
-        No tomes solo nuestra palabra. Lee las experiencias de quienes ya han transformado su conectividad con nosotros.
+      
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+        Más de 10 años conectando a Chiapas nos respaldan. Descubre por qué somos el Distribuidor Autorizado preferido.
       </p>
     </div>
 
     <!-- Cards Grid -->
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
       {
-        finalReviews.map((review, index) => (
-          <div 
-            class="group relative flex h-full flex-col rounded-[2rem] border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10 dark:border-white/5 dark:bg-slate-900 dark:shadow-none dark:hover:border-blue-500/30 dark:hover:bg-slate-800/80"
+        finalReviews.map((review) => (
+          <article 
+            class="group relative flex flex-col h-full p-8 rounded-[2rem] bg-white dark:bg-[#151e2e] border border-slate-100 dark:border-white/5 shadow-xl shadow-slate-200/40 dark:shadow-none transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/5 dark:hover:border-blue-500/20 dark:hover:bg-[#1a2333]"
           >
-            <!-- Top: User Profile & Stars -->
-            <div class="flex items-center justify-between mb-6">
-               <!-- User Info -->
-               <div class="flex items-center gap-4">
-                 <div class="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-100 bg-gradient-to-br from-blue-50 to-white shadow-inner dark:border-slate-700 dark:from-slate-800 dark:to-slate-800">
+            <!-- Quote Icon Decorativo -->
+            <div class="absolute top-8 right-8 text-slate-100 dark:text-slate-800 transition-colors group-hover:text-blue-50 dark:group-hover:text-blue-900/20">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.017 21L14.017 18C14.017 16.096 14.017 14.192 14.017 12.289C14.017 9.71298 13.3902 8.07998 12.1362 7.39C12.5243 7.34472 12.7597 7.19464 12.8424 6.93968C12.8424 6.93968 14.8913 6.91968 16.0472 8.55971C17.2032 10.1997 16.6542 12.3497 16.6542 12.3497L16.6542 21H14.017ZM8.01717 21L8.01717 18C8.01717 16.096 8.01717 14.192 8.01717 12.289C8.01717 9.71298 7.39025 8.07998 6.13625 7.39C6.5243 7.34472 6.75972 7.19464 6.84243 6.93968C6.84243 6.93968 8.89125 6.91968 10.0472 8.55971C11.2032 10.1997 10.6542 12.3497 10.6542 12.3497L10.6542 21H8.01717Z"/>
+                </svg>
+            </div>
+
+            <!-- Header: User Profile -->
+            <div class="flex items-center gap-4 mb-6 relative z-10">
+               <div class="relative shrink-0">
+                  <div class="h-12 w-12 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-700 ring-2 ring-white dark:ring-slate-800 shadow-sm flex items-center justify-center">
                     {review.profile_photo_url ? (
                       <img
                         src={review.profile_photo_url}
-                        alt={review.author_name}
+                        alt={`Foto de ${review.author_name}`}
                         class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                         loading="lazy"
+                        decoding="async"
                       />
                     ) : (
-                      <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{getInitial(review.author_name)}</span>
+                      <span class="text-lg font-bold text-slate-400 dark:text-slate-300">{getInitial(review.author_name)}</span>
                     )}
-                 </div>
-                 <div class="flex flex-col">
-                   <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-none mb-1 group-hover:text-blue-600 transition-colors">
-                     {review.author_name}
-                   </h4>
-                   <span class="text-2xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                     {review.relative_time_description}
-                   </span>
+                  </div>
+                  <!-- Badge Google pequeño -->
+                  <div class="absolute -bottom-1 -right-1 bg-white dark:bg-slate-800 rounded-full p-1 shadow-sm border border-slate-100 dark:border-slate-600">
+                     <svg class="w-3 h-3" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                  </div>
+               </div>
+               
+               <div>
+                 <h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                   {review.author_name}
+                 </h4>
+                 <div class="flex items-center gap-2 mt-1">
+                    <div class="flex gap-0.5">
+                        {getStars(review.rating).map(() => (
+                            <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        ))}
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium">• {review.relative_time_description}</span>
                  </div>
                </div>
             </div>
 
-            <!-- Middle: Review Content -->
-            <div class="relative flex-grow">
-               <!-- Decorative Quote Icon -->
-               <svg class="absolute -left-2 -top-2 h-8 w-8 text-slate-100 dark:text-slate-800 -z-10 opacity-0 transition-all group-hover:opacity-100 group-hover:-top-4 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.096 14.017 14.192 14.017 12.289C14.017 9.71298 13.3902 8.07998 12.1362 7.39C12.5243 7.34472 12.7597 7.19464 12.8424 6.93968C12.8424 6.93968 14.8913 6.91968 16.0472 8.55971C17.2032 10.1997 16.6542 12.3497 16.6542 12.3497L16.6542 21H14.017ZM8.01717 21L8.01717 18C8.01717 16.096 8.01717 14.192 8.01717 12.289C8.01717 9.71298 7.39025 8.07998 6.13625 7.39C6.5243 7.34472 6.75972 7.19464 6.84243 6.93968C6.84243 6.93968 8.89125 6.91968 10.0472 8.55971C11.2032 10.1997 10.6542 12.3497 10.6542 12.3497L10.6542 21H8.01717Z"/></svg>
-               
-               <p class="relative text-base leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-6 italic">
+            <!-- Content -->
+            <div class="relative z-10 flex-grow">
+               <p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed italic opacity-90">
                 "{review.text}"
                </p>
             </div>
 
-            <!-- Bottom: Stars & Source -->
-            <div class="mt-8 flex items-center justify-between border-t border-slate-50 pt-6 dark:border-white/5">
-              <div class="flex items-center gap-1">
-                {getStars(review.rating).map((isFilled) => (
-                   <svg
-                    class={`h-4 w-4 transition-all ${isFilled ? "text-amber-400" : "text-slate-200"}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-
-              <!-- Clean Google Brand (Monochrome by default, Color on hover) -->
-              <div class="flex items-center gap-2 text-2xs font-bold uppercase text-slate-300 dark:text-slate-600 transition-colors group-hover:text-slate-500 dark:group-hover:text-slate-400">
-                <svg class="h-4 w-4 grayscale opacity-50 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100" viewBox="0 0 24 24">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                </svg>
-                <span>Google Reviews</span>
-              </div>
+            <!-- Footer Card (Opcional: Verificar "Compra Verificada" o similar si existiera dato) -->
+            <div class="mt-6 pt-6 border-t border-slate-50 dark:border-white/5 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+               <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Opinión Verificada
+               </span>
             </div>
 
-          </div>
+          </article>
         ))
       }
     </div>
 
-    <!-- Modern Pill CTA -->
+    <!-- CTA Footer -->
     <div class="mt-16 text-center">
       <Button
         href={`https://search.google.com/local/writereview?placeid=${PLACE_ID || ""}`}
         target="_blank"
-        variant="primary"
-        size="lg"
-        class="group gap-3"
+        rel="noopener noreferrer"
+        variant="secondary"
+        class="group dark:bg-white/5 dark:text-white dark:border-white/10 dark:hover:bg-white/10"
       >
-        <span class="relative z-10">Comparte tu Experiencia</span>
-        <svg class="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        <span class="flex items-center gap-2">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V7h2v3z"/></svg>
+            Escribe tu opinión
+        </span>
       </Button>
     </div>
   </div>

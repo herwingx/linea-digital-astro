@@ -2,36 +2,53 @@
 // src/layouts/BaseLayout.astro
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import "../styles/user.css";
 import AmbientBlur from "../components/AmbientBlur.astro";
 import Chatbot from "../components/Chatbot.astro";
+import "../styles/user.css";
 
-// Nota: He eliminado la importación de Image y heroShapes estáticos.
-// El estilo "Modern Clean" utiliza gradientes CSS (Glows) para un renderizado
-// más suave, responsivo y ligero, eliminando la necesidad de SVGs pesados de fondo.
-
+// Definición estricta de Props para TS
 export interface Props {
   title: string;
   description: string;
+  image?: string; // Opcional para OpenGraph dinámico en el futuro
 }
-const { title, description } = Astro.props;
+
+const {
+  title,
+  description,
+  image = "/image.png", // Fallback default image
+} = Astro.props;
+
+// Configuración de colores Telcel Modernizados para selección
+const selectionClass =
+  "selection:bg-blue-600 selection:text-white dark:selection:bg-blue-500 dark:selection:text-white";
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang="es-MX" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/logo-white.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO & Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <!-- Google Fonts -->
+
+    <!-- Open Graph (Básico para compartir en WhatsApp/FB) -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:type" content="website" />
+
+    <!-- Google Fonts: Inter o similar suele ser mejor para Retail, pero mantenemos Material Icons si se usan en UI -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
     />
 
-    <!-- Pre-render Theme Script: Evita el "Flash of Wrong Theme" -->
+    <!-- Theme Initialization Script: Critical Rendering Path -->
     <script is:inline>
       (function () {
         const savedTheme = localStorage.getItem("theme");
@@ -39,6 +56,7 @@ const { title, description } = Astro.props;
           "(prefers-color-scheme: dark)",
         ).matches;
 
+        // Lógica robusta para evitar FOUC (Flash of Unstyled Content)
         if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
           document.documentElement.classList.add("dark");
         } else {
@@ -48,73 +66,116 @@ const { title, description } = Astro.props;
     </script>
   </head>
 
+  <!-- 
+    BODY STYLING STRATEGY:
+    1. Light Mode: bg-slate-50 (Limpio, profesional, alto contraste para lectura B2B).
+    2. Dark Mode: bg-[#0B1120] (Navy Profundo solicitado, ideal para resaltar 'Glows' tecnológicos).
+    3. Text: Contraste AAA para accesibilidad.
+  -->
   <body
-    class="antialiased min-h-screen flex flex-col bg-blue-100/30 text-slate-900 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-500 selection:bg-blue-500 selection:text-white overflow-x-hidden"
+    class:list={[
+      "antialiased min-h-screen flex flex-col transition-colors duration-300 overflow-x-hidden",
+      "bg-slate-50 text-slate-900", // Light Theme
+      "dark:bg-[#0B1120] dark:text-slate-200", // Dark Theme (Navy Deep)
+      selectionClass,
+    ]}
   >
-    <!-- === FONDO AMBIENTAL (Design System Core) === -->
-    <!-- 1. Grilla Técnica Sutil (Estilo Linear) -->
-    <div class="fixed inset-0 z-0 pointer-events-none">
-      <!-- Patrón de cuadros muy sutil -->
+    <!-- === CAPA AMBIENTAL (Background) === -->
+    <div
+      class="fixed inset-0 z-0 pointer-events-none select-none overflow-hidden"
+    >
+      <!-- 1. Grilla Técnica: Opacidad ajustada para no ensuciar el diseño limpio -->
       <div
-        class="absolute inset-0 opacity-[0.4] dark:opacity-[0.2]"
-        style="background-image: linear-gradient(to right, #80808012 1px, transparent 1px), linear-gradient(to bottom, #80808012 1px, transparent 1px); background-size: 24px 24px;"
+        class="absolute inset-0 z-0 opacity-[0.4] dark:opacity-[0.15]"
+        style="
+          background-image: 
+            linear-gradient(to right, #64748b1a 1px, transparent 1px), 
+            linear-gradient(to bottom, #64748b1a 1px, transparent 1px); 
+          background-size: 40px 40px;
+          mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+          -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        "
       >
       </div>
+
+      <!-- 2. Ambient Blur: Los "Glows" de acento -->
+      <AmbientBlur />
     </div>
 
-    <!-- 2. Blur Ambiental Unificado (Componente Centralizado) -->
-    <AmbientBlur />
+    <!-- === LAYOUT PRINCIPAL === -->
 
-    <!-- === CONTENIDO === -->
-    <!-- Header Sticky con z-index alto -->
-
+    <!-- Header Sticky -->
     <Header />
 
-    <!-- Main con flex-grow para empujar el footer siempre abajo -->
+    <!-- Main Content: Padding ajustado para Mobile-First y evitar solapamiento con Header -->
     <main
-      class="animate-fade-up relative z-10 flex-grow flex flex-col pt-24 pb-8 md:pt-17 md:pb-16"
-      style="animation-duration: 0.8s;"
+      class="relative z-10 flex-grow flex flex-col pt-24 pb-12 md:pt-28 md:pb-20 animate-fade-in"
     >
       <slot />
     </main>
 
-    <!-- Footer al final del flujo -->
+    <!-- Footer -->
     <div class="relative z-10 mt-auto">
       <Footer />
     </div>
+
+    <!-- Floating Elements -->
     <Chatbot />
 
-    <!-- Style Global Fixes para Tipografía -->
+    <!-- Global Styles Refinement -->
     <style is:global>
-      /* Aseguramos legibilidad máxima */
+      /* Tipografía Premium */
       body {
-        font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen,
+          Ubuntu,
+          Cantarell,
+          "Open Sans",
+          "Helvetica Neue",
+          sans-serif;
+        font-feature-settings: "cv11", "ss01";
         -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        -moz-osx-font-smoothing: grayscale; /* Texto más nítido en MacOS/iOS */
       }
-      /* Custom Scrollbar para Webkit (Chrome/Safari/Edge) */
+
+      /* Scrollbar Personalizado (Sutil y elegante) */
       ::-webkit-scrollbar {
-        width: 10px;
+        width: 8px;
       }
       ::-webkit-scrollbar-track {
         background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 5px;
-        border: 2px solid transparent;
-        background-clip: content-box;
+        background-color: #cbd5e1; /* Slate-300 */
+        border-radius: 20px;
       }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-        border: 2px solid transparent;
-        background-clip: content-box;
-      }
+
+      /* Dark Mode Scrollbar */
       .dark ::-webkit-scrollbar-thumb {
-        background: #334155;
+        background-color: #1e293b; /* Slate-800 - se integra con el Navy */
       }
       .dark ::-webkit-scrollbar-thumb:hover {
-        background: #475569;
+        background-color: #334155;
+      }
+
+      /* Animación de entrada suave para el contenido */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
       }
     </style>
   </body>

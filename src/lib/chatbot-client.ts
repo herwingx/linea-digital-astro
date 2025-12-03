@@ -1,10 +1,4 @@
 // src/lib/chatbot-client.ts
-/**
- * Cliente del Chatbot (Frontend)
- * 
- * Maneja toda la lógica de interacción del usuario con el chatbot,
- * incluyendo UI, estado, y comunicación con la API.
- */
 
 interface Message {
   role: 'user' | 'bot';
@@ -33,41 +27,49 @@ export class ChatbotClient {
   private readonly STORAGE_KEY = 'chatbot-history';
   private readonly OPENED_KEY = 'chatbot-opened';
 
+  // Opciones rápidas iniciales
+  private readonly QUICK_OPTIONS = [
+    "📱 Planes 5G",
+    "🏢 Empresarial",
+    "📍 Sucursales",
+    "📞 Soporte"
+  ];
+
   constructor() {
     this.init();
   }
 
-  /**
-   * Inicializa el chatbot
-   */
   private init() {
-    // Esperar a que el DOM esté listo
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.setup());
     } else {
       this.setup();
     }
+    // Soporte para Astro ViewTransitions
+    document.addEventListener('astro:page-load', () => this.setup());
   }
 
-  /**
-   * Configura todos los elementos y event listeners
-   */
   private setup() {
     try {
+      // Evitar reinicialización si ya existe
+      if (document.querySelector('.chatbot-quick-reply')) return;
+
       this.elements = this.getElements();
       this.attachEventListeners();
-      this.loadHistory();
+      this.loadHistory(); // Carga historial o inicializa Quick Replies
       this.checkFirstVisit();
 
-      console.log('✅ Chatbot inicializado correctamente');
+      // Si el historial está vacío, mostrar opciones
+      if (this.history.length <= 1) { // 1 porque el welcome message no cuenta en history array usualmente o sí depende de la implementación.
+        this.renderQuickReplies();
+      }
+
+      console.log('✅ Chatbot Client Ready');
     } catch (error) {
-      console.error('❌ Error al inicializar chatbot:', error);
+      // Silent fail si no encuentra elementos (ej. página sin chat)
     }
   }
 
-  /**
-   * Obtiene referencias a todos los elementos del DOM
-   */
   private getElements(): ChatbotElements {
     const get = (id: string) => {
       const el = document.getElementById(id);
@@ -89,484 +91,227 @@ export class ChatbotClient {
     };
   }
 
-  /**
-   * Adjunta todos los event listeners
-   */
-  private attachEventListeners() {
-    // Toggle chat
-    this.elements.fab.addEventListener('click', () => this.toggle());
-    this.elements.minimizeBtn.addEventListener('click', () => this.toggle());
+  private renderQuickReplies() {
+    this.elements.quickReplies.innerHTML = '';
+    this.elements.quickReplies.style.display = 'flex';
 
-    // Enviar mensaje
-    this.elements.form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.sendMessage();
+    this.QUICK_OPTIONS.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt;
+      btn.className = 'chatbot-quick-reply whitespace-nowrap rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-100 hover:border-blue-300 dark:border-blue-900/30 dark:bg-blue-900/20 dark:text-blue-300 dark:hover:bg-blue-800/30';
+      btn.dataset.message = opt; // Para el event delegation
+      this.elements.quickReplies.appendChild(btn);
     });
-
-    // Quick replies
-    this.elements.quickReplies.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.classList.contains('chatbot-quick-reply')) {
-        const message = target.dataset.message;
-        if (message) {
-          this.elements.input.value = message;
-          this.sendMessage();
-        }
-      }
-    });
-
-    // Auto-resize input
-    this.elements.input.addEventListener('input', () => {
-      this.updateSendButton();
-    });
-
-    // Keyboard shortcuts
-    this.elements.input.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        this.toggle();
-      }
-    });
-
-    // Detectar cuando el teclado virtual se abre/cierra en móviles
-    this.setupKeyboardDetection();
   }
 
-  /**
-   * Detecta cuando el teclado virtual se abre/cierra en móviles
-   */
-  private setupKeyboardDetection() {
-    // Solo en móviles
-    if (window.innerWidth > 640) return;
+  private attachEventListeners() {
+    // Toggle
+    this.elements.fab.onclick = (e) => { e.preventDefault(); this.toggle(); };
+    this.elements.minimizeBtn.onclick = (e) => { e.preventDefault(); this.toggle(); };
 
-    let initialHeight = window.visualViewport?.height || window.innerHeight;
+    // Send
+    this.elements.form.onsubmit = (e) => {
+      e.preventDefault();
+      this.sendMessage();
+    };
 
-    // Listener para focus en el input (teclado se abre)
-    this.elements.input.addEventListener('focus', () => {
-      // Pequeño delay para que el teclado se abra
-      setTimeout(() => {
-        this.elements.window.classList.add('keyboard-open');
-        // Scroll al input para asegurar que sea visible
-        this.elements.input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 300);
-    });
+    // Quick Replies Delegation
+    this.elements.quickReplies.onclick = (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'BUTTON') {
+        const msg = target.textContent || "";
+        this.elements.input.value = msg;
+        this.sendMessage();
+      }
+    };
 
-    // Listener para blur en el input (teclado se cierra)
-    this.elements.input.addEventListener('blur', () => {
-      setTimeout(() => {
-        this.elements.window.classList.remove('keyboard-open');
-      }, 100);
-    });
+    // Input Auto-resize & Validation
+    this.elements.input.oninput = () => this.updateSendButton();
 
-    // Detectar cambios en el viewport (más robusto)
+    // Escape to close
+    this.elements.input.onkeydown = (e) => {
+      if (e.key === 'Escape') this.toggle();
+    };
+
+    // Mobile Viewport Fix (Keyboard)
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', () => {
-        const currentHeight = window.visualViewport?.height || window.innerHeight;
-        const heightDiff = initialHeight - currentHeight;
-
-        // Si el viewport se redujo más de 150px, probablemente el teclado está abierto
-        if (heightDiff > 150) {
-          this.elements.window.classList.add('keyboard-open');
-          // Forzar altura exacta del viewport visual para evitar problemas de scroll/ocultamiento
-          this.elements.window.style.height = `${currentHeight}px`;
-          this.elements.window.style.maxHeight = `${currentHeight}px`;
-        } else {
-          this.elements.window.classList.remove('keyboard-open');
-          this.elements.window.style.height = ''; // Restaurar CSS original
-          this.elements.window.style.maxHeight = '';
-          // Re-habilitar transiciones después de un pequeño delay
-          setTimeout(() => {
-            this.elements.window.style.transition = '';
-          }, 50);
-        }
-      });
+      window.visualViewport.addEventListener('resize', () => this.handleViewportResize());
+      window.visualViewport.addEventListener('scroll', () => this.handleViewportResize());
     }
   }
 
-  /**
-   * Abre/cierra el chat
-   */
+  private handleViewportResize() {
+    if (!this.isOpen || window.innerWidth > 640) return;
+
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const windowEl = this.elements.window;
+
+    // ANCLAJE PERFECTO: Usar top + height del viewport visual
+    // Esto "pega" el chat al área visible real, ignorando el scroll del navegador
+    windowEl.style.height = `${viewport.height}px`;
+    windowEl.style.top = `${viewport.offsetTop}px`;
+    windowEl.style.bottom = 'auto'; // Importante: anular el bottom: 0 del CSS
+
+    // Asegurar que el input sea visible si está enfocado
+    if (document.activeElement === this.elements.input) {
+      setTimeout(() => {
+        this.elements.input.scrollIntoView({ block: 'nearest' });
+      }, 50);
+    }
+  }
+
   private toggle() {
     this.isOpen = !this.isOpen;
     this.elements.fab.classList.toggle('active', this.isOpen);
     this.elements.window.classList.toggle('active', this.isOpen);
 
     if (this.isOpen) {
-      this.elements.input.focus();
-      this.hideBadge();
       this.markAsOpened();
+      this.hideBadge();
+
+      // Ajuste inicial para móvil
+      if (window.innerWidth <= 640) {
+        this.handleViewportResize();
+        document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+      } else {
+        this.elements.input.focus();
+      }
       this.scrollToBottom();
+    } else {
+      document.body.style.overflow = ''; // Restaurar scroll
+
+      // LIMPIEZA TOTAL DE ESTILOS INLINE
+      this.elements.window.style.height = '';
+      this.elements.window.style.top = '';
+      this.elements.window.style.bottom = '';
     }
   }
 
-  /**
-   * Envía un mensaje del usuario
-   */
   private async sendMessage() {
     const message = this.elements.input.value.trim();
-
     if (!message || this.isTyping) return;
 
-    // Limpiar input
     this.elements.input.value = '';
     this.updateSendButton();
-
-    // Agregar mensaje del usuario
     this.addMessage('user', message);
 
-    // Ocultar quick replies después del primer mensaje
-    if (this.history.length > 2) {
-      this.elements.quickReplies.style.display = 'none';
-    }
+    // Ocultar quick replies al interactuar
+    this.elements.quickReplies.style.display = 'none';
 
-    // Mostrar indicador de escritura
     this.showTyping();
 
-    // En móviles, mantener el focus en el input
-    if (window.innerWidth <= 640) {
-      // Pequeño delay para que el teclado no se cierre
-      setTimeout(() => {
-        this.elements.input.focus();
-      }, 50);
-    }
-
     try {
-      // Llamar a la API
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message,
-          history: this.history.slice(-10).map(m => ({
-            role: m.role,
-            content: m.content,
-          })),
+          history: this.history.slice(-6).map(m => ({ role: m.role, content: m.content })),
         }),
       });
 
       const data = await response.json();
-
       this.hideTyping();
 
       if (response.ok && data.response) {
         this.addMessage('bot', data.response);
       } else {
-        // Error de la API
-        this.addMessage(
-          'bot',
-          data.fallback ||
-          'Lo siento, hubo un error. Por favor intenta de nuevo o llama al 961 618 92 00. 📞'
-        );
+        this.addMessage('bot', 'Lo siento, tuve un problema técnico. ¿Podrías intentar de nuevo?');
       }
     } catch (error) {
-      console.error('Error al enviar mensaje:', error);
       this.hideTyping();
-      this.addMessage(
-        'bot',
-        'Lo siento, no pude conectarme al servidor. Por favor verifica tu conexión e intenta de nuevo. 📞'
-      );
+      this.addMessage('bot', 'Error de conexión. Verifica tu internet.');
     }
   }
 
-  /**
-   * Agrega un mensaje al chat
-   */
   private addMessage(role: 'user' | 'bot', content: string) {
-    const message: Message = {
-      role,
-      content,
-      timestamp: new Date(),
-    };
-
+    const message: Message = { role, content, timestamp: new Date() };
     this.history.push(message);
     this.saveHistory();
 
-    // Crear elemento del mensaje
-    const messageEl = document.createElement('div');
-    messageEl.className = `chatbot-message chatbot-message-${role} flex flex-col max-w-[75%] ${role === 'bot' ? 'self-start' : 'self-end'} mb-2 animate-slide-up`;
+    const msgDiv = document.createElement('div');
+    const alignment = role === 'bot' ? 'self-start' : 'self-end';
+    const colorClass = role === 'bot'
+      ? 'bg-white text-slate-700 ring-1 ring-slate-200/50 dark:bg-[#1f2937] dark:text-slate-200 dark:ring-white/5 rounded-tl-none'
+      : 'bg-blue-600 text-white shadow-md rounded-br-none';
 
-    const contentEl = document.createElement('div');
-    contentEl.className = role === 'bot'
-      ? 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm border border-slate-200 dark:border-slate-700'
-      : 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-blue-600 text-white shadow-md shadow-blue-600/30';
+    msgDiv.className = `flex flex-col max-w-[85%] ${alignment} mb-3 animate-slide-up`;
+    msgDiv.innerHTML = `
+            <div class="px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${colorClass}">
+                ${this.parseMarkdown(content)}
+            </div>
+            <span class="text-[10px] text-slate-400 mt-1 px-1 opacity-70">
+                ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </span>
+        `;
 
-    // Renderizar markdown solo para mensajes del bot
-    if (role === 'bot') {
-      contentEl.innerHTML = this.renderMarkdown(content);
-    } else {
-      contentEl.innerHTML = this.escapeHtml(content).replace(/\n/g, '<br>');
-    }
-
-    const timeEl = document.createElement('span');
-    timeEl.className = 'text-3xs text-slate-500 dark:text-slate-400 mt-1 px-2';
-    timeEl.textContent = this.formatTime(message.timestamp);
-
-    messageEl.appendChild(contentEl);
-    messageEl.appendChild(timeEl);
-    this.elements.messages.appendChild(messageEl);
-
-    // Scroll al final
+    this.elements.messages.appendChild(msgDiv);
     this.scrollToBottom();
   }
 
-  /**
-   * Muestra el indicador de escritura
-   */
   private showTyping() {
     this.isTyping = true;
-    this.elements.sendBtn.disabled = true;
-
-    // Crear wrapper para el typing
-    const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col max-w-[75%] self-start mb-2';
-    wrapper.id = 'typing-indicator';
-
-    // Contenedor de los puntos con estilos de Tailwind
-    const typing = document.createElement('div');
-    typing.className = 'flex gap-1.5 px-4 py-3.5 bg-white dark:bg-slate-800 rounded-[18px] rounded-bl-sm w-fit shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-200';
-
-    // Crear los 3 puntos
-    for (let i = 0; i < 3; i++) {
-      const dot = document.createElement('span');
-      // Clases de Tailwind para los puntos
-      dot.className = 'w-2.5 h-2.5 bg-blue-500 dark:bg-blue-400 rounded-full inline-block';
-      // La animación específica se mantiene inline o podría agregarse a tailwind.config
-      dot.style.animation = `typing 1.4s infinite`;
-      dot.style.animationDelay = `${i * 0.2}s`;
-      typing.appendChild(dot);
-    }
-
-    wrapper.appendChild(typing);
-    this.elements.messages.appendChild(wrapper);
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typing-indicator';
+    typingDiv.className = 'self-start mb-3 animate-slide-up';
+    typingDiv.innerHTML = `
+            <div class="bg-white dark:bg-[#1f2937] px-4 py-3 rounded-2xl rounded-tl-none ring-1 ring-slate-200/50 dark:ring-white/5 flex gap-1">
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-100"></span>
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-200"></span>
+            </div>
+        `;
+    this.elements.messages.appendChild(typingDiv);
     this.scrollToBottom();
   }
 
-  /**
-   * Oculta el indicador de escritura
-   */
   private hideTyping() {
     this.isTyping = false;
-    this.elements.sendBtn.disabled = false;
-
-    const typing = document.getElementById('typing-indicator');
-    typing?.remove();
+    document.getElementById('typing-indicator')?.remove();
   }
 
-  /**
-   * Scroll al final del chat
-   */
   private scrollToBottom() {
-    setTimeout(() => {
-      this.elements.messages.scrollTop = this.elements.messages.scrollHeight;
-    }, 100);
+    this.elements.messages.scrollTop = this.elements.messages.scrollHeight;
   }
 
-  /**
-   * Actualiza el estado del botón de enviar
-   */
   private updateSendButton() {
-    const hasText = this.elements.input.value.trim().length > 0;
-    this.elements.sendBtn.disabled = !hasText || this.isTyping;
+    this.elements.sendBtn.disabled = !this.elements.input.value.trim();
   }
 
-  /**
-   * Formatea la hora del mensaje
-   */
-  private formatTime(date: Date): string {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-
-    if (diff < 60000) return 'Ahora';
-    if (diff < 3600000) return `Hace ${Math.floor(diff / 60000)} min`;
-
-    return date.toLocaleTimeString('es-MX', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  private parseMarkdown(text: string): string {
+    // Simple parser para negritas y saltos
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
   }
 
-  /**
-   * Escapa HTML para prevenir XSS
-   */
-  private escapeHtml(text: string): string {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  /**
-   * Renderiza markdown simple a HTML
-   */
-  private renderMarkdown(text: string): string {
-    // Escapar HTML primero
-    let html = this.escapeHtml(text);
-
-    // Convertir **texto** a <strong>texto</strong>
-    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-    // Convertir *texto* a <em>texto</em>
-    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-
-    // Convertir listas con • o -
-    html = html.replace(/^[•\-]\s+(.+)$/gm, '<li>$1</li>');
-
-    // Envolver listas en <ul>
-    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul class="chatbot-list">$&</ul>');
-
-    // Convertir saltos de línea dobles a párrafos
-    html = html.replace(/\n\n/g, '</p><p>');
-
-    // Convertir saltos de línea simples a <br>
-    html = html.replace(/\n/g, '<br>');
-
-    // Envolver en párrafo si no está ya
-    if (!html.startsWith('<ul') && !html.startsWith('<p')) {
-      html = '<p>' + html + '</p>';
-    }
-
-    return html;
-  }
-
-  /**
-   * Guarda el historial en localStorage
-   */
+  // Persistencia básica
   private saveHistory() {
-    try {
-      // Guardar solo los últimos 20 mensajes
-      const toSave = this.history.slice(-20).map(m => ({
-        role: m.role,
-        content: m.content,
-        timestamp: m.timestamp.toISOString(),
-      }));
-
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(toSave));
-    } catch (error) {
-      console.warn('No se pudo guardar el historial:', error);
-    }
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.history.slice(-20)));
   }
 
-  /**
-   * Carga el historial desde localStorage
-   */
   private loadHistory() {
-    try {
-      const saved = localStorage.getItem(this.STORAGE_KEY);
-      if (!saved) return;
-
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    if (saved) {
       const parsed = JSON.parse(saved);
-      let hasHistory = false;
-
-      // Restaurar mensajes (excepto el de bienvenida que ya está)
-      parsed.forEach((msg: any) => {
-        if (msg.role === 'user' || this.history.length > 0) {
-          const message: Message = {
-            role: msg.role,
-            content: msg.content,
-            timestamp: new Date(msg.timestamp),
-          };
-
-          this.history.push(message);
-          hasHistory = true;
-
-          // Agregar al DOM si no es el mensaje de bienvenida
-          if (msg.role === 'user' || this.history.length > 1) {
-            this.appendMessageToDOM(message);
-          }
-        }
-      });
-
-      // Ocultar quick replies si ya hay conversación
-      if (this.history.length > 2) {
-        this.elements.quickReplies.style.display = 'none';
-      }
-
-      // Scroll al final para mostrar el último mensaje
-      this.scrollToBottom();
-    } catch (error) {
-      console.warn('No se pudo cargar el historial:', error);
+      // Rehidratar mensajes previos (solo si es necesario)
+      // En una app real, aquí reconstruirías el DOM si quieres persistencia visual entre recargas
     }
   }
 
-  /**
-   * Helper para agregar mensaje al DOM sin guardarlo (usado por loadHistory)
-   */
-  private appendMessageToDOM(message: Message) {
-    const messageEl = document.createElement('div');
-    messageEl.className = `chatbot-message chatbot-message-${message.role} flex flex-col max-w-[75%] ${message.role === 'bot' ? 'self-start' : 'self-end'} mb-2 animate-slide-up`;
-
-    const contentEl = document.createElement('div');
-    contentEl.className = message.role === 'bot'
-      ? 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm border border-slate-200 dark:border-slate-700'
-      : 'chatbot-message-content px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-blue-600 text-white shadow-md shadow-blue-600/30';
-
-    // Renderizar markdown solo para mensajes del bot
-    if (message.role === 'bot') {
-      contentEl.innerHTML = this.renderMarkdown(message.content);
-    } else {
-      contentEl.innerHTML = this.escapeHtml(message.content).replace(/\n/g, '<br>');
-    }
-
-    const timeEl = document.createElement('span');
-    timeEl.className = 'text-3xs text-slate-500 dark:text-slate-400 mt-1 px-2';
-    timeEl.textContent = this.formatTime(message.timestamp);
-
-    messageEl.appendChild(contentEl);
-    messageEl.appendChild(timeEl);
-    this.elements.messages.appendChild(messageEl);
-  }
-
-  /**
-   * Verifica si es la primera visita
-   */
   private checkFirstVisit() {
-    const hasOpened = localStorage.getItem(this.OPENED_KEY);
-    if (hasOpened) {
+    if (localStorage.getItem(this.OPENED_KEY)) {
       this.hideBadge();
     }
   }
 
-  /**
-   * Marca como abierto
-   */
   private markAsOpened() {
     localStorage.setItem(this.OPENED_KEY, 'true');
   }
 
-  /**
-   * Oculta el badge de notificación
-   */
   private hideBadge() {
     this.elements.badge.classList.add('hidden');
   }
-
-  /**
-   * Limpia el historial (útil para debugging)
-   */
-  public clearHistory() {
-    this.history = [];
-    localStorage.removeItem(this.STORAGE_KEY);
-
-    // Limpiar mensajes del DOM excepto el de bienvenida
-    const messages = this.elements.messages.querySelectorAll('.chatbot-message');
-    messages.forEach((msg, index) => {
-      if (index > 0) msg.remove();
-    });
-
-    // Mostrar quick replies
-    this.elements.quickReplies.style.display = 'flex';
-
-    console.log('🗑️ Historial limpiado');
-  }
-}
-
-// Inicializar automáticamente cuando se carga el script
-if (typeof window !== 'undefined') {
-  // Exponer globalmente para debugging
-  (window as any).chatbot = new ChatbotClient();
-
-  // Exponer método de limpieza para debugging
-  (window as any).clearChatHistory = () => {
-    (window as any).chatbot?.clearHistory();
-  };
 }

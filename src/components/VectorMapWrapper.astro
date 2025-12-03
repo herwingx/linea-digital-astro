@@ -1,0 +1,22 @@
+---
+// src/components/VectorMapWrapper.astro
+// Wrapper para usar el componente React VectorMap en Astro
+import VectorMap from "./VectorMap";
+---
+
+<div class="w-full h-full min-h-[300px] md:min-h-[400px]">
+  <VectorMap client:only="react" />
+</div>
+
+<style is:global>
+  /* Estilos globales para react-tooltip en dark mode */
+  .dark [data-tooltip-id] {
+    cursor: pointer;
+  }
+
+  /* Asegurar que el SVG se ajuste correctamente */
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+</style>

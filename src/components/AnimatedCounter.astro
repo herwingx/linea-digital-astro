@@ -5,100 +5,118 @@ interface Props {
   prefix?: string;
   suffix?: string;
   duration?: number;
-  class?: string; // Permite recibir clases externas (colores, tamaños)
+  decimals?: number;
+  class?: string;
 }
 
-const { 
-  end, 
-  prefix = '', 
-  suffix = '', 
-  duration = 2000, 
-  class: className = '' 
+const {
+  end,
+  prefix = "",
+  suffix = "",
+  duration = 2000,
+  decimals = 0,
+  class: className = "",
 } = Astro.props;
 ---
 
-<span
-  class:list={["animated-counter tabular-nums tracking-tight", className]}
+<div
+  class:list={["animated-counter", className]}
   data-end={end}
   data-prefix={prefix}
   data-suffix={suffix}
   data-duration={duration}
+  data-decimals={decimals}
+  role="status"
+  aria-live="assertive"
+  aria-atomic="true"
 >
-  {/* Valor inicial para SEO y SSR */}
-  {prefix}0{suffix}
-</span>
+  {/* Render inicial estático para SEO y fallback */}
+  {prefix}{
+    end.toLocaleString("es-MX", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    })
+  }{suffix}
+</div>
 
 <script>
-  // Función para animar un solo elemento
-  const animateValue = (obj: HTMLElement) => {
-    // Evitamos re-animar si ya terminó
-    if (obj.hasAttribute('data-animated')) return;
-    
-    const end = parseFloat(obj.dataset.end || "0");
-    const duration = parseInt(obj.dataset.duration || "2000");
-    const prefix = obj.dataset.prefix || "";
-    const suffix = obj.dataset.suffix || "";
-    
-    // Usamos Intl.NumberFormat para formateo nativo y performante (localización MX/US automática)
-    const formatter = new Intl.NumberFormat('es-MX'); 
-    
-    let startTimestamp: number | null = null;
-
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      
-      // Easing: easeOutQuart (más suave y "moderno" que cubic)
-      const easeProgress = 1 - Math.pow(1 - progress, 4);
-      
-      const current = Math.floor(easeProgress * end);
-      
-      // Renderizado
-      obj.textContent = `${prefix}${formatter.format(current)}${suffix}`;
-      
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      } else {
-        obj.textContent = `${prefix}${formatter.format(end)}${suffix}`;
-        obj.setAttribute('data-animated', 'true'); // Marca para no repetir
-      }
-    };
-
-    window.requestAnimationFrame(step);
-  };
-
-  // Función de inicialización (patrón Astro moderno)
   const initCounters = () => {
-    const counters = document.querySelectorAll<HTMLElement>('.animated-counter');
-    
-    if (counters.length === 0) return;
+    // 1. Detectar preferencia de usuario para reducir movimiento
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const counters =
+      document.querySelectorAll<HTMLElement>(".animated-counter");
 
-    // Un solo IntersectionObserver para todos los contadores (Mejora de Performance)
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animateValue(entry.target as HTMLElement);
-          observer.unobserve(entry.target); // Dejar de observar una vez animado
-        }
-      });
-    }, { threshold: 0.2 });
+    if (counters.length === 0) return;
+    if (prefersReducedMotion) return; // Si prefiere no animar, dejamos el valor inicial (SEO friendly)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateValue(entry.target as HTMLElement);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 },
+    );
 
     counters.forEach((counter) => observer.observe(counter));
   };
 
-  // Ejecutar en carga inicial y en navegaciones (View Transitions)
-  document.addEventListener('astro:page-load', initCounters);
-  // Fallback para primera carga si no se usa view transitions
-  document.addEventListener('DOMContentLoaded', initCounters); 
+  const animateValue = (obj: HTMLElement) => {
+    if (obj.dataset.animated) return; // Evitar doble animación
+
+    const end = parseFloat(obj.dataset.end || "0");
+    const duration = parseInt(obj.dataset.duration || "2000");
+    const prefix = obj.dataset.prefix || "";
+    const suffix = obj.dataset.suffix || "";
+    const decimals = parseInt(obj.dataset.decimals || "0");
+
+    let startTimestamp: number | null = null;
+
+    // Configuración regional
+    const formatter = new Intl.NumberFormat("es-MX", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
+      // Easing: easeOutExpo (Sensación más "snappy" y tecnológica)
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+      const current = easeProgress * end;
+      obj.textContent = `${prefix}${formatter.format(current)}${suffix}`;
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        // Asegurar valor final exacto
+        obj.textContent = `${prefix}${formatter.format(end)}${suffix}`;
+        obj.dataset.animated = "true";
+      }
+    };
+
+    // Comenzar en 0 visualmente
+    obj.textContent = `${prefix}${formatter.format(0)}${suffix}`;
+    window.requestAnimationFrame(step);
+  };
+
+  document.addEventListener("astro:page-load", initCounters);
+  document.addEventListener("DOMContentLoaded", initCounters);
 </script>
 
 <style>
-  /* "tabular-nums" es CRUCIAL para Clean UI.
-     Hace que todos los números (1, 7, 9) ocupen el mismo ancho,
-     evitando que el texto vibre o salte mientras cuenta. */
-  .tabular-nums {
+  /* Clave para UI numérica estable */
+  .animated-counter {
+    font-variant-numeric: tabular-nums; /* Ancho fijo por número */
     font-feature-settings: "tnum";
-    font-variant-numeric: tabular-nums;
+    white-space: nowrap; /* Evitar roturas */
+    will-change: contents;
   }
 </style>
