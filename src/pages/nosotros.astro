@@ -96,23 +96,10 @@ const VALUES = [
         <!-- COLUMNA VISUAL (MAPA INTERACTIVO) -->
         <div class="lg:order-first relative group perspective-1000">
           <!-- Glass Container -->
-          <div class="relative rounded-[2.5rem] bg-white/40 dark:bg-[#151e2e]/50 border border-white/60 dark:border-white/10 backdrop-blur-xl shadow-2xl shadow-blue-900/10 dark:shadow-black/40 p-3 transition-transform duration-700 hover:rotate-y-1 hover:scale-[1.01]">
+          <div class="relative rounded-[2.5rem] bg-white/80 dark:bg-[#151e2e]/80 border border-white/60 dark:border-white/10 shadow-2xl shadow-blue-900/10 dark:shadow-black/40 p-3 transition-shadow duration-700">
             <div class="rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-[#0B1120] relative aspect-[1.47] w-full">
-               <!-- Gradiente superior para integrar con el fondo -->
-               <div class="absolute inset-0 bg-gradient-to-b from-white/50 via-transparent to-transparent dark:from-[#0B1120] dark:via-transparent z-10 pointer-events-none"></div>
                
                <VectorMapWrapper />
-            </div>
-          </div>
-
-          <!-- Floating Badge -->
-          <div class="absolute -right-4 top-10 animate-bounce-slow hidden md:block z-20">
-            <div class="px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 flex items-center gap-3">
-              <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-              </span>
-              <span class="text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-white">Cobertura Total</span>
             </div>
           </div>
         </div>

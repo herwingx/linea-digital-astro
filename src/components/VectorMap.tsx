@@ -40,14 +40,14 @@ const VectorMap = () => {
   // Inicialización segura para SSR/Hydration
   const [mounted, setMounted] = useState(false);
   const [position, setPosition] = useState<{ coordinates: [number, number]; zoom: number }>({
-    coordinates: [-93.5, 17.0], // Centro ligeramente ajustado para incluir Tuxtla sin recorte
-    zoom: 1.5
+    coordinates: [-92.8, 16.9], // Centro ligeramente ajustado para incluir Tuxtla sin recorte
+    zoom: 2
   });
 
   useEffect(() => {
     setMounted(true);
     if (window.innerWidth < 768) {
-      setPosition({ coordinates: [-92.5, 15.8], zoom: 3.5 });
+      setPosition({ coordinates: [-92.5, 12.8], zoom: 3 });
     }
   }, []);
 
@@ -67,9 +67,9 @@ const VectorMap = () => {
 
   const handleReset = () => {
     if (window.innerWidth < 768) {
-      setPosition({ coordinates: [-92.5, 15.8], zoom: 3.5 });
+      setPosition({ coordinates: [-92.5, 12.8], zoom: 3 });
     } else {
-      setPosition({ coordinates: [-93.5, 17.0], zoom: 1.5 });
+      setPosition({ coordinates: [-92.8, 16.9], zoom: 2 });
     }
   };
 
@@ -88,8 +88,8 @@ const VectorMap = () => {
       ></div>
 
       {/* Leyenda Superior */}
-      <div className="absolute top-6 left-6 z-20 pointer-events-none select-none">
-        <div className="flex items-center gap-3 bg-white/90 dark:bg-[#1a2333]/90 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 shadow-lg">
+      <div className="absolute top-6 left-6 z-50 pointer-events-none select-none">
+        <div className="flex items-center gap-3 bg-white dark:bg-[#1a2333] px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 shadow-lg" style={{ filter: 'none' }}>
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border-2 border-white dark:border-[#1a2333]"></span>
@@ -101,27 +101,30 @@ const VectorMap = () => {
       </div>
 
       {/* Controles de Zoom */}
-      <div className="absolute bottom-8 right-6 z-20 flex flex-col gap-2">
+      <div className="absolute bottom-96 right-4 md:bottom-[10rem] md:right-4 z-50 flex flex-col gap-1.5 md:gap-2">
         <button
           onClick={handleZoomIn}
-          className="w-11 h-11 flex items-center justify-center bg-white/90 dark:bg-[#1a2333]/90 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition-all"
+          className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-white dark:bg-[#1a2333] rounded-xl md:rounded-2xl shadow-lg border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition-all"
           aria-label="Zoom In"
+          style={{ filter: 'none' }}
         >
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+          <svg width="16" height="16" className="md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
         </button>
         <button
           onClick={handleZoomOut}
-          className="w-11 h-11 flex items-center justify-center bg-white/90 dark:bg-[#1a2333]/90 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition-all"
+          className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-white dark:bg-[#1a2333] rounded-xl md:rounded-2xl shadow-lg border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition-all"
           aria-label="Zoom Out"
+          style={{ filter: 'none' }}
         >
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" /></svg>
+          <svg width="16" height="16" className="md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" /></svg>
         </button>
         <button
           onClick={handleReset}
-          className="w-11 h-11 flex items-center justify-center bg-blue-600 rounded-2xl shadow-lg shadow-blue-600/30 border border-transparent text-white hover:bg-blue-500 active:scale-95 transition-all mt-2"
+          className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-blue-600 rounded-xl md:rounded-2xl shadow-lg shadow-blue-600/30 border border-transparent text-white hover:bg-blue-500 active:scale-95 transition-all mt-1 md:mt-2"
           aria-label="Reset Map"
+          style={{ filter: 'none' }}
         >
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+          <svg width="16" height="16" className="md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
         </button>
       </div>
 
@@ -131,7 +134,7 @@ const VectorMap = () => {
         projectionConfig={{
           scale: 1800,
         }}
-        className="w-full h-full cursor-grab active:cursor-grabbing outline-none relative z-10"
+        className="w-full h-full cursor-grab active:cursor-grabbing outline-none relative z-0"
         height={600} // Height explícito para evitar recorte vertical
       >
         <ZoomableGroup
@@ -158,7 +161,6 @@ const VectorMap = () => {
                         stroke: isChiapas ? "rgba(255,255,255,0.8)" : "var(--map-stroke)",
                         strokeWidth: isChiapas ? 1.5 : 0.5,
                         outline: "none",
-                        filter: isChiapas ? "drop-shadow(0 0 10px rgba(59, 130, 246, 0.4))" : "none",
                         transition: "all 0.3s ease"
                       },
                       hover: {
@@ -166,7 +168,7 @@ const VectorMap = () => {
                         stroke: "#fff",
                         strokeWidth: 1.5,
                         outline: "none",
-                        cursor: "default", // Cursor default para el mapa base
+                        cursor: "default",
                       },
                       pressed: {
                         fill: isChiapas ? "#1e40af" : "var(--map-fill-pressed)",
@@ -202,7 +204,7 @@ const VectorMap = () => {
 
                 {/* Animación Radar */}
                 <circle r={8} className="fill-blue-500 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-75 pointer-events-none" />
-                <circle r={5} className="fill-blue-600 dark:fill-blue-400 stroke-[1.5px] stroke-white dark:stroke-[#0B1120] transition-transform duration-300 group-hover:scale-125 pointer-events-none" />
+                <circle r={3} className="fill-white dark:fill-white stroke-[1.5px] stroke-blue-400 transition-transform duration-300 group-hover:scale-125 pointer-events-none" />
               </g>
             </Marker>
           ))}
@@ -245,30 +247,37 @@ const VectorMap = () => {
 
         /* ESTILO DEL TOOLTIP GLASS */
         #map-tooltip {
-          background: rgba(255, 255, 255, 0.95) !important;
-          backdrop-filter: blur(12px) !important;
-          -webkit-backdrop-filter: blur(12px) !important;
+          background: rgb(255, 255, 255) !important;
           border: 1px solid rgba(203, 213, 225, 0.5) !important; /* Slate 300 */
           box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.2) !important;
           color: #0f172a !important;
           border-radius: 16px !important;
           padding: 0 !important;
           font-family: inherit !important;
+          filter: none !important;
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+          will-change: transform;
         }
 
         .dark #map-tooltip {
-          background: rgba(15, 23, 42, 0.90) !important; /* Navy oscuro */
+          background: rgb(15, 23, 42) !important; /* Navy oscuro */
           border: 1px solid rgba(255, 255, 255, 0.1) !important;
           box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6) !important;
           color: white !important;
+          filter: none !important;
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
         }
 
         /* FLECHA DEL TOOLTIP */
         .react-tooltip-arrow {
-          background: rgba(255, 255, 255, 0.95) !important;
+          background: rgb(255, 255, 255) !important;
+          filter: none !important;
         }
         .dark .react-tooltip-arrow {
-          background: rgba(15, 23, 42, 0.90) !important;
+          background: rgb(15, 23, 42) !important;
+          filter: none !important;
         }
 
         /* CONTENIDO INTERNO HTML DEL TOOLTIP */
@@ -276,6 +285,7 @@ const VectorMap = () => {
           padding: 12px 16px;
           text-align: center;
           min-width: 160px;
+          filter: none !important;
         }
         .tooltip-header {
           display: flex;
