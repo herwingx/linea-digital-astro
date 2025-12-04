@@ -229,7 +229,7 @@ export async function getAllChatbotKnowledge() {
     };
 
     // Logs detallados por categoría
-    console.log('\n📢 PROMOCIONES ACTIVAS:', promos.length);
+   /*  console.log('\n📢 PROMOCIONES ACTIVAS:', promos.length);
     console.log(JSON.stringify(promos, null, 2));
 
     console.log('\n👤 PLANES PERSONAS - LIBRE:', planesLibre.length);
@@ -256,6 +256,7 @@ export async function getAllChatbotKnowledge() {
     console.log('\n🏢 INTERNET EN TU EMPRESA:', internetEmpresa.length);
     console.log(JSON.stringify(internetEmpresa, null, 2));
 
+ */
     // Resumen total
     const totalItems =
       promos.length +
@@ -267,7 +268,7 @@ export async function getAllChatbotKnowledge() {
       planesEmpresasUltra.length +
       planesInternetEmpresa.length +
       internetEmpresa.length;
-
+/* 
     console.log('\n📊 ===== RESUMEN TOTAL =====');
     console.log(`Total de items en knowledge base: ${totalItems}`);
     console.log('Desglose:');
@@ -280,7 +281,7 @@ export async function getAllChatbotKnowledge() {
     console.log(`  - Planes Empresas Ultra: ${planesEmpresasUltra.length}`);
     console.log(`  - Planes Internet Empresas: ${planesInternetEmpresa.length}`);
     console.log(`  - Internet Empresa: ${internetEmpresa.length}`);
-    console.log('🤖 ===== FIN DE DATOS PARA CHATBOT =====\n');
+    console.log('🤖 ===== FIN DE DATOS PARA CHATBOT =====\n'); */
 
     return knowledgeBase;
   } catch (error) {

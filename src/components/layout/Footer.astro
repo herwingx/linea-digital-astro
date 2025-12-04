@@ -3,6 +3,8 @@
 import { Image } from "astro:assets";
 import logoWhite from "../../assets/logo-white.svg";
 import logoDark from "../../assets/logo-dark.svg"; // Asegúrate de tener este asset o usar el white con filtro
+import footerShape1 from "../../assets/footer-shape-1.svg";
+import footerShape2 from "../../assets/footer-shape-2.svg";
 import SocialIcon from "../ui/SocialIcon.astro";
 import Newsletter from "../sections/Newsletter.astro"; // Importamos la Newsletter para inyectarla antes del footer real
 
@@ -260,6 +262,13 @@ const footerLinks = [
           >
         </div>
       </div>
+    </div>
+
+    <div class="absolute top-0 left-0 -z-10">
+      <img src={footerShape2.src} alt="shape" />
+    </div>
+    <div class="absolute bottom-0 right-0 -z-10">
+      <img src={footerShape1.src} alt="shape" />
     </div>
   </footer>
 </div>
