@@ -17,6 +17,8 @@ interface ChatbotElements {
   badge: HTMLElement;
   sendBtn: HTMLButtonElement;
   minimizeBtn: HTMLButtonElement;
+  resetBtn: HTMLButtonElement;
+  callout: HTMLElement;
 }
 
 export class ChatbotClient {
@@ -88,6 +90,8 @@ export class ChatbotClient {
       badge: get('chatbot-badge'),
       sendBtn: get('chatbot-send-btn') as HTMLButtonElement,
       minimizeBtn: get('chatbot-minimize') as HTMLButtonElement,
+      resetBtn: get('chatbot-reset') as HTMLButtonElement,
+      callout: get('chatbot-callout'),
     };
   }
 
@@ -108,6 +112,55 @@ export class ChatbotClient {
     // Toggle
     this.elements.fab.onclick = (e) => { e.preventDefault(); this.toggle(); };
     this.elements.minimizeBtn.onclick = (e) => { e.preventDefault(); this.toggle(); };
+
+    // Reset con doble confirmación visual (sin alert feo)
+    let resetTimeout: any;
+    
+    this.elements.resetBtn.onclick = (e) => {
+      e.preventDefault();
+      const btn = this.elements.resetBtn;
+      
+      if (btn.dataset.confirm === 'true') {
+        // Segunda confirmación: Ejecutar acción
+        this.elements.messages.style.opacity = '0';
+        setTimeout(() => {
+            localStorage.removeItem(this.STORAGE_KEY);
+            location.reload();
+        }, 200);
+      } else {
+        // Primer clic: ESTADO DE ALERTA
+        btn.dataset.confirm = 'true';
+        
+        // Transformación visual fuerte (Rojo Sólido + Escala)
+        // Quitamos estilos sutiles
+        btn.classList.remove('text-slate-400', 'hover:bg-slate-100', 'hover:text-red-500', 'dark:hover:bg-white/5');
+        // Añadimos estilos de alerta
+        btn.classList.add('bg-red-500', 'text-white', 'scale-110', 'shadow-md', 'ring-2', 'ring-red-200', 'dark:ring-red-900');
+        
+        // Icono de Check Grueso (Confirmar)
+        btn.innerHTML = `<svg class="h-5 w-5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
+        
+        // Función para revertir al estado original
+        const revert = () => {
+            btn.dataset.confirm = 'false';
+            // Restaurar icono basura
+            btn.innerHTML = `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
+            
+            // Restaurar estilos originales
+            btn.classList.remove('bg-red-500', 'text-white', 'scale-110', 'shadow-md', 'ring-2', 'ring-red-200', 'dark:ring-red-900');
+            btn.classList.add('text-slate-400', 'hover:bg-slate-100', 'hover:text-red-500', 'dark:hover:bg-white/5');
+        };
+
+        // Auto-revertir después de 3 segundos
+        clearTimeout(resetTimeout);
+        resetTimeout = setTimeout(revert, 3000);
+        
+        // Opcional: Revertir si el usuario saca el mouse (para evitar clics accidentales al volver)
+        btn.onmouseleave = () => {
+            setTimeout(revert, 300); // Pequeño delay para no ser frustrante
+        };
+      }
+    };
 
     // Send
     this.elements.form.onsubmit = (e) => {
@@ -170,6 +223,7 @@ export class ChatbotClient {
     if (this.isOpen) {
       this.markAsOpened();
       this.hideBadge();
+      this.elements.callout.style.display = 'none'; // Ocultar callout al abrir
 
       // Ajuste inicial para móvil
       if (window.innerWidth <= 640) {
@@ -181,6 +235,7 @@ export class ChatbotClient {
       this.scrollToBottom();
     } else {
       document.body.style.overflow = ''; // Restaurar scroll
+      this.elements.callout.style.display = ''; // Restaurar callout al cerrar (vuelve a flex por CSS si no tiene inline)
 
       // LIMPIEZA TOTAL DE ESTILOS INLINE
       this.elements.window.style.height = '';
@@ -243,8 +298,8 @@ export class ChatbotClient {
     const msgDiv = document.createElement('div');
     const alignment = role === 'bot' ? 'self-start' : 'self-end';
     const colorClass = role === 'bot'
-      ? 'bg-white text-slate-700 ring-1 ring-slate-200/50 dark:bg-[#1f2937] dark:text-slate-200 dark:ring-white/5 rounded-tl-none'
-      : 'bg-blue-600 text-white shadow-md rounded-br-none';
+      ? 'bg-slate-100 text-slate-800 shadow-sm dark:bg-[#1f2937] dark:text-slate-200 dark:ring-1 dark:ring-white/5 rounded-tl-none'
+      : 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md rounded-br-none';
 
     msgDiv.className = `flex flex-col max-w-[85%] ${alignment} mb-3 animate-slide-up`;
     msgDiv.innerHTML = `
@@ -266,10 +321,10 @@ export class ChatbotClient {
     typingDiv.id = 'typing-indicator';
     typingDiv.className = 'self-start mb-3 animate-slide-up';
     typingDiv.innerHTML = `
-            <div class="bg-white dark:bg-[#1f2937] px-4 py-3 rounded-2xl rounded-tl-none ring-1 ring-slate-200/50 dark:ring-white/5 flex gap-1">
-                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
-                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-100"></span>
-                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-200"></span>
+            <div class="bg-slate-100 dark:bg-[#1f2937] px-4 py-4 rounded-2xl rounded-tl-none flex gap-1.5 items-center h-10 shadow-sm">
+                <span class="w-2 h-2 bg-slate-500 dark:bg-slate-400 rounded-full animate-typing"></span>
+                <span class="w-2 h-2 bg-slate-500 dark:bg-slate-400 rounded-full animate-typing" style="animation-delay: 0.2s"></span>
+                <span class="w-2 h-2 bg-slate-500 dark:bg-slate-400 rounded-full animate-typing" style="animation-delay: 0.4s"></span>
             </div>
         `;
     this.elements.messages.appendChild(typingDiv);

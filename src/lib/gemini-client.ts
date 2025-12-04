@@ -27,7 +27,7 @@ export interface ChatResponse {
 const GEMINI_CONFIG = {
   model: "gemini-2.5-flash", // Modelo estable y compatible
   temperature: 0.7, // Balance entre creatividad y consistencia
-  maxOutputTokens: 500, // Respuestas concisas
+  maxOutputTokens: 1500, // Respuestas más completas y detalladas
   topP: 0.9,
   topK: 40,
 };

@@ -1,0 +1,66 @@
+GUÍA TÉCNICA DEL CHATBOT "LÍA"
+================================
+
+Esta guía explica cómo funciona el chatbot de Línea Digital, cómo se conecta con la IA y cómo gestiona el conocimiento.
+
+1. ARQUITECTURA
+----------------
+El sistema consta de 3 partes principales:
+
+A. Frontend (src/components/Chatbot.astro):
+   - Es la interfaz visual que ve el usuario.
+   - Maneja el estado del chat (abierto/cerrado), el historial de mensajes y la animación de escritura.
+   - Envía los mensajes a tu propia API interna.
+
+B. API Backend (src/pages/api/chat.ts):
+   - Recibe el mensaje del usuario.
+   - Aplica límites de seguridad (Rate Limiting) para que no abusen del bot.
+   - Valida la configuración.
+   - Se conecta con Google Gemini para obtener la respuesta.
+
+C. Cerebro & Cliente IA (src/lib/gemini-client.ts y chatbot-knowledge.ts):
+   - Aquí vive la "personalidad" de Lía.
+   - Configura el modelo de IA (temperatura, tokens).
+   - Inyecta los datos del negocio (precios, sucursales) en cada mensaje.
+
+
+2. ¿CÓMO "PIENSA" LÍA? (EL PROMPT DEL SISTEMA)
+-----------------------------------------------
+Lía no "aprende" en tiempo real, sino que sigue un guion muy sofisticado que le enviamos cada vez que alguien le habla. Este guion está en `src/lib/chatbot-knowledge.ts`.
+
+Flujo de Pensamiento:
+1. Identidad: Le decimos "Eres Lía, experta en ventas...".
+2. Datos Vivos: Le inyectamos la lista de precios y promociones actualizadas.
+3. Reglas de Negocio: Le prohibimos inventar precios y le obligamos a pedir que visiten la sucursal.
+4. Estrategia L.I.A.:
+   - Leer (Diagnosticar necesidad)
+   - Informar (Vender beneficios)
+   - Accionar (Cerrar venta)
+
+
+3. TOKENS Y COSTOS
+-------------------
+Los "tokens" son la unidad de medida de la IA (aprox. 4 caracteres = 1 token).
+
+Configuración Actual (src/lib/gemini-client.ts):
+- Modelo: gemini-2.5-flash (Rápido y económico).
+- Max Output Tokens: 1500 (Antes 500).
+  - Esto significa que Lía puede escribir respuestas de hasta ~1000 palabras sin cortarse.
+  - Si una respuesta es muy larga, consume más cuota de tu API Key.
+
+¿Por qué se cortaban las respuestas?
+Antes el límite era 500 tokens. Si Lía intentaba listar 3 planes con sus beneficios, se quedaba sin espacio a mitad de camino. Con 1500, tiene espacio de sobra para ser detallada.
+
+
+4. CÓMO HACER AJUSTES FUTUROS
+------------------------------
+- Si quieres cambiar precios o sucursales:
+  Edita `src/lib/chatbot-knowledge.ts` en la constante `KNOWLEDGE_BASE`.
+
+- Si quieres cambiar la personalidad (más seria o más bromista):
+  Edita el `getSystemPrompt` en `src/lib/chatbot-knowledge.ts`.
+
+- Si quieres cambiar el modelo de IA (ej. a uno más potente):
+  Edita `GEMINI_CONFIG` en `src/lib/gemini-client.ts`.
+
+NOTA: Tu API Key de Gemini está segura en el servidor y nunca se expone al navegador del cliente.
