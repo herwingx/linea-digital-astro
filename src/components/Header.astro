@@ -9,17 +9,15 @@ import DarkModeToggle from "./DarkModeToggle.astro";
 interface NavLink {
   label: string;
   href: string;
-  desc?: string; // Descripción corta para dropdowns (UX improvement)
-  icon?: string; // SVG path content
+  desc?: string;
+  icon?: string;
   children?: NavLink[];
 }
 
 const { pathname } = Astro.url;
 
-// Lógica de estado activo estricta
 const isActive = (href: string) => {
   if (href === "/" && pathname === "/") return true;
-  // Manejo de subrutas (ej: /personas/planes debe activar /personas)
   if (href !== "/" && pathname.startsWith(href)) return true;
   return false;
 };
@@ -27,19 +25,19 @@ const isActive = (href: string) => {
 const navLinks: NavLink[] = [
   {
     label: "Planes",
-    href: "/personas", // Enlace padre clickeable
+    href: "/personas",
     children: [
       { 
         label: "Personas", 
         href: "/personas", 
-        desc: "Datos, Redes Sociales y 5G",
-        icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" // User icon
+        desc: "Datos, Redes Sociales",
+        icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
       },
       { 
         label: "Empresas", 
         href: "/empresas", 
-        desc: "Soluciones fiscales y flotillas",
-        icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" // Building icon
+        desc: "Soluciones Empresariales",
+        icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
       },
     ]
   },
@@ -56,7 +54,6 @@ const navLinks: NavLink[] = [
   data-scroll-initialized="false"
 >
   <!-- Background Backdrop Inteligente -->
-  <!-- En modo light: Blanco translúcido. En dark: Navy profundo translúcido -->
   <div 
     id="header-bg" 
     class="absolute inset-0 bg-transparent backdrop-blur-[0px] border-b border-transparent transition-all duration-500 -z-10"
@@ -68,18 +65,16 @@ const navLinks: NavLink[] = [
       <!-- 1. LOGO BRANDING -->
       <div class="flex-shrink-0 relative z-[110]">
         <a href="/" class="block group" aria-label="Volver al inicio">
-           <!-- Optimización: loading eager para LCP (Largest Contentful Paint) -->
-           <Image src={logoWhite} alt="Línea Digital Telcel" class="w-32 md:w-36 h-auto hidden dark:block transition-transform duration-300 group-hover:scale-105" loading="eager" />
-           <Image src={logoDark} alt="Línea Digital Telcel" class="w-32 md:w-36 h-auto dark:hidden transition-transform duration-300 group-hover:scale-105" loading="eager" />
+           <Image src={logoWhite} alt="Línea Digital Telcel" class="w-40 md:w-44 h-auto hidden dark:block transition-transform duration-300 group-hover:scale-105" loading="eager" />
+           <Image src={logoDark} alt="Línea Digital Telcel" class="w-40 md:w-44 h-auto dark:hidden transition-transform duration-300 group-hover:scale-105" loading="eager" />
         </a>
       </div>
 
       <!-- 2. DESKTOP NAV ("Dynamic Island" Style) -->
       <nav class="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-        <ul class="flex items-center gap-1 p-1.5 rounded-full bg-white/80 dark:bg-[#151e2e]/80 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 shadow-lg shadow-slate-200/20 dark:shadow-black/20 ring-1 ring-black/5 dark:ring-white/5 transition-colors duration-300">
+        <ul class="flex items-center gap-1 p-1.5 rounded-full bg-white/90 dark:bg-[#0B1120]/80 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 shadow-lg shadow-slate-200/20 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5 transition-colors duration-300">
            {navLinks.map((link) => {
                const hasChildren = link.children && link.children.length > 0;
-               // Check si el padre o algún hijo está activo
                const isChildActive = hasChildren && link.children?.some(c => isActive(c.href));
                const active = isActive(link.href) || isChildActive;
 
@@ -100,24 +95,24 @@ const navLinks: NavLink[] = [
                            )}
                        </a>
                        
-                       {/* Dropdown Desktop (Glassmorphism Premium) */}
+                       {/* Dropdown Desktop Refactorizado (Diseño Premium) */}
                        {hasChildren && (
-                           <div class="absolute top-full left-1/2 -translate-x-1/2 pt-5 w-80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform origin-top scale-95 group-hover:scale-100 translate-y-2 group-hover:translate-y-0 z-50">
-                               <!-- Puntero visual (Triángulo) - Ajustado para fusión perfecta -->
-                               <div class="absolute top-3 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#1a2333] rotate-45 border-t border-l border-slate-200 dark:border-white/10 z-20"></div>
+                           <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform origin-top scale-95 group-hover:scale-100 translate-y-2 group-hover:translate-y-0 z-50">
+                               <!-- Puntero visual más sutil y del mismo color que el fondo oscuro -->
+                               <div class="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#0B1120] rotate-45 border-t border-l border-slate-200 dark:border-white/10 z-20"></div>
                                
-                               <div class="relative bg-white/95 dark:bg-[#1a2333]/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 p-2 ring-1 ring-black/5 z-10">
+                               <!-- Caja del Menú (Fondo ajustado al tema Deep Navy) -->
+                               <div class="relative bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 p-2 ring-1 ring-black/5 dark:ring-white/5 z-10 overflow-hidden">
                                    {link.children?.map(child => (
-                                       <a href={child.href} class="group/item flex items-start gap-4 p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-white/5 transition-all duration-200">
-                                           <div class="mt-1 flex-shrink-0 w-10 h-10 rounded-lg bg-blue-100/50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover/item:scale-110 group-hover/item:bg-blue-600 group-hover/item:text-white transition-all duration-300">
-                                               {/* Icono dinámico */}
-                                               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                       <a href={child.href} class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-white/5 transition-all duration-200">
+                                           <div class="mt-0.5 flex-shrink-0 w-9 h-9 rounded-lg bg-blue-100/50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover/item:scale-110 group-hover/item:bg-blue-600 group-hover/item:text-white transition-all duration-300 shadow-sm">
+                                               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={child.icon || "M13 10V3L4 14h7v7l9-11h-7z"}/>
                                                </svg>
                                            </div>
                                            <div>
                                                <div class="text-sm font-bold text-slate-900 dark:text-white group-hover/item:text-blue-700 dark:group-hover/item:text-blue-300 transition-colors">{child.label}</div>
-                                               <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">{child.desc}</div>
+                                               <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-tight">{child.desc}</div>
                                            </div>
                                        </a>
                                    ))}
@@ -130,12 +125,10 @@ const navLinks: NavLink[] = [
         </ul>
       </nav>
 
-      <!-- 3. ACTIONS & UTILITIES -->
+      <!-- 3. ACTIONS -->
       <div class="flex items-center gap-3 relative z-[110]">
          <div class="hidden sm:block hover:scale-110 transition-transform"><DarkModeToggle /></div>
          
-         <!-- Primary Action: Mi Telcel (Login) -->
-         <!-- Diseño ajustado: Outline en lugar de solid para no competir con los CTAs de la página -->
          <a 
             href="https://www.mitelcel.com/mitelcel/login" 
             target="_blank" 
@@ -148,7 +141,7 @@ const navLinks: NavLink[] = [
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
          </a>
 
-         <!-- Hamburger Button (Mobile) -->
+         <!-- Hamburger Button -->
          <button 
             id="mobile-menu-btn"
             class="lg:hidden relative z-50 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 focus:outline-none touch-manipulation
@@ -167,43 +160,46 @@ const navLinks: NavLink[] = [
     </div>
   </div>
 
-  <!-- 4. MOBILE MENU (Full Width Dropdown) -->
+  <!-- Backdrop con blur para el menú móvil -->
+  <div 
+    id="mobile-menu-backdrop"
+    class="fixed inset-0 bg-slate-900/20 dark:bg-black/40 backdrop-blur-sm z-[85] transition-all duration-500 opacity-0 invisible pointer-events-none"
+    aria-hidden="true"
+  ></div>
+
+  <!-- 4. MOBILE MENU (Mejorado) -->
   <div 
     id="mobile-menu-dropdown" 
     class="fixed top-[80px] inset-x-4 z-[90] origin-top transform transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] 
            opacity-0 invisible pointer-events-none -translate-y-4 scale-[0.98]"
   >
-      <!-- Contenedor Glassmorphism que respeta el tema Dark Navy -->
+      <!-- Background ajustado a #0B1120 para consistencia -->
       <div class="bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-2xl rounded-[2rem] border border-slate-200 dark:border-white/10 shadow-2xl shadow-blue-900/20 dark:shadow-black/50 overflow-hidden ring-1 ring-black/5 max-h-[80vh] overflow-y-auto custom-scrollbar">
           
-          <nav class="flex flex-col p-3 space-y-2">
+          <nav class="flex flex-col p-3 space-y-1">
              {navLinks.map((link) => {
-                 // LOGICA DROPDOWN MOVIL (Acordeón)
                  if (link.children) {
                      return (
                          <div class="mobile-group rounded-2xl overflow-hidden">
                              <button 
-                                class="flex items-center justify-between w-full px-5 py-4 text-left hover:bg-slate-100 dark:hover:bg-white/5 transition-colors group mobile-accordion-trigger select-none"
+                                class="flex items-center justify-between w-full px-5 py-3.5 text-left rounded-2xl hover:bg-slate-100 dark:hover:bg-white/5 transition-all group mobile-accordion-trigger select-none active:scale-[0.98]"
                                 aria-expanded="false"
                              >
-                                 <span class="font-bold text-slate-900 dark:text-white text-lg">{link.label}</span>
+                                 <span class="font-bold text-slate-900 dark:text-white text-base">{link.label}</span>
                                  <span class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-600/30 transition-colors">
                                      <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-white transition-transform duration-300 accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                  </span>
                              </button>
                              
-                             <!-- Contenido del Acordeón -->
                              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out mobile-accordion-grid">
                                  <div class="overflow-hidden">
-                                     <div class="px-5 pb-3 pt-1 space-y-1 border-l-2 border-slate-100 dark:border-white/10 ml-5 mb-3">
+                                     <div class="px-3 pt-2 pb-3 space-y-1">
                                          {link.children.map(child => (
-                                             <a href={child.href} class="flex items-center gap-3 w-full px-4 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 text-base font-medium text-slate-600 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-300 transition-all active:scale-[0.98]">
-                                                 <div class="w-6 h-6 flex items-center justify-center text-blue-500 dark:text-blue-400">
-                                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={child.icon || "M13 10V3L4 14h7v7l9-11h-7z"}/>
-                                                     </svg>
-                                                 </div>
-                                                 {child.label}
+                                             <a href={child.href} class="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent hover:border-blue-200 dark:hover:border-blue-500/30 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-blue-700 dark:hover:text-blue-300 transition-all active:scale-[0.98]">
+                                                 <!-- Mini icon mobile -->
+                                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                                                 <span class="flex-1">{child.label}</span>
+                                                 <span class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Ir →</span>
                                              </a>
                                          ))}
                                      </div>
@@ -213,7 +209,6 @@ const navLinks: NavLink[] = [
                      )
                  }
                  
-                 // LOGICA LINK NORMAL
                  const active = isActive(link.href);
                  return (
                      <a href={link.href} class={`flex items-center w-full px-5 py-4 rounded-2xl text-lg font-bold transition-all active:scale-[0.98] ${active ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}>
@@ -223,14 +218,13 @@ const navLinks: NavLink[] = [
              })}
           </nav>
 
-          <!-- Footer del Menú Móvil -->
           <div class="p-4 mt-2 border-t border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-[#0f1520] flex flex-col gap-4">
                <div class="flex items-center justify-between px-2 py-1">
-                   <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">Modo Oscuro</span>
+                   <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">Apariencia</span>
                    <DarkModeToggle />
                </div>
                <a href="https://www.mitelcel.com/mitelcel/login" target="_blank" class="w-full flex items-center justify-center py-3.5 rounded-xl bg-slate-900 dark:bg-blue-600 text-white font-bold shadow-lg shadow-slate-900/10 active:scale-95 transition-transform hover:bg-slate-800 dark:hover:bg-blue-500">
-                   Ingresar a Mi Telcel
+                   Acceso a Mi Telcel
                </a>
           </div>
       </div>
@@ -238,12 +232,11 @@ const navLinks: NavLink[] = [
 </header>
 
 <style>
-  /* Animación Hamburguesa Premium */
+  /* Animación Hamburguesa */
   .menu-active .ham-line-1 { transform: translateY(6px) rotate(45deg); }
   .menu-active .ham-line-2 { opacity: 0; transform: scaleX(0); }
   .menu-active .ham-line-3 { transform: translateY(-6px) rotate(-45deg); }
   
-  /* Estado activo del botón */
   #mobile-menu-btn.menu-active {
       @apply bg-slate-900 dark:bg-white border-slate-900 dark:border-white;
   }
@@ -251,7 +244,6 @@ const navLinks: NavLink[] = [
       @apply bg-white dark:bg-slate-900;
   }
 
-  /* Animación Acordeón */
   .mobile-accordion-trigger[aria-expanded="true"] .accordion-icon {
       transform: rotate(180deg);
   }
@@ -262,12 +254,12 @@ const navLinks: NavLink[] = [
       grid-template-rows: 1fr;
   }
   
-  /* Scroll Effect: Glassmorphism activado al scrollear */
+  /* SCROLL EFFECT: IMPORTANTE
+     Usamos #0B1120 en dark mode para que coincida con el fondo del site */
   .header-scrolled #header-bg {
-     @apply bg-white/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-slate-200 dark:border-white/10 shadow-sm;
+     @apply bg-white/60 dark:bg-[#0B1120]/60 backdrop-blur-xl border-slate-200/50 dark:border-white/10 shadow-sm;
   }
 
-  /* Dropdown Active State */
   .dropdown-active {
       opacity: 1 !important;
       visibility: visible !important;
@@ -275,58 +267,34 @@ const navLinks: NavLink[] = [
       transform: translateY(0) scale(100%) !important;
   }
 
-  /* Custom Scrollbar para el menú móvil si es muy largo */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #cbd5e1;
-    border-radius: 10px;
-  }
-  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #334155;
-  }
+  .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
 </style>
 
 <script>
-    // Lógica TS robusta para Astro ViewTransitions
     const setupHeader = () => {
         const header = document.getElementById("main-header");
         const btn = document.getElementById("mobile-menu-btn");
         const dropdown = document.getElementById("mobile-menu-dropdown");
+        const backdrop = document.getElementById("mobile-menu-backdrop");
         
-        // 1. SCROLL EFFECT
         if (header) {
-            // Define the scroll handler
+            // Limpieza de listeners previos
+            const oldHandler = (window as any).__headerScrollHandler;
+            if (oldHandler) window.removeEventListener("scroll", oldHandler);
+            
             const handleScroll = () => {
-                if (window.scrollY > 10) {
-                    header.classList.add("header-scrolled");
-                } else {
-                    header.classList.remove("header-scrolled");
-                }
+                if (window.scrollY > 10) header.classList.add("header-scrolled");
+                else header.classList.remove("header-scrolled");
             };
             
-            // Clean up any existing scroll listeners
-            // We need to remove all scroll listeners and add a fresh one
-            const oldHandler = (window as any).__headerScrollHandler;
-            if (oldHandler) {
-                window.removeEventListener("scroll", oldHandler);
-            }
-            
-            // Store the handler reference globally so we can remove it later
             (window as any).__headerScrollHandler = handleScroll;
-            
-            // Add the scroll listener
             window.addEventListener("scroll", handleScroll, { passive: true });
-            
-            // Check initial state
             handleScroll();
         }
 
-        // 2. MENU TOGGLE LOGIC
         let isOpen = false;
         
         const closeMenu = () => {
@@ -334,7 +302,7 @@ const navLinks: NavLink[] = [
             btn?.classList.remove("menu-active");
             btn?.setAttribute("aria-expanded", "false");
             dropdown?.classList.remove("dropdown-active");
-            // Reactivar scroll del body
+            backdrop?.classList.remove("!opacity-100", "!visible", "!pointer-events-auto");
             document.body.style.overflow = '';
         };
 
@@ -344,14 +312,13 @@ const navLinks: NavLink[] = [
                 btn?.classList.add("menu-active");
                 btn?.setAttribute("aria-expanded", "true");
                 dropdown?.classList.add("dropdown-active");
-                // Bloquear scroll del body para evitar doble scroll
+                backdrop?.classList.add("!opacity-100", "!visible", "!pointer-events-auto");
                 document.body.style.overflow = 'hidden';
             } else {
                 closeMenu();
             }
         };
 
-        // Limpieza de event listeners antiguos (si existen) y asignación de nuevos
         const newBtn = btn?.cloneNode(true);
         if (btn && newBtn && btn.parentNode) {
             btn.parentNode.replaceChild(newBtn, btn);
@@ -361,47 +328,33 @@ const navLinks: NavLink[] = [
             });
         }
 
-        // Close on click outside
-        const handleOutsideClick = (e: MouseEvent) => {
-            if (isOpen && dropdown && !dropdown.contains(e.target as Node) && !(e.target as HTMLElement).closest('#mobile-menu-btn')) {
-                closeMenu();
-            }
-        };
-        document.removeEventListener('click', handleOutsideClick); // Limpieza preventiva
-        document.addEventListener('click', handleOutsideClick);
+        // Cerrar menú al hacer clic en el backdrop
+        backdrop?.addEventListener('click', closeMenu);
 
-        // 3. ACCORDION LOGIC
+        // Cerrar si click fuera
+        document.addEventListener('click', (e) => {
+             if (isOpen && dropdown && !dropdown.contains(e.target as Node) && !newBtn?.contains(e.target as Node)) {
+                closeMenu();
+             }
+        });
+
         const triggers = document.querySelectorAll(".mobile-accordion-trigger");
         triggers.forEach(trigger => {
-            // Clonar para limpiar listeners previos
             const newTrigger = trigger.cloneNode(true);
             trigger.parentNode?.replaceChild(newTrigger, trigger);
-            
             newTrigger.addEventListener("click", function(this: HTMLElement) {
                 const isExpanded = this.getAttribute("aria-expanded") === "true";
-                
-                // Cerrar otros (Opcional - UX de acordeón exclusivo)
-                // triggers.forEach(t => t.setAttribute("aria-expanded", "false")); 
-                // document.querySelectorAll('.mobile-accordion-grid').forEach(g => g.classList.remove('open'));
-
                 this.setAttribute("aria-expanded", String(!isExpanded));
-                
                 const grid = this.nextElementSibling;
-                if (grid) {
-                    grid.classList.toggle("open");
-                }
+                if (grid) grid.classList.toggle("open");
             });
         });
         
-        // Cerrar menú al hacer clic en un enlace
-        const links = dropdown?.querySelectorAll("a");
-        links?.forEach(link => {
+        dropdown?.querySelectorAll("a").forEach(link => {
             link.addEventListener("click", closeMenu);
         });
     };
 
-    // Ejecutar en carga inicial y en navegaciones de Astro
     document.addEventListener("astro:page-load", setupHeader);
-    // Fallback para primera carga si no usas ViewTransitions
     document.addEventListener("DOMContentLoaded", setupHeader);
 </script>

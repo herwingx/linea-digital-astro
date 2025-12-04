@@ -1,6 +1,6 @@
 // src/components/VectorMap.tsx
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -9,133 +9,174 @@ import {
   ZoomableGroup,
 } from "react-simple-maps";
 import { Tooltip } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css"; // Asegúrate de que este CSS exista o la librería esté configurada
+import "react-tooltip/dist/react-tooltip.css";
 
-// TopoJSON Optimizado de México
+// URL del TopoJSON de México
 const GEO_URL = "https://gist.githubusercontent.com/diegovalle/5129746/raw/mx_tj.json";
 
+// Datos enriquecidos para el Tooltip
 interface Location {
   id: string;
   name: string;
   role: string;
+  address: string;
+  schedule: string;
   coordinates: [number, number];
 }
 
 const locations: Location[] = [
   {
     id: "tuxtla",
-    name: "Corporativo Central",
+    name: "Corporativo Tuxtla",
     role: "Matriz Operativa",
+    address: "1a Av. Norte Poniente #834, Centro",
+    schedule: "Lun-Vie: 9am - 6pm",
     coordinates: [-93.113, 16.753],
   },
   {
     id: "tapachula",
-    name: "CEDIS Tapachula",
-    role: "Centro de Distribución",
+    name: "Sucursal Tapachula",
+    role: "Matriz Operativa",
+    address: "4a. Av. Nte. 70, Los Naranjos",
+    schedule: "Lun-Vie: 9am - 6pm",
     coordinates: [-92.261, 14.905],
   },
 ];
 
 const VectorMap = () => {
-  // Inicialización segura para SSR/Hydration
-  const [mounted, setMounted] = useState(false);
-  const [position, setPosition] = useState<{ coordinates: [number, number]; zoom: number }>({
-    coordinates: [-92.8, 16.9], // Centro ligeramente ajustado para incluir Tuxtla sin recorte
-    zoom: 2
-  });
+  // Control de estado para evitar hydration mismatch
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Estado de posición (Zoom y Centro)
+  const [position, setPosition] = useState({ coordinates: [-93.5, 16.5] as [number, number], zoom: 3 });
 
+  // Ajustar vista inicial según el dispositivo al montar
   useEffect(() => {
-    setMounted(true);
-    if (window.innerWidth < 768) {
-      setPosition({ coordinates: [-92.5, 12.8], zoom: 3 });
+    setIsMounted(true);
+    const width = window.innerWidth;
+    
+    if (width < 768) {
+      // Móvil: Zoom fuerte sobre Chiapas
+      setPosition({ coordinates: [-92.5, 14.2], zoom: 3.5 });
+    } else if (width < 1024) {
+      // Tablet
+      setPosition({ coordinates: [-93.0, 16.5], zoom: 4 });
+    } else {
+      // Desktop: Vista sureste amplia
+      setPosition({ coordinates: [-93.5, 16.8], zoom: 2.8 }); 
     }
   }, []);
 
   const handleZoomIn = () => {
-    if (position.zoom >= 10) return;
-    setPosition((pos) => ({ ...pos, zoom: pos.zoom * 1.3 }));
+    if (position.zoom >= 15) return;
+    setPosition((pos) => ({ ...pos, zoom: pos.zoom * 1.2 }));
   };
 
   const handleZoomOut = () => {
     if (position.zoom <= 1) return;
-    setPosition((pos) => ({ ...pos, zoom: pos.zoom / 1.3 }));
+    setPosition((pos) => ({ ...pos, zoom: pos.zoom / 1.2 }));
   };
 
   const handleMoveEnd = (position: { coordinates: [number, number]; zoom: number }) => {
     setPosition(position);
   };
 
-  const handleReset = () => {
-    if (window.innerWidth < 768) {
-      setPosition({ coordinates: [-92.5, 12.8], zoom: 3 });
-    } else {
-      setPosition({ coordinates: [-92.8, 16.9], zoom: 2 });
-    }
-  };
+  // Botón de reset inteligente
+  const handleReset = useCallback(() => {
+    const width = window.innerWidth;
+    const newPosition = width < 768 
+      ? { coordinates: [-92.5, 14.2] as [number, number], zoom: 3.5 }
+      : { coordinates: [-93.5, 16.8] as [number, number], zoom: 2.8 };
+    
+    setPosition(newPosition);
+  }, []);
 
-  if (!mounted) return <div className="w-full h-[500px] bg-slate-100 dark:bg-[#0B1120] rounded-[2.5rem] animate-pulse" />;
+  if (!isMounted) {
+    return (
+      <div className="w-full h-[400px] md:h-[500px] bg-slate-100 dark:bg-[#151e2e] rounded-[2rem] animate-pulse flex items-center justify-center">
+         <span className="text-slate-400 text-sm font-bold tracking-wider uppercase">Cargando Mapa...</span>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative w-full h-[600px] min-h-[500px] rounded-[2.5rem] overflow-hidden bg-slate-50 dark:bg-[#0B1120] border border-slate-200 dark:border-white/10 shadow-2xl group transition-colors duration-500">
-
-      {/* Capa de Textura / Grid Técnico */}
-      <div
-        className="absolute inset-0 opacity-[0.3] dark:opacity-[0.1] pointer-events-none z-0"
+    <div className="relative w-full h-[450px] md:h-[600px] rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-[#0B1120] border border-slate-200 dark:border-white/10 shadow-2xl group select-none touch-pan-y">
+      
+      {/* === 1. UI LAYERS === */}
+      
+      {/* Textura de Fondo */}
+      <div 
+        className="absolute inset-0 opacity-[0.3] dark:opacity-[0.15] pointer-events-none z-0" 
         style={{
-          backgroundImage: "radial-gradient(#64748b 1px, transparent 1px)",
-          backgroundSize: "30px 30px"
+          backgroundImage: "radial-gradient(#64748b 0.8px, transparent 0.8px)",
+          backgroundSize: "20px 20px"
         }}
-      ></div>
+      />
 
-      {/* Leyenda Superior */}
-      <div className="absolute top-6 left-6 z-50 pointer-events-none select-none">
-        <div className="flex items-center gap-3 bg-white dark:bg-[#1a2333] px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 shadow-lg" style={{ filter: 'none' }}>
+      {/* Leyenda Flotante */}
+      <div className="absolute top-6 left-6 z-20 pointer-events-none hidden sm:block">
+        <div className="flex items-center gap-3 bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 shadow-sm">
           <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border-2 border-white dark:border-[#1a2333]"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500 border-[1.5px] border-white dark:border-[#0B1120]"></span>
           </span>
-          <span className="text-[10px] font-bold tracking-widest text-slate-700 dark:text-slate-200 uppercase">
-            Red 5G
+          <span className="text-[10px] font-bold tracking-widest text-slate-600 dark:text-slate-300 uppercase">
+            Territorio Activo
           </span>
         </div>
       </div>
 
-      {/* Controles de Zoom */}
-      <div className="absolute bottom-96 right-4 md:bottom-[10rem] md:right-4 z-50 flex flex-col gap-1.5 md:gap-2">
+      {/* Controles de Navegación (Adaptativos) */}
+      <div className="absolute bottom-60 lg:bottom-24 right-6 z-50 flex flex-col gap-2" style={{ pointerEvents: 'auto', position: 'absolute', zIndex: 9999 }}>
+        <div className="bg-white/90 dark:bg-[#151e2e]/90 backdrop-blur-lg rounded-2xl shadow-lg border border-slate-200 dark:border-white/10 p-1.5 flex flex-col gap-1" style={{ pointerEvents: 'auto' }}>
+          <button
+            type="button"
+            onClick={handleZoomIn}
+            onMouseDown={(e) => { e.stopPropagation(); }}
+            className="w-10 h-10 md:w-11 md:h-11 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center text-slate-600 dark:text-slate-300 bg-white dark:bg-[#151e2e] hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 rounded-xl transition-all cursor-pointer touch-none"
+            aria-label="Acercar"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" /></svg>
+          </button>
+          
+          <div className="h-px w-full bg-slate-200 dark:bg-white/5"></div>
+          
+          <button
+            type="button"
+            onClick={handleZoomOut}
+            onMouseDown={(e) => { e.stopPropagation(); }}
+            className="w-10 h-10 md:w-11 md:h-11 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center text-slate-600 dark:text-slate-300 bg-white dark:bg-[#151e2e] hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 rounded-xl transition-all cursor-pointer touch-none"
+            aria-label="Alejar"
+            style={{ pointerEvents: 'auto' }}
+          >
+             <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" /></svg>
+          </button>
+        </div>
+        
         <button
-          onClick={handleZoomIn}
-          className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-white dark:bg-[#1a2333] rounded-xl md:rounded-2xl shadow-lg border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition-all"
-          aria-label="Zoom In"
-          style={{ filter: 'none' }}
-        >
-          <svg width="16" height="16" className="md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-        </button>
-        <button
-          onClick={handleZoomOut}
-          className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-white dark:bg-[#1a2333] rounded-xl md:rounded-2xl shadow-lg border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition-all"
-          aria-label="Zoom Out"
-          style={{ filter: 'none' }}
-        >
-          <svg width="16" height="16" className="md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" /></svg>
-        </button>
-        <button
+          type="button"
           onClick={handleReset}
-          className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-blue-600 rounded-xl md:rounded-2xl shadow-lg shadow-blue-600/30 border border-transparent text-white hover:bg-blue-500 active:scale-95 transition-all mt-1 md:mt-2"
-          aria-label="Reset Map"
-          style={{ filter: 'none' }}
+          onMouseDown={(e) => { e.stopPropagation(); }}
+          className="w-12 h-12 md:w-[52px] md:h-[52px] min-w-[3rem] min-h-[3rem] flex items-center justify-center text-slate-600 dark:text-slate-300 bg-white dark:bg-[#151e2e] hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 rounded-xl transition-all cursor-pointer touch-none"
+          aria-label="Centrar Mapa"
+          style={{ pointerEvents: 'auto' }}
         >
-          <svg width="16" height="16" className="md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+           <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+             <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+           </svg>
         </button>
       </div>
 
-      {/* Componente Mapa */}
+      {/* === 2. MAPA INTERACTIVO === */}
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
-          scale: 1800,
+          scale: 1600,
         }}
+        width={800}
+        height={600}
         className="w-full h-full cursor-grab active:cursor-grabbing outline-none relative z-0"
-        height={600} // Height explícito para evitar recorte vertical
       >
         <ZoomableGroup
           center={position.coordinates}
@@ -144,11 +185,11 @@ const VectorMap = () => {
           maxZoom={12}
           minZoom={1}
         >
-          {/* GEOGRAFÍA */}
+          {/* A. CAPA GEOGRÁFICA */}
           <Geographies geography={GEO_URL}>
             {({ geographies }) =>
               geographies.map((geo: any) => {
-                const stateName = geo.properties?.state_name || geo.properties?.name || "";
+                const stateName = geo.properties?.state_name || "";
                 const isChiapas = stateName.toLowerCase().includes("chiapas");
 
                 return (
@@ -157,23 +198,20 @@ const VectorMap = () => {
                     geography={geo}
                     style={{
                       default: {
-                        fill: isChiapas ? "url(#activeStateGrad)" : "var(--map-fill-default)",
-                        stroke: isChiapas ? "rgba(255,255,255,0.8)" : "var(--map-stroke)",
-                        strokeWidth: isChiapas ? 1.5 : 0.5,
+                        fill: isChiapas ? "url(#activeStateGrad)" : "var(--fill-default)",
+                        stroke: isChiapas ? "#ffffff" : "var(--stroke-default)",
+                        strokeWidth: isChiapas ? 1.2 : 0.4,
                         outline: "none",
                         transition: "all 0.3s ease"
                       },
                       hover: {
-                        fill: isChiapas ? "#2563eb" : "var(--map-fill-hover)",
+                        fill: isChiapas ? "#3b82f6" : "var(--fill-hover)",
                         stroke: "#fff",
                         strokeWidth: 1.5,
                         outline: "none",
-                        cursor: "default",
+                        cursor: isChiapas ? "default" : "default"
                       },
-                      pressed: {
-                        fill: isChiapas ? "#1e40af" : "var(--map-fill-pressed)",
-                        outline: "none"
-                      },
+                      pressed: { fill: isChiapas ? "#1e40af" : "var(--fill-default)", outline: "none" },
                     }}
                   />
                 );
@@ -181,149 +219,180 @@ const VectorMap = () => {
             }
           </Geographies>
 
-          {/* MARCADORES (Sobre la capa geográfica) */}
-          {locations.map(({ id, name, role, coordinates }) => (
+          {/* B. MARCADORES (Solo se muestran si el zoom es suficiente o siempre, a decisión) */}
+          {locations.map(({ id, name, role, address, schedule, coordinates }) => (
             <Marker key={id} coordinates={coordinates}>
-              <g
-                className="group cursor-pointer focus:outline-none"
-                data-tooltip-id="map-tooltip"
-                // HTML STRING SIMPLIFICADO PARA STYLING EN EL CSS
-                data-tooltip-html={`
-                  <div class="tooltip-content">
-                    <div class="tooltip-header">
-                       <div class="status-dot"></div>
-                       <span>Sucursal Activa</span>
+               {/* Tooltip Trigger Group */}
+               <g 
+                 className="cursor-pointer focus:outline-none group/marker"
+                 data-tooltip-id="map-tooltip"
+                 data-tooltip-html={`
+                    <div class="tooltip-container">
+                        <div class="tooltip-header">
+                           <span class="dot"></span>
+                           <span class="text">Ubicación</span>
+                        </div>
+                        <p class="tooltip-title">${name}</p>
+                        <p class="tooltip-role">${role}</p>
+                        
+                        <div class="tooltip-divider"></div>
+                        
+                        <div class="tooltip-row">
+                            <span class="icon">📍</span>
+                            <span>${address}</span>
+                        </div>
+                        <div class="tooltip-row">
+                            <span class="icon">🕒</span>
+                            <span>${schedule}</span>
+                        </div>
                     </div>
-                    <p class="tooltip-title">${name}</p>
-                    <p class="tooltip- role">${role}</p>
-                  </div>
-                `}
-              >
-                {/* Área interactiva invisible más grande para facilitar el hover */}
-                <circle r={20} fill="transparent" />
-
-                {/* Animación Radar */}
-                <circle r={8} className="fill-blue-500 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-75 pointer-events-none" />
-                <circle r={3} className="fill-white dark:fill-white stroke-[1.5px] stroke-blue-400 transition-transform duration-300 group-hover:scale-125 pointer-events-none" />
-              </g>
+                 `}
+               >
+                 {/* Efecto Radar */}
+                 <circle r={8} className="fill-blue-500 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60 pointer-events-none" />
+                 
+                 {/* Anillo Principal */}
+                 <circle r={5} className="fill-blue-600 dark:fill-blue-400 stroke-[1.5px] stroke-white dark:stroke-[#0B1120] transition-all duration-300 group-hover/marker:scale-150" />
+                 
+                 {/* Etiqueta Permanente en Mobile o Hover en Desktop */}
+                 <text 
+                    textAnchor="middle" 
+                    y={-10} 
+                    className="text-[5px] font-bold fill-slate-700 dark:fill-white opacity-0 md:group-hover/marker:opacity-100 transition-opacity"
+                 >
+                     {name}
+                 </text>
+               </g>
             </Marker>
           ))}
         </ZoomableGroup>
-
+        
         <defs>
-          <linearGradient id="activeStateGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#1e3a8a" /> {/* Blue 900 */}
-            <stop offset="100%" stopColor="#3b82f6" /> {/* Blue 500 */}
-          </linearGradient>
+           <linearGradient id="activeStateGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#1e3a8a" /> {/* Dark Blue */}
+              <stop offset="100%" stopColor="#3b82f6" /> {/* Blue 500 */}
+           </linearGradient>
         </defs>
       </ComposableMap>
 
-      {/* TOOLTIP REFACTORIZADO (Renderizado via Portal por defecto) */}
+      {/* === 3. TOOLTIP PERSONALIZADO === */}
       <Tooltip
         id="map-tooltip"
         place="top"
-        opacity={1}
-        // Offset aumentado para no tapar el pin
         offset={20}
-        // className limpia estilos default feos
-        className="!opacity-100 !p-0 !bg-transparent !border-0 !shadow-none !z-[9999]"
-        noArrow={false} // Usaremos arrow CSS personalizada
+        opacity={1}
+        className="!z-50 !p-0 !bg-transparent !border-0 !shadow-none !opacity-100"
+        noArrow={false} // Flecha CSS controlada abajo
+        float={true}    // Flota con el cursor, útil en web
       />
 
-      {/* INYECCIÓN DE ESTILOS (Para forzar el diseño Premium) */}
+      {/* CSS INYECTADO PARA TOOLTIP */}
       <style>{`
         :root {
-          --map-fill-default: #cbd5e1; 
-          --map-fill-hover: #94a3b8;
-          --map-fill-pressed: #64748b;
-          --map-stroke: #ffffff;
+           --fill-default: #cbd5e1;
+           --fill-hover: #94a3b8;
+           --stroke-default: #ffffff;
         }
         .dark {
-          --map-fill-default: #1e293b;
-          --map-fill-hover: #334155;
-          --map-fill-pressed: #0f172a;
-          --map-stroke: #0f172a;
+           --fill-default: #1e293b; /* Slate 800 */
+           --fill-hover: #334155;
+           --stroke-default: #0f172a;
         }
 
-        /* ESTILO DEL TOOLTIP GLASS */
+        /* WRAPPER DEL TOOLTIP */
         #map-tooltip {
-          background: rgb(255, 255, 255) !important;
-          border: 1px solid rgba(203, 213, 225, 0.5) !important; /* Slate 300 */
-          box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.2) !important;
-          color: #0f172a !important;
-          border-radius: 16px !important;
-          padding: 0 !important;
-          font-family: inherit !important;
-          filter: none !important;
-          backdrop-filter: none !important;
-          -webkit-backdrop-filter: none !important;
-          will-change: transform;
+           z-index: 1000 !important;
+           /* Importante: Quitar padding/bg default de la librería */
+           background: transparent !important;
+           box-shadow: none !important;
         }
-
-        .dark #map-tooltip {
-          background: rgb(15, 23, 42) !important; /* Navy oscuro */
-          border: 1px solid rgba(255, 255, 255, 0.1) !important;
-          box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6) !important;
-          color: white !important;
-          filter: none !important;
-          backdrop-filter: none !important;
-          -webkit-backdrop-filter: none !important;
-        }
-
-        /* FLECHA DEL TOOLTIP */
+        
+        /* FLECHA PERSONALIZADA */
         .react-tooltip-arrow {
-          background: rgb(255, 255, 255) !important;
-          filter: none !important;
+            background: rgba(255, 255, 255, 0.98) !important;
         }
         .dark .react-tooltip-arrow {
-          background: rgb(15, 23, 42) !important;
-          filter: none !important;
+            background: rgba(15, 23, 42, 0.95) !important;
         }
 
-        /* CONTENIDO INTERNO HTML DEL TOOLTIP */
-        .tooltip-content {
-          padding: 12px 16px;
-          text-align: center;
-          min-width: 160px;
-          filter: none !important;
+        /* ESTILOS INTERNOS (Glass Card) */
+        .tooltip-container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(203, 213, 225, 0.5);
+            box-shadow: 0 15px 40px -5px rgba(0, 0, 0, 0.15);
+            color: #0f172a;
+            border-radius: 16px;
+            padding: 16px;
+            width: 220px;
+            font-family: inherit;
         }
+
+        .dark .tooltip-container {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+        }
+
         .tooltip-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          font-size: 10px;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: #64748b; /* Slate 500 */
-          margin-bottom: 6px;
-          padding-bottom: 6px;
-          border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .dark .tooltip-header {
-          color: #94a3b8; /* Slate 400 */
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+        .dark .tooltip-header { color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        
+        .tooltip-header .dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #22c55e;
         }
-        .status-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background-color: #22c55e; /* Green 500 */
-          box-shadow: 0 0 8px #22c55e;
-        }
+
         .tooltip-title {
-          font-weight: 700;
-          font-size: 14px;
-          line-height: 1.2;
-          margin-bottom: 2px;
+            font-weight: 800;
+            font-size: 15px;
+            line-height: 1.1;
+            margin-bottom: 2px;
+            color: #0f172a;
         }
+        .dark .tooltip-title { color: white; }
+
         .tooltip-role {
-          font-size: 11px;
-          color: #3b82f6; /* Blue 500 */
-          font-weight: 600;
-          text-transform: uppercase;
+            font-size: 11px;
+            color: #3b82f6;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
         }
+        
+        .tooltip-divider {
+             height: 1px;
+             background: transparent;
+             margin: 6px 0;
+        }
+
+        .tooltip-row {
+            display: flex;
+            gap: 8px;
+            font-size: 10px;
+            color: #475569;
+            line-height: 1.4;
+            text-align: left;
+        }
+        .dark .tooltip-row { color: #cbd5e1; }
+        .tooltip-row .icon { opacity: 0.8; font-size: 11px; }
       `}</style>
+
     </div>
   );
 };

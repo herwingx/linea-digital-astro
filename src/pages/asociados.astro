@@ -10,9 +10,9 @@ import AnimatedCounter from "../components/AnimatedCounter.astro";
 const FEATURES = [
   {
     id: 1,
-    title: "Ingresos Recurrentes",
-    subtitle: "Comisiones & Bonos",
-    desc: "Esquema escalonado del 7% al 15% en activaciones y recargas. Pagos automáticos a tu saldo semanalmente.",
+    title: "Máxima Rentabilidad",
+    subtitle: "Margen Superior",
+    desc: "Olvida los centavos. Gana comisiones reales en Recargas y utilidades de hasta el 20% vendiendo Smartphones a crédito.",
     icon: "money",
     colSpan: "md:col-span-2", // Tarjeta Grande
     accent: "emerald", // Color tema
@@ -20,9 +20,9 @@ const FEATURES = [
   },
   {
     id: 2,
-    title: "Stock Inteligente",
-    subtitle: "Consignación 100%",
-    desc: "Recibe SIMs y equipos sin inversión inicial. Paga solo lo que vendes (Sujeto a buró).",
+    title: "Inventario $0 Costo",
+    subtitle: "Sin Inversión mínima",
+    desc: "Te llenamos la vitrina sin que pagues un peso por adelantado. Nosotros ponemos los equipos y los chips; tú pones el mostrador. (Sujeto a buró).",
     icon: "box",
     colSpan: "md:col-span-1", // Tarjeta Cuadrada
     accent: "blue",
@@ -30,9 +30,9 @@ const FEATURES = [
   },
   {
     id: 3,
-    title: "Control Total",
-    subtitle: "App & Web 24/7",
-    desc: "Plataforma intuitiva para gestionar tus ventas, empleados y solicitar inventario.",
+    title: "Oficina en tu Celular",
+    subtitle: "App de Gestión",
+    desc: "Realiza recargas en 5 segundos, tramita créditos y revisa tus ganancias en tiempo real desde nuestra plataforma Web o App.",
     icon: "device",
     colSpan: "md:col-span-1", // Tarjeta Cuadrada
     accent: "violet",
@@ -40,9 +40,9 @@ const FEATURES = [
   },
   {
     id: 4,
-    title: "Kit de Bienvenida",
-    subtitle: "Branding Oficial",
-    desc: "Transformamos tu fachada con material P.O.P, lonas y exhibidores de Telcel para atraer tráfico.",
+    title: "Imagen Telcel",
+    subtitle: "PRespaldo de Marca",
+    desc: "Viste tu negocio de azul. Al ser socio, te regalamos la publicidad exterior para atraer a todos los usuarios de la red #1.",
     icon: "star",
     colSpan: "md:col-span-2", // Tarjeta Grande
     accent: "amber",
@@ -53,30 +53,30 @@ const FEATURES = [
 // Nuevas imágenes HD que sí cargan y tienen estilo "Lifestyle"
 const INVENTORY = [
   { 
-    category: "Venta de Chips", 
-    title: "Chips Express", 
-    metric: "Gana Comisiones por Portabilidad", 
-    image: "https://images.unsplash.com/photo-1753036051291-cfc20d052c24?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    category: "TRÁFICO DIARIO", 
+    title: "Chips & Portabilidad", 
+    metric: "Gana comisiones y bonos en efectivo", // Mucho más atractivo que "Gana comisiones"
+    image: "https://images.unsplash.com/photo-1753036051291-cfc20d052c24?q=80&w=1470&auto=format&fit=crop",
     tagColor: "bg-emerald-500"
   },
   { 
-    category: "Venta de Smartphones", 
-    title: "Smartphones", 
-    metric: "Precio Mayoreo desde 3 piezas", 
-    image: "https://images.unsplash.com/photo-1689804847815-50398ac952b2?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    category: "ALTA RENTABILIDAD", 
+    title: "Celulares al Mayoreo", 
+    metric: "Precios especiales desde 3 piezas", // "Especiales" suena mejor que "mayoreo"
+    image: "https://images.unsplash.com/photo-1689804847815-50398ac952b2?q=80&w=1470&auto=format&fit=crop",
     tagColor: "bg-blue-600"
   },
   { 
-    category: "Recargas", 
-    title: "Venta a Mayoreo", 
-    metric: "Comisiones por recargas", 
-    image: "https://images.unsplash.com/photo-1760531932521-8eb5a064dbca?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    category: "VENTA RECURRENTE", 
+    title: "Tiempo Aire (TAE)", 
+    metric: "Flujo de caja diario para tu local", // Explica el beneficio: tener dinero líquido
+    image: "https://images.unsplash.com/photo-1760531932521-8eb5a064dbca?q=80&w=687&auto=format&fit=crop",
     tagColor: "bg-purple-600"
   },
   {
-    category: "Accesorios",
-    title: "Gadgets & Audio",
-    metric: "Con tu propio margen de ganancia",
+    category: "MARGEN LIBRE",
+    title: "Accesorios & Gadgets",
+    metric: "Tú defines el precio de venta final", // Empodera al dueño a ganar lo que quiera
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop",
     tagColor: "bg-amber-500"
   }
@@ -94,36 +94,36 @@ const INVENTORY = [
   </div>
 
 <!-- 1. HERO SECTION: NEGOCIO Y OPORTUNIDAD -->
-    <section class="relative pt-12 pb-24 px-6 text-center overflow-hidden">
+    <section class="relative pt-12 md:pb-24 px-6 text-center overflow-hidden">
       <!-- Contenido -->
       <div class="relative z-10 max-w-4xl mx-auto">
         
         <!-- Badge Animado -->
    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 dark:bg-blue-900/20 dark:border-blue-500/20 mb-8 backdrop-blur-sm">
             <span class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
-            <span class="text-xs font-bold uppercase tracking-widest text-blue-700 dark:text-blue-300">Inscripciones Abiertas</span>
+            <span class="text-xs font-bold uppercase tracking-widest text-blue-700 dark:text-blue-300">OPORTUNIDAD DE NEGOCIO</span>
           </div>
 
         <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter dark:text-white leading-[1.1] mb-8 drop-shadow-xl">
-            Convierte tu local en <br class="hidden md:block" /> una 
-            <span class="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-700 dark:from-blue-400 dark:to-blue-200">máquina de ingresos.</span>
+           Convierte tu negocio en un  <br class="hidden md:block" />
+            <span class="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-700 dark:from-blue-400 dark:to-blue-200">Punto Telcel Oficial.</span>
         </h1>
         
         <p class="text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-10 max-w-2xl mx-auto text-balance">
-            Únete a la red de distribución <strong>#1 del Sureste</strong>. Vende tiempo aire y equipos Telcel sin trámites complejos. Tu éxito es nuestro negocio.
+            Dale a tu local el respaldo de la Red <strong>#1 del México.</strong> Accede a precios de mayoreo en equipos y sistema de recargas sin costo de afiliación.
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
             <!-- CTA Principal con Glow Efectivo -->
             <a href="https://wa.me/529616189200?text=Quiero%20ser%20distribuidor" target="_blank" class="group relative inline-flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-blue-600 px-10 text-sm font-bold uppercase tracking-widest text-white shadow-lg shadow-blue-600/40 transition-all hover:bg-blue-500 hover:scale-105 active:scale-95">
                 <span class="relative z-10 flex items-center gap-2">
-                    Aplicar Ahora <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    Quiero ser Asociado <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </span>
                 <div class="absolute inset-0 -translate-x-full group-hover:animate-shine bg-gradient-to-r from-transparent via-white/25 to-transparent z-0"></div>
             </a>
             
             <a href="#beneficios" class="h-14 inline-flex items-center justify-center rounded-full px-8 text-sm font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 transition-colors dark:hover:text-white hover:text-slate-900 hover:border-slate-900/10 hover:bg-slate-900/5 dark:hover:bg-white/5 border border-transparent dark:hover:border-white/10 ">
-                Ver modelo de negocio
+                Cómo funciona
             </a>
         </div>
       </div>
@@ -131,7 +131,7 @@ const INVENTORY = [
 
     <!-- 2. STATS DECK (Flotante y Premium) -->
     <!-- Margen negativo para solapar con el Hero, creando profundidad -->
-    <div class="container mx-auto pt-16 pb-4 relative z-20 -mt-12 mb-32">
+    <div class="container mx-auto pt-16 pb-4 relative z-20 -mt-12 md:mb-32 mb-16">
         
         <div class="bg-white dark:bg-[#101623] backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden max-w-5xl mx-auto relative group">
             
@@ -195,7 +195,7 @@ const INVENTORY = [
         </div>
     </div>
 <!-- 3. BENTO GRID: MODELO DE NEGOCIO -->
-  <section id="beneficios" class="py-24 px-6 container mx-auto max-w-7xl">
+  <section id="beneficios" class="md:py-24 pb-16 px-6 container mx-auto max-w-7xl">
       
       <!-- Header -->
       <div class="mb-16 max-w-2xl">
@@ -257,7 +257,7 @@ const INVENTORY = [
   </section>
 
 <!-- 4. CATÁLOGO VISUAL (Slider Premium) -->
-  <section class="py-24 bg-slate-50 dark:bg-[#101623] relative overflow-hidden transition-colors duration-500">
+  <section class="md:py-24 py-8  relative overflow-hidden transition-colors duration-500">
       
       <!-- Luz Ambiental de Fondo -->
       <div class="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 dark:bg-blue-900/20 rounded-full blur-[120px] pointer-events-none"></div>
@@ -346,7 +346,7 @@ const INVENTORY = [
   </section>
 
 <!-- 5. FINAL CTA: CORE DEL NEGOCIO -->
-    <section class="py-32 px-4 container mx-auto relative">
+    <section class="md:py-32 py-8 px-4 container mx-auto relative">
         
         <!-- Glow Ambiental de Fondo -->
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[500px] bg-blue-500/20 dark:bg-blue-900/20 rounded-full blur-[150px] pointer-events-none"></div>
@@ -366,16 +366,16 @@ const INVENTORY = [
                  <div class="text-center md:text-left max-w-2xl">
                      <span class="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        Activación Inmediata
+                        INICIA HOY MISMO
                      </span>
                      
                      <h2 class="text-4xl md:text-6xl font-black text-white tracking-tighter leading-[1.05] mb-6">
-                         ¿Listo para ver <br/>
-                         <span class="text-transparent bg-clip-text dark:bg-gradient-to-b dark:from-blue-400 dark:to-blue-200 bg-white">resultados hoy?</span>
+                          Tu mostrador podría estar generando <br/>
+                         <span class="text-transparent bg-clip-text dark:bg-gradient-to-b dark:from-blue-400 dark:to-blue-200 bg-white">más dinero.</span>
                      </h2>
                      
                      <p class="text-lg text-blue-100 dark:text-slate-400 font-medium leading-relaxed">
-                         Sin burocracia, sin mínimos imposibles. Damos de alta tu punto de venta en menos de 2 horas para que empieces a facturar.
+                          Aliarte con Línea Digital significa tener inventario, publicidad y soporte técnico siempre disponibles. Convierte tu tienda en el referente tecnológico de tu zona.
                      </p>
                  </div>
 
@@ -393,7 +393,7 @@ const INVENTORY = [
                     <!-- Secondary Button -->
                     <a href="tel:9616189200" class="flex items-center justify-center gap-3 px-8 py-4 bg-white/10 hover:bg-white hover:text-blue-900 text-white border border-white/20 hover:border-white rounded-2xl transition-all duration-300 font-bold tracking-wide group/sec">
                         <svg class="w-5 h-5 text-blue-200 group-hover/sec:text-blue-900 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                        Llamar a Oficina
+                        Oficina Central
                     </a>
                  </div>
              </div>

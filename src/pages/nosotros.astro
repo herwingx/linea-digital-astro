@@ -18,34 +18,38 @@ const BRANDS = [
 
 const VALUES = [
              { 
-                title: "Fe & Propósito", 
-                desc: "Nuestra fuerza motriz. Trabajamos con la convicción de que servir con excelencia es un compromiso superior.", 
+                title: "Fe en Dios", 
+                desc: "Promover nuestra capacidad para alcanzar cada uno de los retos que se nos presentan a través de la confianza en nuestro Creador, quien es el que sustenta nuestra filosofía institucional.", 
                 icon: "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z",
                 color: "text-amber-400",
+                barColor: "bg-amber-400",
                 bg: "group-hover:bg-amber-500/10",
                 border: "group-hover:border-amber-500/50"
              },
              { 
-                title: "Unidad Total", 
-                desc: "No somos empleados, somos aliados. Fomentamos una cultura donde el éxito de uno es el éxito de todos.", 
+                title: "Unidad", 
+                desc: "Fomentar el trabajo en equipo, el compañerismo y la buena comunicación dentro de nuestra organización", 
                 icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z",
                 color: "text-blue-400",
+                barColor: "bg-blue-400",
                 bg: "group-hover:bg-blue-500/10",
                 border: "group-hover:border-blue-500/50"
              },
              { 
-                title: "Respeto Radical", 
-                desc: "Dignidad humana ante todo. Tratamos a cada cliente, socio y colaborador con la misma deferencia y atención.", 
+                title: "Respeto", 
+                desc: "Tratar a toda persona, sin importar nivel social, ideología o grupo étnico, de manera digna con tolerancia y cortesía.", 
                 icon: "M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
                 color: "text-cyan-400",
+                barColor: "bg-cyan-400",
                 bg: "group-hover:bg-cyan-500/10",
                 border: "group-hover:border-cyan-500/50"
              },
              { 
-                title: "Integridad Absoluta", 
-                desc: "Una sola pieza. Cumplimos lo que prometemos con transparencia total, construyendo relaciones a largo plazo.", 
+                title: "Integridad y ética", 
+                desc: "Conducirse intachablemente demostrando ser digno de confianza y mostrarse de una sola pieza. Actuando siempre con principios sólidos los cuales motivarán el efecto de nuestra productividad.", 
                 icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
                 color: "text-emerald-400",
+                barColor: "bg-emerald-400",
                 bg: "group-hover:bg-emerald-500/10",
                 border: "group-hover:border-emerald-500/50"
              }
@@ -57,7 +61,7 @@ const VALUES = [
   description="Más de 25 años conectando a México con valores sólidos, tecnología de punta y el respaldo de la red Telcel."
 >
   <!-- === HERO SECTION: MAPA & COBERTURA === -->
-  <section class="relative pt-12 pb-24 overflow-hidden h-screen">
+  <section class="relative pt-12 md:pt-20 md:pb-24 lg:h-[calc(100vh-5rem)]  b-24 overflow-hidden">
     <div class="container relative z-10 mx-auto px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         
@@ -119,7 +123,7 @@ const VALUES = [
       </div>
     </div>
     <!-- === STATS DASHBOARD (High Authority) === -->
-  <section class="relative pt-52 -mt-12 md:-mt-20 z-20 pb-20">
+  <section class="relative pt-32 md:pt-32 -mt-12 md:-mt-20 z-20 md:pb-20 pb-8">
     <div class="container mx-auto max-w-6xl">
       
       <!-- Contenedor Glass -->
@@ -199,7 +203,7 @@ const VALUES = [
   </section>
 
   <!-- === BRAND MARQUEE (Efecto Infinito - Retail Power) === -->
-  <section class="py-20 overflow-hidden border-y border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#0f1520] relative">
+  <section class="md:py-20 py-8 overflow-hidden border-y border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#0f1520] relative">
       <div class="container mx-auto px-6 text-center mb-12">
  <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 dark:bg-blue-900/20 dark:border-blue-500/20 mb-8 backdrop-blur-sm">
             <span class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
@@ -229,7 +233,7 @@ const VALUES = [
   </section>
 
 <!-- === FILOSOFÍA & VALORES (Deep Core Design) === -->
-  <section class="relative py-32 overflow-hidden">
+  <section class="relative pt-16 overflow-hidden">
     
     <!-- Ambient Background -->
     <div class="absolute inset-0 pointer-events-none">
@@ -251,7 +255,7 @@ const VALUES = [
         </h2>
         
         <p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed text-balance font-medium">
-           Más allá de conectar dispositivos, conectamos historias. Democratizamos el acceso a la red 5G y creemos en la tecnología como motor de <span class="font-bold text-slate-900 dark:text-white">prosperidad compartida</span>.
+           Reinventamos la forma de dar productos financieros, logramos que sea fácil y rápido, creemos en la <span class="font-bold text-slate-900 dark:text-white">inclusión financiera</span> y que la tecnología llegue a todos. 
         </p>
       </div>
 
@@ -329,10 +333,10 @@ const VALUES = [
                     <p class="text-sm text-slate-400 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-white transition-colors font-medium">
                         {val.desc}
                     </p>
-
-                    <!-- Borde Inferior (Barra de progreso visual) -->
-                    <div class={`absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-700 ${val.color.replace('text', 'bg')}`}></div>
                 </div>
+
+                <!-- Borde Inferior (Barra de progreso visual) - MOVIDO FUERA DEL PADDING -->
+                <div class={`absolute bottom-0 left-0 h-[4px] w-0 group-hover:w-full transition-all duration-700 ease-out ${val.barColor}`}></div>
              </article>
            ))}
         </div>

@@ -7,7 +7,7 @@
  */
 
 import { GoogleGenerativeAI, type ChatSession } from "@google/generative-ai";
-import { getSystemPrompt, detectIntent, findRelevantFAQs, type FAQ } from "./chatbot-knowledge.js";
+import { getSystemPrompt, detectIntent } from "./chatbot-knowledge.js";
 
 // Tipos
 export interface ChatMessage {
@@ -68,9 +68,6 @@ export async function getChatbotResponse(
     // Detectar intención
     const intents = detectIntent(userMessage);
 
-    // Buscar FAQs relevantes
-    const relevantFAQs = findRelevantFAQs(userMessage);
-
     // Inicializar cliente
     const client = getGeminiClient();
 
@@ -119,18 +116,13 @@ export async function getChatbotResponse(
       console.log('🤖 Chatbot Debug:', {
         userMessage,
         intents,
-        relevantFAQs: relevantFAQs.length,
         responseLength: responseText.length
       });
     }
 
     return {
       response: responseText,
-      intent: intents,
-      relatedFAQs: relevantFAQs.map((faq: FAQ) => ({
-        pregunta: faq.pregunta,
-        respuesta: faq.respuesta
-      }))
+      intent: intents
     };
 
   } catch (error: any) {
@@ -197,41 +189,56 @@ export function validateGeminiConfig(): { valid: boolean; message: string } {
  */
 export function getFallbackResponse(userMessage: string): ChatResponse {
   const intents = detectIntent(userMessage);
-  const faqs = findRelevantFAQs(userMessage, 1);
 
-  // Si encontramos una FAQ relevante, usarla
-  if (faqs.length > 0) {
+  // Saludo
+  const lowerMessage = userMessage.toLowerCase();
+  if (lowerMessage.match(/^(hola|buenos días|buenas tardes|buenas noches|hey|qué tal)/)) {
     return {
-      response: `${faqs[0].respuesta}\n\n¿Necesitas ayuda con algo más? Llámanos al 961 618 92 00 (Tuxtla) o 962 625 58 10 (Tapachula). 📞`,
-      intent: intents
+      response: "¡Hola! 👋 Soy **Lía**, tu asesora digital de Línea Digital.\n\nEstoy aquí para ayudarte con:\n📱 Planes móviles\n🏠 Internet en casa\n📍 Ubicaciones\n💼 Soluciones empresariales\n\n¿Qué te interesa?",
+      intent: ['saludo']
     };
   }
 
   // Respuestas basadas en intención
-  if (intents.includes('ubicacion')) {
+  if (intents.includes('contacto') || intents.includes('ubicacion')) {
     return {
-      response: "🏢 **Nuestras Sucursales:**\n\n**Tuxtla:** 1a Av. Norte Poniente #834, Centro\n📞 961 618 92 00\n\n**Tapachula:** 4a. Av. Nte. 70, Los Naranjos\n📞 962 625 58 10\n\n⏰ Lun-Vie: 9:00 AM - 6:00 PM",
+      response: "🏢 **Nuestras Sucursales:**\n\n📍 **Tuxtla Gutiérrez**\n1a Av. Norte Poniente #834, Centro\n📞 961 618 92 00\n💬 WhatsApp: https://wa.me/529616189200\n\n📍 **Tapachula**\n4a. Av. Nte. 70, Los Naranjos\n📞 962 625 58 10\n💬 WhatsApp: https://wa.me/529626255810\n\n⏰ Lun-Vie: 9:00 AM - 6:00 PM\n\n¿Te gustaría que te contacte un asesor? 😊",
       intent: intents
     };
   }
 
   if (intents.includes('horario')) {
     return {
-      response: "⏰ Nuestro horario es:\n**Lunes a Viernes: 9:00 AM - 6:00 PM**\n\nAmbas sucursales (Tuxtla y Tapachula)\n\n¿Te gustaría agendar una visita? Llama al 961 618 92 00 📞",
+      response: "⏰ **Nuestro horario de atención:**\n\n**Lunes a Viernes**\n9:00 AM - 6:00 PM\n\n📍 Ambas sucursales (Tuxtla y Tapachula)\n\n¿Te gustaría agendar una visita? Llámanos:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10",
       intent: intents
     };
   }
 
-  if (intents.includes('planes')) {
+  if (intents.includes('comprar') || intents.includes('planes')) {
     return {
-      response: "📱 Tenemos varios planes:\n\n• **Telcel Libre** (prepago) desde $100\n• **Telcel Ultra** (pospago) desde $299/mes\n• **Internet en Casa** desde $399/mes\n\nVisita lineadigital.com/personas para ver todos los detalles o llama al 961 618 92 00 para asesoría personalizada. 😊",
+      response: "📱 **Nuestros Planes:**\n\n💙 **Telcel Libre** (Prepago)\nDesde $100 - Sin contrato\n\n⭐ **Telcel Ultra** (Pospago)\nDesde $299/mes - Datos 5G\n\n🏠 **Internet en Casa**\nDesde $399/mes - Instalación gratis\n\n¿Cuál te interesa más? Para una asesoría personalizada:\n📞 961 618 92 00 (Tuxtla)\n📞 962 625 58 10 (Tapachula)\n\nO visita: lineadigital.com/personas 😊",
+      intent: intents
+    };
+  }
+
+  if (intents.includes('negocio')) {
+    return {
+      response: "💼 **Soluciones Empresariales**\n\nTenemos planes especiales para negocios:\n✅ Descuentos por volumen\n✅ Gestión centralizada\n✅ Soporte dedicado\n✅ Alta express el mismo día\n\nPara una cotización personalizada, contacta a nuestro equipo corporativo:\n📞 961 618 92 00\n\nO visita: lineadigital.com/empresas",
+      intent: intents
+    };
+  }
+
+  if (intents.includes('soporte')) {
+    return {
+      response: "🔧 **Soporte Técnico**\n\nEstoy aquí para ayudarte. ¿Qué problema tienes?\n\nPara asistencia inmediata:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10\n\n⏰ Lun-Vie: 9:00 AM - 6:00 PM\n\nTambién puedes visitarnos en nuestras sucursales con tu equipo. 😊",
       intent: intents
     };
   }
 
   // Respuesta genérica
   return {
-    response: "Gracias por contactarnos. Para una mejor atención, por favor llama a:\n\n📞 **Tuxtla:** 961 618 92 00\n📞 **Tapachula:** 962 625 58 10\n\nO visita lineadigital.com/contacto 😊",
+    response: "Gracias por contactarme. 😊\n\nPara ayudarte mejor, puedo informarte sobre:\n📱 Planes móviles\n🏠 Internet en casa\n📍 Ubicaciones y horarios\n💼 Soluciones empresariales\n\n¿Qué te interesa?\n\nO si prefieres hablar con un asesor:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10",
     intent: intents
   };
 }
+

@@ -29,10 +29,10 @@ export class ChatbotClient {
 
   // Opciones rápidas iniciales
   private readonly QUICK_OPTIONS = [
-    "📱 Planes 5G",
-    "🏢 Empresarial",
-    "📍 Sucursales",
-    "📞 Soporte"
+    "📱 Ver planes móviles",
+    "🏠 Internet en casa",
+    "📍 ¿Dónde están?",
+    "💼 Planes empresariales"
   ];
 
   constructor() {
@@ -218,11 +218,20 @@ export class ChatbotClient {
       if (response.ok && data.response) {
         this.addMessage('bot', data.response);
       } else {
-        this.addMessage('bot', 'Lo siento, tuve un problema técnico. ¿Podrías intentar de nuevo?');
+        // Usar el mensaje de fallback si está disponible
+        const errorMessage = data.fallback || 
+          'Disculpa, tuve un problema técnico. 😔\n\nPor favor intenta de nuevo o llámanos:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10';
+        this.addMessage('bot', errorMessage);
+        
+        // Log para debugging
+        if (data.error) {
+          console.error('❌ Error del servidor:', data.error);
+        }
       }
     } catch (error) {
       this.hideTyping();
-      this.addMessage('bot', 'Error de conexión. Verifica tu internet.');
+      console.error('❌ Error de conexión:', error);
+      this.addMessage('bot', 'Parece que hay un problema de conexión. 😔\n\nPor favor verifica tu internet o llámanos:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10');
     }
   }
 
