@@ -1,8 +1,8 @@
 ---
 // src/pages/empresas.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PlansOrchestrator from "../components/PlansOrchestrator.astro";
-import BenefitsSection from "../components/BenefitsSection.astro";
+import PlansOrchestrator from "../components/features/plans/PlansOrchestrator.astro";
+import BenefitsSection from "../components/sections/BenefitsSection.astro";
 import "../styles/user.css";
 
 import {
@@ -45,7 +45,7 @@ const [rawLibre, rawUltra, rawMovilInt, rawCasaInt] = await Promise.all([
   getInternetEnTuEmpresa().catch(() => []),
 ]);
 
-console.log("DEBUG: rawCasaInt", JSON.stringify(rawCasaInt, null, 2));
+/* console.log("DEBUG: rawCasaInt", JSON.stringify(rawCasaInt, null, 2)); */
 
 const libreEmpresas = safeMap(rawLibre, "movil");
 const ultraEmpresas = safeMap(rawUltra, "movil");

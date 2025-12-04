@@ -1,6 +1,6 @@
 ---
 // src/components/Chatbot.astro
-import "../styles/user.css";
+import "../../../styles/user.css";
 
 // Nota: No se requiere lógica de servidor aquí, todo es cliente.
 ---
@@ -297,7 +297,7 @@ import "../styles/user.css";
 </div>
 
 <script>
-  import { ChatbotClient } from "../lib/chatbot-client";
+import { ChatbotClient } from "../../../lib/chatbot-client";
 
   // Init Logic
   if (typeof window !== "undefined") {

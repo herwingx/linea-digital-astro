@@ -1,8 +1,8 @@
 ---
 // src/pages/personas.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PlansOrchestrator from "../components/PlansOrchestrator.astro";
-import BenefitsSection from "../components/BenefitsSection.astro";
+import PlansOrchestrator from "../components/features/plans/PlansOrchestrator.astro";
+import BenefitsSection from "../components/sections/BenefitsSection.astro";
 import "../styles/user.css";
 import {
   getPlansLibre,
@@ -44,7 +44,7 @@ const [rawLibre, rawUltra, rawMovilInt, rawCasaInt] = await Promise.all([
   getInternetEnTuCasaLibre().catch(() => []),
 ]);
 
-console.log("DEBUG: rawCasaInt", JSON.stringify(rawCasaInt, null, 2));
+/* console.log("DEBUG: rawCasaInt", JSON.stringify(rawCasaInt, null, 2)); */
 
 const librePlans = safeMap(rawLibre, "movil");
 const ultraPlans = safeMap(rawUltra, "movil");
