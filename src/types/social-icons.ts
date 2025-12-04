@@ -1,8 +1,8 @@
 // src/types/social-icons.ts
-// Tipos para los iconos de redes sociales disponibles
 
 /**
- * Nombres de iconos de redes sociales y apps soportados
+ * Define los nombres de los iconos de redes sociales y aplicaciones que están soportados por el componente `SocialIcon`.
+ * Este tipo se utiliza para asegurar que solo se puedan usar los nombres de iconos predefinidos.
  */
 export type SocialIconName =
   | "whatsapp"
@@ -25,6 +25,6 @@ export type SocialIconName =
   | "email";
 
 /**
- * Tamaños disponibles para los iconos
+ * Define los tamaños predefinidos disponibles para el componente `SocialIcon`.
  */
 export type IconSize = "sm" | "md" | "lg";

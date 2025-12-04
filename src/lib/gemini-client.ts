@@ -1,40 +1,63 @@
 // src/lib/gemini-client.ts
 /**
- * Cliente de Gemini AI para el chatbot
- * 
- * Maneja la comunicación con la API de Google Gemini
- * y procesa las respuestas del modelo de IA.
+ * Este módulo gestiona la comunicación con la API de Google Gemini,
+ * incluyendo la construcción de prompts, el manejo del historial
+ * y el procesamiento de las respuestas del modelo de IA.
  */
 
 import { GoogleGenerativeAI, type ChatSession } from "@google/generative-ai";
 import { getSystemPrompt, detectIntent } from "./chatbot-knowledge.js";
 
-// Tipos
+/**
+ * Representa un mensaje en el historial de la conversación, compatible con la API de Gemini.
+ */
 export interface ChatMessage {
+  /** El rol del autor del mensaje. */
   role: 'user' | 'bot';
+  /** El contenido de texto del mensaje. */
   content: string;
+  /** Marca de tiempo opcional del mensaje. */
   timestamp?: string;
 }
 
+/**
+ * Define la estructura de la respuesta que devuelve el servicio de chat.
+ */
 export interface ChatResponse {
+  /** El texto de la respuesta generada por el bot. */
   response: string;
+  /** Un array de intenciones detectadas en el mensaje del usuario. */
   intent?: string[];
+  /** Una lista opcional de FAQs relacionadas con la consulta. */
   relatedFAQs?: Array<{ pregunta: string; respuesta: string }>;
+  /** Un código de error opcional si algo salió mal. */
   error?: string;
 }
 
-// Configuración
+/**
+ * Configuración para el modelo generativo de Gemini.
+ */
 const GEMINI_CONFIG = {
-  model: "gemini-2.5-flash", // Modelo estable y compatible
-  temperature: 0.7, // Balance entre creatividad y consistencia
-  maxOutputTokens: 1500, // Respuestas más completas y detalladas
+  /** El modelo específico de Gemini a utilizar. */
+  model: "gemini-2.5-flash",
+  /** Controla la aleatoriedad de la respuesta. Valores más altos son más creativos. */
+  temperature: 0.7,
+  /** El número máximo de tokens a generar en la respuesta. */
+  maxOutputTokens: 1500,
+  /** Parámetro de muestreo para controlar la diversidad. */
   topP: 0.9,
+  /** Parámetro de muestreo para controlar la aleatoriedad. */
   topK: 40,
 };
 
-// Inicializar cliente
 let genAI: GoogleGenerativeAI | null = null;
 
+/**
+ * Obtiene una instancia singleton del cliente de GoogleGenerativeAI.
+ * La inicializa con la API key de las variables de entorno la primera vez que se llama.
+ * @throws {Error} Si la variable de entorno GEMINI_API_KEY no está configurada.
+ * @returns La instancia del cliente de GoogleGenerativeAI.
+ */
 function getGeminiClient(): GoogleGenerativeAI {
   if (!genAI) {
     const apiKey = import.meta.env.GEMINI_API_KEY;
@@ -50,14 +73,17 @@ function getGeminiClient(): GoogleGenerativeAI {
 }
 
 /**
- * Obtiene una respuesta del chatbot usando Gemini AI
+ * Envía un mensaje del usuario y el historial de la conversación a la API de Gemini
+ * para obtener una respuesta inteligente. Incluye manejo de errores y validación.
+ * @param userMessage El mensaje actual enviado por el usuario.
+ * @param conversationHistory Un array de mensajes anteriores en la conversación.
+ * @returns Una promesa que resuelve a un objeto `ChatResponse` con la respuesta del bot.
  */
 export async function getChatbotResponse(
   userMessage: string,
   conversationHistory: ChatMessage[] = []
 ): Promise<ChatResponse> {
   try {
-    // Validación
     if (!userMessage || userMessage.trim().length === 0) {
       return {
         response: "Por favor escribe un mensaje para poder ayudarte. 😊",
@@ -65,13 +91,10 @@ export async function getChatbotResponse(
       };
     }
 
-    // Detectar intención
     const intents = detectIntent(userMessage);
 
-    // Inicializar cliente
     const client = getGeminiClient();
 
-    // Configurar modelo con instrucciones del sistema
     const systemInstruction = await getSystemPrompt();
 
     const model = client.getGenerativeModel({
@@ -85,15 +108,11 @@ export async function getChatbotResponse(
       },
     });
 
-    // Construir historial de conversación válido para Gemini
-    // El historial DEBE empezar con un mensaje del usuario
     let history: any[] = [];
 
-    // Encontrar el índice del primer mensaje de usuario
     const firstUserIndex = conversationHistory.findIndex(msg => msg.role === 'user');
 
     if (firstUserIndex !== -1) {
-      // Tomar desde el primer mensaje de usuario en adelante
       const validHistory = conversationHistory.slice(firstUserIndex);
 
       history = validHistory.map(msg => ({
@@ -102,16 +121,13 @@ export async function getChatbotResponse(
       }));
     }
 
-    // Iniciar chat con historial
     const chat: ChatSession = model.startChat({
       history: history as any,
     });
 
-    // Enviar mensaje y obtener respuesta
     const result = await chat.sendMessage(userMessage);
     const responseText = result.response.text();
 
-    // Log para debugging (solo en desarrollo)
     if (import.meta.env.DEV) {
       console.log('🤖 Chatbot Debug:', {
         userMessage,
@@ -128,7 +144,6 @@ export async function getChatbotResponse(
   } catch (error: any) {
     console.error("❌ Error en Gemini API:", error);
 
-    // Manejo de errores específicos
     if (error?.message?.includes('API key')) {
       return {
         response: "Lo siento, hay un problema de configuración. Por favor contacta a nuestro equipo al 961 618 92 00. 📞",
@@ -150,7 +165,6 @@ export async function getChatbotResponse(
       };
     }
 
-    // Error genérico
     return {
       response: "Lo siento, estoy teniendo problemas técnicos en este momento. 😔\n\nPor favor llama al:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10\n\nO visita nuestras sucursales para atención inmediata.",
       error: "unknown_error"
@@ -159,7 +173,8 @@ export async function getChatbotResponse(
 }
 
 /**
- * Valida que la API key esté configurada correctamente
+ * Valida que la API key de Gemini esté correctamente configurada en las variables de entorno.
+ * @returns Un objeto que indica si la configuración es válida y un mensaje descriptivo.
  */
 export function validateGeminiConfig(): { valid: boolean; message: string } {
   const apiKey = import.meta.env.GEMINI_API_KEY;
@@ -185,12 +200,14 @@ export function validateGeminiConfig(): { valid: boolean; message: string } {
 }
 
 /**
- * Genera una respuesta de fallback cuando la IA no está disponible
+ * Genera una respuesta de fallback predefinida cuando la IA no está disponible o falla.
+ * Utiliza la detección de intenciones simple para dar una respuesta contextual básica.
+ * @param userMessage El mensaje original del usuario.
+ * @returns Un objeto `ChatResponse` con una respuesta predefinida.
  */
 export function getFallbackResponse(userMessage: string): ChatResponse {
   const intents = detectIntent(userMessage);
 
-  // Saludo
   const lowerMessage = userMessage.toLowerCase();
   if (lowerMessage.match(/^(hola|buenos días|buenas tardes|buenas noches|hey|qué tal)/)) {
     return {
@@ -199,7 +216,6 @@ export function getFallbackResponse(userMessage: string): ChatResponse {
     };
   }
 
-  // Respuestas basadas en intención
   if (intents.includes('contacto') || intents.includes('ubicacion')) {
     return {
       response: "🏢 **Nuestras Sucursales:**\n\n📍 **Tuxtla Gutiérrez**\n1a Av. Norte Poniente #834, Centro\n📞 961 618 92 00\n💬 WhatsApp: https://wa.me/529616189200\n\n📍 **Tapachula**\n4a. Av. Nte. 70, Los Naranjos\n📞 962 625 58 10\n💬 WhatsApp: https://wa.me/529626255810\n\n⏰ Lun-Vie: 9:00 AM - 6:00 PM\n\n¿Te gustaría que te contacte un asesor? 😊",
@@ -235,7 +251,6 @@ export function getFallbackResponse(userMessage: string): ChatResponse {
     };
   }
 
-  // Respuesta genérica
   return {
     response: "Gracias por contactarme. 😊\n\nPara ayudarte mejor, puedo informarte sobre:\n📱 Planes móviles\n🏠 Internet en casa\n📍 Ubicaciones y horarios\n💼 Soluciones empresariales\n\n¿Qué te interesa?\n\nO si prefieres hablar con un asesor:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10",
     intent: intents

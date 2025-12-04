@@ -1,33 +1,58 @@
 import { createClient, type Entry, type Asset, type EntrySkeletonType } from 'contentful';
 
 // Define the shape of our promotion fields
+/**
+ * Define la estructura de los campos para una promoción en Contentful.
+ */
 interface PromoFields extends EntrySkeletonType {
+  /** El título principal de la promoción. */
   titulo: string;
+  /** Una descripción detallada de la promoción. */
   descripcion: string;
+  /** Una etiqueta opcional para categorizar la promoción (ej. "Exclusivo Web"). */
   etiqueta?: string;
+  /** La fecha en que finaliza la promoción (formato ISO). */
   fechaFin?: string;
+  /** Un enlace opcional para más detalles o para aplicar a la promoción. */
   enlace?: string;
+  /** Un booleano que indica si la promoción está activa o no. */
   activa: boolean;
+  /** La imagen principal asociada a la promoción, como un activo de Contentful. */
   imagen: Asset;
 }
 
 // Estos nombres (keys) deben coincidir EXACTAMENTE con los "Field ID" de Contentful
+/**
+ * Define la estructura de los campos para un plan de Telcel en Contentful.
+ * Se utiliza para planes de personas y empresas, tanto móviles como de internet.
+ */
 interface PlanFields extends EntrySkeletonType {
-  titulo: string;           // Short text
-  datosIncluidos: string;    // Short text (ej: "24 GB")  
-  minutosYSmsIncluidos: string;    // Short text (ej: "1000")
-  cashbackTelcel: string;    // Short text (ej: "1000")
-  precio: number;           // Number (Decimal)
-  redesSociales?: string[]; // List (Text) - Puede ser undefined si no marcan nada
-  recomendado?: boolean;   // Boolean
-  enlace?: string;           // Short text (URL)
-  politicaDeUsoJusto?: string;   // Long text
-  velocidadDeNavegacion?: string; // Short text
+  /** El nombre oficial del plan. */
+  titulo: string;
+  /** La cantidad de datos incluida, como texto (ej. "24 GB"). */
+  datosIncluidos: string;
+  /** El número de minutos y SMS incluidos, como texto (ej. "Ilimitados"). */
+  minutosYSmsIncluidos: string;
+  /** El monto de cashback ofrecido, si aplica, como texto. */
+  cashbackTelcel: string;
+  /** El costo mensual del plan en MXN. */
+  precio: number;
+  /** Una lista opcional de nombres de redes sociales incluidas. */
+  redesSociales?: string[];
+  /** Un booleano opcional para destacar el plan como "Recomendado". */
+  recomendado?: boolean;
+  /** Un enlace opcional a una página de destino para el plan. */
+  enlace?: string;
+  /** Texto opcional que describe la política de uso justo. */
+  politicaDeUsoJusto?: string;
+  /** La velocidad de navegación, principalmente para planes de internet en casa/empresa. */
+  velocidadDeNavegacion?: string;
 }
 
 
-// The entry type that Contentful returns
+/** Representa una entrada de Contentful para una Promoción. */
 export type PromoEntry = Entry<PromoFields, undefined, string>;
+/** Representa una entrada de Contentful para un Plan Telcel. */
 export type PlanEntry = Entry<PlanFields, undefined, string>;
 
 // Initialize the Contentful client
@@ -36,7 +61,11 @@ const client = createClient({
   accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN as string,
 });
 
-// This function fetches all promotions marked as "active" from Contentful
+/**
+ * Obtiene todas las promociones marcadas como "activas" desde Contentful.
+ * En caso de error en la petición, devuelve un array vacío y lo registra en consola.
+ * @returns Una promesa que resuelve a un array de entradas de promoción (`PromoEntry`).
+ */
 export async function getActivePromos(): Promise<PromoEntry[]> {
   try {
     const entries = await client.getEntries<PromoFields>({
@@ -51,6 +80,10 @@ export async function getActivePromos(): Promise<PromoEntry[]> {
 }
 
 // --- NUEVA FUNCIÓN PARA TRAER PLANES ---
+/**
+ * Obtiene los planes Telcel "Libre" para personas desde Contentful, ordenados por precio.
+ * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
+ */
 export async function getPlansLibre(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
@@ -67,6 +100,10 @@ export async function getPlansLibre(): Promise<PlanEntry[]> {
   }
 }
 
+/**
+ * Obtiene los planes Telcel "Ultra" para personas desde Contentful, ordenados por precio.
+ * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
+ */
 export async function getPlansUltra(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
@@ -83,6 +120,10 @@ export async function getPlansUltra(): Promise<PlanEntry[]> {
   }
 }
 
+/**
+ * Obtiene los planes de "Internet Libre" para personas desde Contentful, ordenados por precio.
+ * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
+ */
 export async function getPlansInternet(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
@@ -99,6 +140,10 @@ export async function getPlansInternet(): Promise<PlanEntry[]> {
   }
 }
 
+/**
+ * Obtiene los planes de "Internet en tu Casa Libre" desde Contentful, ordenados por precio.
+ * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
+ */
 export async function getInternetEnTuCasaLibre(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
@@ -115,6 +160,10 @@ export async function getInternetEnTuCasaLibre(): Promise<PlanEntry[]> {
   }
 }
 
+/**
+ * Obtiene los planes Telcel "Empresa" desde Contentful, ordenados por precio.
+ * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
+ */
 export async function getPlansEmpresas(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
@@ -130,6 +179,10 @@ export async function getPlansEmpresas(): Promise<PlanEntry[]> {
   }
 }
 
+/**
+ * Obtiene los planes Telcel "Ultra Empresa" desde Contentful, ordenados por precio.
+ * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
+ */
 export async function getPlansEmpresasUltra(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
@@ -145,7 +198,10 @@ export async function getPlansEmpresasUltra(): Promise<PlanEntry[]> {
   }
 }
 
-
+/**
+ * Obtiene los planes de "Internet Empresa" desde Contentful, ordenados por precio.
+ * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
+ */
 export async function getPlansInternetEmpresa(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
@@ -162,6 +218,10 @@ export async function getPlansInternetEmpresa(): Promise<PlanEntry[]> {
   }
 }
 
+/**
+ * Obtiene los planes de "Internet en tu Empresa" desde Contentful, ordenados por precio.
+ * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
+ */
 export async function getInternetEnTuEmpresa(): Promise<PlanEntry[]> {
   try {
     const entries = await client.getEntries<PlanFields>({
@@ -182,6 +242,11 @@ export async function getInternetEnTuEmpresa(): Promise<PlanEntry[]> {
 // ============================================
 // FUNCIÓN PARA OBTENER TODOS LOS DATOS DEL CHATBOT KNOWLEDGE BASE
 // ============================================
+/**
+ * Obtiene de forma paralela todos los tipos de planes y promociones desde Contentful
+ * para construir una base de conocimiento completa para el chatbot.
+ * @returns Una promesa que resuelve a un objeto (`knowledgeBase`) con todos los datos organizados, o `null` si ocurre un error.
+ */
 export async function getAllChatbotKnowledge() {
   console.log('🤖 ===== INICIANDO OBTENCIÓN DE DATOS PARA CHATBOT =====');
 

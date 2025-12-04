@@ -2,21 +2,40 @@
 
 import { getAllChatbotKnowledge, type PromoEntry, type PlanEntry } from "../services/contentful.ts";
 
+/**
+ * Define la estructura de datos para una sucursal física.
+ */
 export interface Sucursal {
+  /** El nombre descriptivo de la sucursal (ej. "Corporativo Tuxtla"). */
   nombre: string;
+  /** La dirección completa de la sucursal. */
   direccion: string;
+  /** El número de teléfono de contacto principal. */
   telefono: string;
+  /** El horario de atención al público. */
   horario: string;
+  /** La ciudad donde se encuentra la sucursal. */
   ciudad: string;
+  /** El enlace directo de WhatsApp para contacto, si existe. */
   link_wa?: string;
 }
 
+/**
+ * Define la estructura para una pregunta frecuente (FAQ).
+ */
 export interface FAQ {
+  /** La pregunta tal como la haría un usuario. */
   pregunta: string;
+  /** La respuesta concisa y directa a la pregunta. */
   respuesta: string;
+  /** La categoría a la que pertenece la FAQ para una mejor clasificación. */
   categoria: 'ventas' | 'socios' | 'soporte' | 'cobertura';
 }
 
+/**
+ * Contiene toda la información estática del chatbot, como datos de la empresa,
+ * sucursales, preguntas frecuentes y palabras clave para la detección de intenciones.
+ */
 export const KNOWLEDGE_BASE = {
   empresa: {
     nombre: "Grupo Línea Digital",
@@ -45,12 +64,9 @@ export const KNOWLEDGE_BASE = {
   ] as Sucursal[],
 
   faqs: [
-    // Ventas B2C
     { pregunta: "¿Qué necesito para sacar un plan?", respuesta: "Solo tu INE vigente, comprobante de domicilio reciente y una tarjeta bancaria (crédito/débito).", categoria: "ventas" },
-    // Ventas B2B
     { pregunta: "¿Venden al mayoreo?", respuesta: "Sí. Manejamos precios especiales a partir de 3 piezas para distribuidores registrados.", categoria: "socios" },
     { pregunta: "¿Cómo me vuelvo distribuidor?", respuesta: "Es gratis y rápido. Te damos de alta el mismo día para que vendas tiempo aire y chips.", categoria: "socios" },
-    // Soporte
     { pregunta: "¿Tienen cobertura en mi zona?", respuesta: "Cubrimos el 95% de Chiapas con red 4.5G y las principales ciudades con 5G.", categoria: "cobertura" }
   ] as FAQ[],
 
@@ -61,13 +77,13 @@ export const KNOWLEDGE_BASE = {
     contacto: ["ubicación", "dónde están", "teléfono", "whatsapp"]
   }
 };
-
 /**
- * CONSTRUCTOR DEL SISTEMA DE IA
- * Integra datos vivos de Contentful para que el bot siempre tenga precios y stocks reales.
+ * Construye el "prompt de sistema" para el modelo de IA.
+ * Este método fusiona la personalidad estática y las reglas de negocio con
+ * datos dinámicos (planes, promociones) obtenidos de Contentful en tiempo real.
+ * @returns Una promesa que resuelve a un string con el prompt completo para la IA.
  */
 export async function getSystemPrompt(): Promise<string> {
-  // 1. Fetch de Contentful
   const dynamicData = await getAllChatbotKnowledge().catch(err => {
     console.error("Error recuperando datos de Contentful:", err);
     return null;
@@ -80,11 +96,7 @@ export async function getSystemPrompt(): Promise<string> {
   let internetCasaSection = "";
   let empresarialSection = "";
 
-  // 2. Procesamiento de Datos Dinámicos (Tu lógica original restaurada y formateada para IA)
   if (dynamicData) {
-
-    // A. PROMOCIONES (Gancho de apertura)
-    // 1. Promociones
     if (dynamicData.promociones.length > 0) {
       const promosText = dynamicData.promociones.map((p: PromoEntry) => {
         const etiquetaLine = p.fields.etiqueta ? `Etiqueta: ${p.fields.etiqueta}` : '';
@@ -101,10 +113,8 @@ ${promosText}
 `;
     }
 
-    // 2. Planes Libre (Prepago)
     if (dynamicData.planes.personas.libre.length > 0) {
       planesLibreSection = dynamicData.planes.personas.libre.map((p: PlanEntry) => {
-        // Type guard para redesSociales
         let redesText = 'N/A';
         if (p.fields.redesSociales && Array.isArray(p.fields.redesSociales)) {
           const redesArray = p.fields.redesSociales.filter((r): r is string => typeof r === 'string');
@@ -122,10 +132,8 @@ ${promosText}
       }).join('\n');
     }
 
-    // C. PLANES ULTRA (Pospago - Producto Core)
     if (dynamicData.planes.personas.ultra.length > 0) {
       planesUltraSection = dynamicData.planes.personas.ultra.map((p: PlanEntry) => {
-        // Type guard para redesSociales
         let redesText = 'Todas';
         if (p.fields.redesSociales && Array.isArray(p.fields.redesSociales)) {
           const redesArray = p.fields.redesSociales.filter((r): r is string => typeof r === 'string');
@@ -135,14 +143,12 @@ ${promosText}
       }).join('\n');
     }
 
-    // D. INTERNET EN CASA
     if (dynamicData.planes.personas.internetCasa.length > 0) {
       internetCasaSection = dynamicData.planes.personas.internetCasa.map((p: PlanEntry) =>
         `- [Internet Casa] *${p.fields.titulo}* x $${p.fields.precio}/mes: ${p.fields.datosIncluidos} velocidad. Política uso justo: ${p.fields.politicaDeUsoJusto || 'Estándar'}.`
       ).join('\n');
     }
 
-    // E. EMPRESARIAL
     if (dynamicData.planes.empresas.ultra.length > 0) {
       empresarialSection = "Menciona que tenemos Planes Empresariales Deducibles y Soluciones IoT. Derivar con Asesor Corporativo.";
     }
@@ -159,7 +165,6 @@ ${promosText}
     `;
   }
 
-  // 3. El Prompt de "Personalidad" + "Datos"
   return `
 # IDENTIDAD
 Eres **Lía**, la Asesora Digital de Grupo Línea Digital (Distribuidor Autorizado Telcel en Chiapas).
@@ -247,7 +252,9 @@ Lo tenemos disponible. Puedes llevártelo en **Amigo Kit** (prepago) o en un **P
 // --- HELPERS ---
 
 /**
- * Detecta la intención principal del usuario
+ * Detecta la intención principal de un mensaje del usuario basándose en palabras clave.
+ * @param message El mensaje del usuario.
+ * @returns Un array de strings con las intenciones detectadas (ej. ['comprar', 'contacto']).
  */
 export function detectIntent(message: string): string[] {
   const lower = message.toLowerCase();
@@ -259,20 +266,19 @@ export function detectIntent(message: string): string[] {
 }
 
 /**
- * Detecta el sentimiento/tono del mensaje del usuario
+ * Detecta el sentimiento general de un mensaje del usuario.
+ * @param message El mensaje del usuario.
+ * @returns Una categoría de sentimiento: 'positive', 'negative', 'neutral', o 'urgent'.
  */
 export function detectSentiment(message: string): 'positive' | 'negative' | 'neutral' | 'urgent' {
   const lower = message.toLowerCase();
   
-  // Urgente/Frustrado
   const urgentKeywords = ['urgente', 'rápido', 'ya', 'ahora', 'ayuda', 'problema', 'no funciona', 'falla'];
   if (urgentKeywords.some(k => lower.includes(k))) return 'urgent';
   
-  // Negativo
   const negativeKeywords = ['malo', 'caro', 'no sirve', 'molesto', 'enojado', 'pésimo', 'horrible'];
   if (negativeKeywords.some(k => lower.includes(k))) return 'negative';
   
-  // Positivo
   const positiveKeywords = ['gracias', 'excelente', 'perfecto', 'genial', 'bueno', 'me gusta', 'interesa'];
   if (positiveKeywords.some(k => lower.includes(k))) return 'positive';
   
@@ -280,7 +286,9 @@ export function detectSentiment(message: string): 'positive' | 'negative' | 'neu
 }
 
 /**
- * Detecta si el usuario está listo para comprar (buying signals)
+ * Detecta si un mensaje contiene señales de una intención de compra inminente.
+ * @param message El mensaje del usuario.
+ * @returns `true` si se detecta una señal de compra, de lo contrario `false`.
  */
 export function detectBuyingIntent(message: string): boolean {
   const lower = message.toLowerCase();
@@ -293,7 +301,9 @@ export function detectBuyingIntent(message: string): boolean {
 }
 
 /**
- * Genera quick replies contextuales basados en la conversación
+ * Genera una lista de respuestas rápidas sugeridas basadas en la intención detectada.
+ * @param intent Un array de intenciones detectadas en el mensaje del usuario.
+ * @returns Un array de strings con las respuestas rápidas sugeridas.
  */
 export function generateQuickReplies(intent: string[]): string[] {
   const replies: string[] = [];
@@ -307,7 +317,6 @@ export function generateQuickReplies(intent: string[]): string[] {
   } else if (intent.includes('contacto')) {
     replies.push('WhatsApp Tuxtla', 'WhatsApp Tapachula', 'Ver ubicaciones');
   } else {
-    // Default
     replies.push('Ver planes', 'Ubicaciones', 'Hablar con asesor');
   }
   
@@ -315,7 +324,9 @@ export function generateQuickReplies(intent: string[]): string[] {
 }
 
 /**
- * Obtiene el link de WhatsApp apropiado basado en la ciudad mencionada
+ * Obtiene el enlace de WhatsApp correspondiente a una ciudad mencionada en el mensaje.
+ * @param message El mensaje del usuario.
+ * @returns El enlace de WhatsApp de la sucursal correspondiente, o el de Tuxtla por defecto.
  */
 export function getWhatsAppLink(message: string): string {
   const lower = message.toLowerCase();
@@ -324,12 +335,13 @@ export function getWhatsAppLink(message: string): string {
     return KNOWLEDGE_BASE.sucursales[1].link_wa || '';
   }
   
-  // Por defecto Tuxtla (más grande)
   return KNOWLEDGE_BASE.sucursales[0].link_wa || '';
 }
 
 /**
- * Formatea un plan para mostrarlo de manera atractiva
+ * Formatea los detalles de un plan en un string atractivo y legible para el chat.
+ * @param plan Un objeto con los detalles del plan a formatear.
+ * @returns Un string formateado con los detalles del plan.
  */
 export function formatPlanForChat(plan: {
   titulo: string;
@@ -352,7 +364,8 @@ export function formatPlanForChat(plan: {
 }
 
 /**
- * Genera un saludo contextual basado en la hora
+ * Genera un saludo contextual (Buenos días, Buenas tardes, Buenas noches) basado en la hora actual.
+ * @returns Un string con el saludo apropiado.
  */
 export function getContextualGreeting(): string {
   const hour = new Date().getHours();

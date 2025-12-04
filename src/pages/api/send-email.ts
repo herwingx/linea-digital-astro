@@ -4,17 +4,27 @@ export const prerender = false; // API Route
 import type { APIRoute } from 'astro';
 import nodemailer from 'nodemailer';
 
-// Definición estricta de datos esperados
+/**
+ * Define la estructura de datos esperada en el cuerpo de la petición para enviar un correo.
+ */
 interface EmailData {
+  /** El nombre del remitente o de la empresa. */
   name: string;
+  /** La dirección de correo electrónico del remitente. */
   email: string;
+  /** El cuerpo principal del mensaje. */
   message: string;
+  /** El número de teléfono opcional del remitente. */
   phone?: string;
-  subject?: string; // Nuevo campo
+  /** El asunto o departamento al que se dirige el mensaje (ej. "Ventas", "Soporte"). */
+  subject?: string;
 }
 
+/**
+ * Maneja las peticiones POST para enviar un correo electrónico desde el formulario de contacto.
+ * Valida la entrada, construye y envía un correo HTML usando Nodemailer.
+ */
 export const POST: APIRoute = async ({ request }) => {
-  // 1. Content-Type Check
   if (!request.headers.get("Content-Type")?.includes("application/json")) {
     return new Response(JSON.stringify({ error: "Content-Type must be application/json" }), { status: 400 });
   }
@@ -26,7 +36,6 @@ export const POST: APIRoute = async ({ request }) => {
     const data: EmailData = JSON.parse(rawBody);
     const { name, email, message, phone, subject } = data;
 
-    // 2. Validación de Campos
     if (!name || !email || !message) {
       return new Response(
         JSON.stringify({ error: "Faltan campos obligatorios." }),
@@ -34,7 +43,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // 3. Validación de Configuración (DEBUG)
     const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = import.meta.env;
 
     if (!EMAIL_HOST || !EMAIL_USER || !EMAIL_PASS) {
@@ -47,7 +55,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // 4. Nodemailer Config
     const transporter = nodemailer.createTransport({
       host: EMAIL_HOST,
       port: Number(EMAIL_PORT) || 587,
@@ -57,12 +64,10 @@ export const POST: APIRoute = async ({ request }) => {
         pass: EMAIL_PASS,
       },
       tls: {
-        // Aceptar certificados auto-firmados (común en servidores corporativos)
         rejectUnauthorized: false
       }
     });
 
-    // 5. Template HTML (Diseño Corporativo Limpio)
     const htmlTemplate = `
       <!DOCTYPE html>
       <html lang="es">
@@ -114,7 +119,6 @@ export const POST: APIRoute = async ({ request }) => {
       </html>
     `;
 
-    // 6. Envío
     await transporter.sendMail({
       from: `"Web Lead" <${import.meta.env.EMAIL_FROM || EMAIL_USER}>`,
       to: import.meta.env.EMAIL_TO,
@@ -134,7 +138,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         error: "Error interno al enviar el correo.",
-        details: error.message // Enviamos detalle para debug
+        details: error.message
       }),
       { status: 500 }
     );

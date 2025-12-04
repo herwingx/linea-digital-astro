@@ -5,18 +5,22 @@
  * Maneja las peticiones del cliente y se comunica con Gemini AI
  */
 
-// IMPORTANTE: Deshabilitar prerendering para permitir requests dinámicos
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getChatbotResponse, getFallbackResponse, validateGeminiConfig } from '../../lib/gemini-client.js';
 import type { ChatMessage } from '../../lib/gemini-client.js';
 
-// Rate limiting simple (en producción usar Redis o similar)
 const requestCounts = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 20; // requests por ventana
-const RATE_WINDOW = 60 * 1000; // 1 minuto
+const RATE_LIMIT = 20;
+const RATE_WINDOW = 60 * 1000;
 
+/**
+ * Verifica si una dirección IP ha excedido el límite de peticiones.
+ * Implementa un algoritmo de ventana deslizante simple en memoria.
+ * @param ip La dirección IP del cliente.
+ * @returns Un objeto que indica si la petición está permitida y cuántas peticiones restantes quedan.
+ */
 function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
   const now = Date.now();
   const record = requestCounts.get(ip);
@@ -34,8 +38,13 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
   return { allowed: true, remaining: RATE_LIMIT - record.count };
 }
 
+/**
+ * Obtiene la dirección IP real del cliente desde las cabeceras de la petición.
+ * Considera proxies y CDNs al revisar 'x-forwarded-for' y 'x-real-ip'.
+ * @param request El objeto de la petición (`Request`).
+ * @returns La dirección IP del cliente o 'unknown' si no se puede determinar.
+ */
 function getClientIP(request: Request): string {
-  // Intentar obtener IP real (detrás de proxy/CDN)
   const forwarded = request.headers.get('x-forwarded-for');
   if (forwarded) {
     return forwarded.split(',')[0].trim();
@@ -49,11 +58,15 @@ function getClientIP(request: Request): string {
   return 'unknown';
 }
 
+/**
+ * Maneja las peticiones POST al endpoint del chat.
+ * Valida la entrada, aplica rate limiting, se comunica con el servicio de Gemini
+ * y devuelve una respuesta estructurada.
+ */
 export const POST: APIRoute = async ({ request }) => {
   const startTime = Date.now();
 
   try {
-    // 1. Validar Content-Type
     const contentType = request.headers.get('content-type');
     if (!contentType?.includes('application/json')) {
       return new Response(
@@ -68,7 +81,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // 2. Rate Limiting
     const clientIP = getClientIP(request);
     const rateLimit = checkRateLimit(clientIP);
 
@@ -91,7 +103,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // 3. Parsear body
     let body: { message?: string; history?: ChatMessage[] };
     try {
       body = await request.json();
@@ -110,7 +121,6 @@ export const POST: APIRoute = async ({ request }) => {
 
     const { message, history = [] } = body;
 
-    // 4. Validar mensaje
     if (!message || typeof message !== 'string') {
       return new Response(
         JSON.stringify({
@@ -124,7 +134,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Validar longitud del mensaje
     if (message.length > 500) {
       return new Response(
         JSON.stringify({
@@ -138,7 +147,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Validar historial
     if (!Array.isArray(history)) {
       return new Response(
         JSON.stringify({
@@ -151,15 +159,12 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Limitar historial a últimos 10 mensajes para no exceder límites de tokens
     const limitedHistory = history.slice(-10);
 
-    // 5. Validar configuración de Gemini
     const configValidation = validateGeminiConfig();
     if (!configValidation.valid) {
       console.error('❌ Configuración de Gemini inválida:', configValidation.message);
 
-      // Usar respuesta de fallback
       const fallbackResponse = getFallbackResponse(message);
 
       return new Response(
@@ -179,10 +184,8 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // 6. Obtener respuesta de Gemini AI
     const chatResponse = await getChatbotResponse(message, limitedHistory);
 
-    // 7. Logging (solo en desarrollo)
     if (import.meta.env.DEV) {
       const duration = Date.now() - startTime;
       console.log('📊 Chat API Stats:', {
@@ -195,7 +198,6 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // 8. Responder
     return new Response(
       JSON.stringify({
         response: chatResponse.response,
@@ -217,7 +219,6 @@ export const POST: APIRoute = async ({ request }) => {
   } catch (error: any) {
     console.error('❌ Error crítico en API chat:', error);
 
-    // Error 500 con fallback
     return new Response(
       JSON.stringify({
         error: 'Error interno del servidor',
@@ -232,7 +233,10 @@ export const POST: APIRoute = async ({ request }) => {
   }
 };
 
-// Endpoint de health check
+/**
+ * Maneja las peticiones GET a este endpoint, actuando como un health check.
+ * Devuelve el estado del servicio y si la configuración de Gemini es válida.
+ */
 export const GET: APIRoute = async () => {
   const configValidation = validateGeminiConfig();
 

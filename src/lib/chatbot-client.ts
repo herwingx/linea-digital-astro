@@ -1,11 +1,20 @@
 // src/lib/chatbot-client.ts
 
+/**
+ * Representa un único mensaje en el historial del chat.
+ */
 interface Message {
+  /** El rol de quien envía el mensaje. */
   role: 'user' | 'bot';
+  /** El contenido de texto del mensaje. */
   content: string;
+  /** La fecha y hora en que se creó el mensaje. */
   timestamp: Date;
 }
 
+/**
+ * Agrupa todas las referencias a los elementos del DOM que utiliza el chatbot.
+ */
 interface ChatbotElements {
   container: HTMLElement;
   fab: HTMLButtonElement;
@@ -21,15 +30,26 @@ interface ChatbotElements {
   callout: HTMLElement;
 }
 
+/**
+ * Manages the entire state and interaction logic for the chatbot UI.
+ * This class is responsible for DOM manipulation, event handling,
+ * and communication with the chat API.
+ */
 export class ChatbotClient {
+  /** Referencias a los elementos del DOM utilizados por el chatbot. */
   private elements!: ChatbotElements;
+  /** Almacena el historial de la conversación actual. */
   private history: Message[] = [];
+  /** Estado que indica si la ventana del chat está abierta o cerrada. */
   private isOpen = false;
+  /** Estado que indica si el bot está "escribiendo" una respuesta. */
   private isTyping = false;
+  /** Clave para guardar y recuperar el historial del chat en localStorage. */
   private readonly STORAGE_KEY = 'chatbot-history';
+  /** Clave para registrar en localStorage si el usuario ya ha abierto el chat alguna vez. */
   private readonly OPENED_KEY = 'chatbot-opened';
 
-  // Opciones rápidas iniciales
+  /** Opciones de respuesta rápida que se muestran al iniciar una nueva conversación. */
   private readonly QUICK_OPTIONS = [
     "📱 Ver planes móviles",
     "🏠 Internet en casa",
@@ -37,41 +57,55 @@ export class ChatbotClient {
     "💼 Planes empresariales"
   ];
 
+  /**
+   * Inicializa el cliente del chatbot.
+   */
   constructor() {
     this.init();
   }
 
+  /**
+   * Se asegura de que el DOM esté completamente cargado antes de ejecutar
+   * la configuración principal. También añade soporte para Astro View Transitions.
+   */
   private init() {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.setup());
     } else {
       this.setup();
     }
-    // Soporte para Astro ViewTransitions
     document.addEventListener('astro:page-load', () => this.setup());
   }
 
+  /**
+   * Realiza la configuración principal: obtiene los elementos del DOM,
+   * adjunta los listeners de eventos y carga el historial del chat.
+   * Falla silenciosamente si no se encuentran los elementos del chatbot en la página.
+   */
   private setup() {
     try {
-      // Evitar reinicialización si ya existe
       if (document.querySelector('.chatbot-quick-reply')) return;
 
       this.elements = this.getElements();
       this.attachEventListeners();
-      this.loadHistory(); // Carga historial o inicializa Quick Replies
+      this.loadHistory();
       this.checkFirstVisit();
 
-      // Si el historial está vacío, mostrar opciones
-      if (this.history.length <= 1) { // 1 porque el welcome message no cuenta en history array usualmente o sí depende de la implementación.
+      if (this.history.length <= 1) {
         this.renderQuickReplies();
       }
 
       console.log('✅ Chatbot Client Ready');
     } catch (error) {
-      // Silent fail si no encuentra elementos (ej. página sin chat)
+      // Silent fail if elements are not found (e.g., page without chat)
     }
   }
 
+  /**
+   * Obtiene y devuelve todos los elementos del DOM necesarios para el chatbot.
+   * @throws {Error} Si no se encuentra un elemento del DOM requerido.
+   * @returns Un objeto que contiene las referencias a los elementos del DOM.
+   */
   private getElements(): ChatbotElements {
     const get = (id: string) => {
       const el = document.getElementById(id);
@@ -95,6 +129,9 @@ export class ChatbotClient {
     };
   }
 
+  /**
+   * Renderiza los botones de respuesta rápida en la interfaz del chat.
+   */
   private renderQuickReplies() {
     this.elements.quickReplies.innerHTML = '';
     this.elements.quickReplies.style.display = 'flex';
@@ -103,17 +140,19 @@ export class ChatbotClient {
       const btn = document.createElement('button');
       btn.textContent = opt;
       btn.className = 'chatbot-quick-reply whitespace-nowrap rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-100 hover:border-blue-300 dark:border-blue-900/30 dark:bg-blue-900/20 dark:text-blue-300 dark:hover:bg-blue-800/30';
-      btn.dataset.message = opt; // Para el event delegation
+      btn.dataset.message = opt;
       this.elements.quickReplies.appendChild(btn);
     });
   }
 
+  /**
+   * Adjunta todos los listeners de eventos necesarios a los elementos del DOM del chatbot.
+   * Esto incluye abrir/cerrar, enviar mensajes, reseteo, etc.
+   */
   private attachEventListeners() {
-    // Toggle
     this.elements.fab.onclick = (e) => { e.preventDefault(); this.toggle(); };
     this.elements.minimizeBtn.onclick = (e) => { e.preventDefault(); this.toggle(); };
 
-    // Reset con doble confirmación visual (sin alert feo)
     let resetTimeout: any;
     
     this.elements.resetBtn.onclick = (e) => {
@@ -121,54 +160,41 @@ export class ChatbotClient {
       const btn = this.elements.resetBtn;
       
       if (btn.dataset.confirm === 'true') {
-        // Segunda confirmación: Ejecutar acción
         this.elements.messages.style.opacity = '0';
         setTimeout(() => {
             localStorage.removeItem(this.STORAGE_KEY);
             location.reload();
         }, 200);
       } else {
-        // Primer clic: ESTADO DE ALERTA
         btn.dataset.confirm = 'true';
         
-        // Transformación visual fuerte (Rojo Sólido + Escala)
-        // Quitamos estilos sutiles
         btn.classList.remove('text-slate-400', 'hover:bg-slate-100', 'hover:text-red-500', 'dark:hover:bg-white/5');
-        // Añadimos estilos de alerta
         btn.classList.add('bg-red-500', 'text-white', 'scale-110', 'shadow-md', 'ring-2', 'ring-red-200', 'dark:ring-red-900');
         
-        // Icono de Check Grueso (Confirmar)
         btn.innerHTML = `<svg class="h-5 w-5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
         
-        // Función para revertir al estado original
         const revert = () => {
             btn.dataset.confirm = 'false';
-            // Restaurar icono basura
             btn.innerHTML = `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
             
-            // Restaurar estilos originales
             btn.classList.remove('bg-red-500', 'text-white', 'scale-110', 'shadow-md', 'ring-2', 'ring-red-200', 'dark:ring-red-900');
             btn.classList.add('text-slate-400', 'hover:bg-slate-100', 'hover:text-red-500', 'dark:hover:bg-white/5');
         };
 
-        // Auto-revertir después de 3 segundos
         clearTimeout(resetTimeout);
         resetTimeout = setTimeout(revert, 3000);
         
-        // Opcional: Revertir si el usuario saca el mouse (para evitar clics accidentales al volver)
         btn.onmouseleave = () => {
-            setTimeout(revert, 300); // Pequeño delay para no ser frustrante
+            setTimeout(revert, 300);
         };
       }
     };
 
-    // Send
     this.elements.form.onsubmit = (e) => {
       e.preventDefault();
       this.sendMessage();
     };
 
-    // Quick Replies Delegation
     this.elements.quickReplies.onclick = (e) => {
       const target = e.target as HTMLElement;
       if (target.tagName === 'BUTTON') {
@@ -178,15 +204,12 @@ export class ChatbotClient {
       }
     };
 
-    // Input Auto-resize & Validation
     this.elements.input.oninput = () => this.updateSendButton();
 
-    // Escape to close
     this.elements.input.onkeydown = (e) => {
       if (e.key === 'Escape') this.toggle();
     };
 
-    // Mobile Viewport Fix (Keyboard)
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', () => this.handleViewportResize());
       window.visualViewport.addEventListener('scroll', () => this.handleViewportResize());
@@ -201,13 +224,10 @@ export class ChatbotClient {
 
     const windowEl = this.elements.window;
 
-    // ANCLAJE PERFECTO: Usar top + height del viewport visual
-    // Esto "pega" el chat al área visible real, ignorando el scroll del navegador
     windowEl.style.height = `${viewport.height}px`;
     windowEl.style.top = `${viewport.offsetTop}px`;
-    windowEl.style.bottom = 'auto'; // Importante: anular el bottom: 0 del CSS
+    windowEl.style.bottom = 'auto';
 
-    // Asegurar que el input sea visible si está enfocado
     if (document.activeElement === this.elements.input) {
       setTimeout(() => {
         this.elements.input.scrollIntoView({ block: 'nearest' });
@@ -223,27 +243,29 @@ export class ChatbotClient {
     if (this.isOpen) {
       this.markAsOpened();
       this.hideBadge();
-      this.elements.callout.style.display = 'none'; // Ocultar callout al abrir
+      this.elements.callout.style.display = 'none';
 
-      // Ajuste inicial para móvil
       if (window.innerWidth <= 640) {
         this.handleViewportResize();
-        document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+        document.body.style.overflow = 'hidden';
       } else {
         this.elements.input.focus();
       }
       this.scrollToBottom();
     } else {
-      document.body.style.overflow = ''; // Restaurar scroll
-      this.elements.callout.style.display = ''; // Restaurar callout al cerrar (vuelve a flex por CSS si no tiene inline)
+      document.body.style.overflow = '';
+      this.elements.callout.style.display = '';
 
-      // LIMPIEZA TOTAL DE ESTILOS INLINE
       this.elements.window.style.height = '';
       this.elements.window.style.top = '';
       this.elements.window.style.bottom = '';
     }
   }
 
+  /**
+   * Procesa y envía el mensaje del usuario a la API de chat.
+   * Gestiona el estado de "escribiendo" y maneja las respuestas o errores.
+   */
   private async sendMessage() {
     const message = this.elements.input.value.trim();
     if (!message || this.isTyping) return;
@@ -273,12 +295,10 @@ export class ChatbotClient {
       if (response.ok && data.response) {
         this.addMessage('bot', data.response);
       } else {
-        // Usar el mensaje de fallback si está disponible
         const errorMessage = data.fallback || 
           'Disculpa, tuve un problema técnico. 😔\n\nPor favor intenta de nuevo o llámanos:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10';
         this.addMessage('bot', errorMessage);
         
-        // Log para debugging
         if (data.error) {
           console.error('❌ Error del servidor:', data.error);
         }
@@ -290,6 +310,11 @@ export class ChatbotClient {
     }
   }
 
+  /**
+   * Añade un mensaje al historial y lo renderiza en la ventana del chat.
+   * @param role El rol del remitente ('user' o 'bot').
+   * @param content El contenido del mensaje de texto.
+   */
   private addMessage(role: 'user' | 'bot', content: string) {
     const message: Message = { role, content, timestamp: new Date() };
     this.history.push(message);
@@ -315,6 +340,9 @@ export class ChatbotClient {
     this.scrollToBottom();
   }
 
+  /**
+   * Muestra el indicador de "escribiendo" en la interfaz del chat.
+   */
   private showTyping() {
     this.isTyping = true;
     const typingDiv = document.createElement('div');
@@ -331,50 +359,75 @@ export class ChatbotClient {
     this.scrollToBottom();
   }
 
+  /**
+   * Oculta el indicador de "escribiendo".
+   */
   private hideTyping() {
     this.isTyping = false;
     document.getElementById('typing-indicator')?.remove();
   }
 
+  /**
+   * Desplaza suavemente el contenedor de mensajes hasta el final.
+   */
   private scrollToBottom() {
     this.elements.messages.scrollTop = this.elements.messages.scrollHeight;
   }
 
+  /**
+   * Habilita o deshabilita el botón de enviar basado en si hay texto en el input.
+   */
   private updateSendButton() {
     this.elements.sendBtn.disabled = !this.elements.input.value.trim();
   }
 
+  /**
+   * Convierte un subconjunto simple de Markdown (negritas y saltos de línea) a HTML.
+   * @param text El texto plano a convertir.
+   * @returns Una cadena de texto con formato HTML.
+   */
   private parseMarkdown(text: string): string {
-    // Simple parser para negritas y saltos
     return text
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\n/g, '<br>');
   }
 
-  // Persistencia básica
+  /**
+   * Guarda los últimos 20 mensajes del historial en localStorage.
+   */
   private saveHistory() {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.history.slice(-20)));
   }
 
+  /**
+   * Carga el historial de chat desde localStorage al iniciar.
+   */
   private loadHistory() {
     const saved = localStorage.getItem(this.STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      // Rehidratar mensajes previos (solo si es necesario)
-      // En una app real, aquí reconstruirías el DOM si quieres persistencia visual entre recargas
     }
   }
 
+  /**
+   * Comprueba si el usuario ya ha abierto el chatbot antes para ocultar el badge.
+   */
   private checkFirstVisit() {
     if (localStorage.getItem(this.OPENED_KEY)) {
       this.hideBadge();
     }
   }
 
+  /**
+   * Marca en localStorage que el usuario ya ha abierto el chatbot.
+   */
   private markAsOpened() {
     localStorage.setItem(this.OPENED_KEY, 'true');
   }
 
+  /**
+   * Oculta el badge de notificación del chatbot.
+   */
   private hideBadge() {
     this.elements.badge.classList.add('hidden');
   }
