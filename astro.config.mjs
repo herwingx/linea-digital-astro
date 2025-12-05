@@ -6,6 +6,7 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://linea-digital.com', // Reemplaza con tu dominio real
   integrations: [tailwind(), react()],
 
   // Configuración para permitir SSR en API routes

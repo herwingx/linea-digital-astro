@@ -19,6 +19,10 @@ const {
   image = "/image.png", // Fallback default image
 } = Astro.props;
 
+// Construir URLs absolutas para Open Graph
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(image, Astro.site);
+
 // Configuración de colores Telcel Modernizados para selección
 const selectionClass =
   "selection:bg-blue-600 selection:text-white dark:selection:bg-blue-500 dark:selection:text-white";
@@ -36,11 +40,19 @@ const selectionClass =
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <!-- Open Graph (Básico para compartir en WhatsApp/FB) -->
+    <!-- Open Graph / Redes Sociales -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={image} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:site_name" content="Línea Digital" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
 
     <!-- Google Fonts: Inter o similar suele ser mejor para Retail, pero mantenemos Material Icons si se usan en UI -->
     <link
