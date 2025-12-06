@@ -16,7 +16,7 @@ export interface Props {
 const {
   title,
   description,
-  image = "/image.png", // Fallback default image
+  image = "../assets/banner-og.jpeg", // Fallback default image
 } = Astro.props;
 
 // Construir URLs absolutas para Open Graph
@@ -36,7 +36,11 @@ const selectionClass =
     <meta name="generator" content={Astro.generator} />
 
     <!-- SEO & Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/logo-white.svg" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="http://erp.linea-digital.com/erp/images/icono.png"
+    />
     <title>{title}</title>
     <meta name="description" content={description} />
 
@@ -304,7 +308,7 @@ const selectionClass =
       >
       </div>
       <!-- BACKGROUND GLOBAL (Deep Navy) -->
-      <div
+      <!--    <div
         class="fixed inset-0 pointer-events-none opacity-[0.3] dark:opacity-[0.1] z-0"
       >
         <svg class="w-full h-full mix-blend-overlay"
@@ -316,7 +320,7 @@ const selectionClass =
               stitchTiles="stitch"></feTurbulence></filter
           ><rect width="100%" height="100%" filter="url(#noise)"></rect></svg
         >
-      </div>
+      </div> -->
 
       <!-- 2. Ambient Blur: Los "Glows" de acento -->
       <AmbientBlur />

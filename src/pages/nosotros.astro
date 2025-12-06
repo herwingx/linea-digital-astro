@@ -61,12 +61,12 @@ const VALUES = [
   description="Más de 25 años conectando a México con valores sólidos, tecnología de punta y el respaldo de la red Telcel."
 >
   <!-- === HERO SECTION: MAPA & COBERTURA === -->
-  <section class="relative pt-12 md:pt-20 md:pb-24 lg:h-[calc(100vh-5rem)]  b-24 overflow-hidden">
+  <section class="relative pt-12 md:pt-20 md:pb-24 lg:h-[calc(100vh-5rem)] mb-24 b-24 overflow-hidden">
     <div class="container relative z-10 mx-auto px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         
         <!-- COLUMNA TEXTO -->
-        <div class="text-center lg:text-left animate-fade-in-up">
+        <div class="lg:order-first text-center lg:text-left animate-fade-in-up">
           <!-- Badge -->
           <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 dark:bg-blue-900/20 dark:border-blue-500/20 mb-8 backdrop-blur-sm">
             <span class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
@@ -110,7 +110,7 @@ const VALUES = [
         </div>
 
         <!-- COLUMNA VISUAL (MAPA INTERACTIVO) -->
-        <div class="lg:order-first relative group perspective-1000">
+        <div class="relative group perspective-1000">
           <!-- Glass Container -->
           <div class="relative rounded-[2.5rem] bg-white/80 dark:bg-[#151e2e]/80 border border-white/60 dark:border-white/10 shadow-2xl shadow-blue-900/10 dark:shadow-black/40 p-3 transition-shadow duration-700">
             <div class="rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-[#0B1120] relative aspect-[1.47] w-full">
@@ -203,8 +203,14 @@ const VALUES = [
   </section>
 
   <!-- === BRAND MARQUEE (Efecto Infinito - Retail Power) === -->
-  <section class="md:py-20 py-8 overflow-hidden border-y border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#0f1520] relative">
-      <div class="container mx-auto px-6 text-center mb-12">
+  <section class="md:py-20 py-8 overflow-visible relative bg-slate-50 dark:bg-[#0f1520]">
+      <!-- Gradiente de desvanecimiento superior - del color de fondo a transparente -->
+      <div class="absolute top-0 left-0 right-0 h-32 md:h-40 bg-gradient-to-b from-transparent via-slate-50/30 via-slate-50/60 to-slate-50 dark:from-transparent dark:via-[#0f1520]/30 dark:via-[#0f1520]/60 dark:to-[#0f1520] pointer-events-none -translate-y-full"></div>
+      
+      <!-- Gradiente de desvanecimiento inferior - del color de fondo a transparente -->
+      <div class="absolute bottom-0 left-0 right-0 h-32 md:h-40 bg-gradient-to-t from-transparent via-slate-50/30 via-slate-50/60 to-slate-50 dark:from-transparent dark:via-[#0f1520]/30 dark:via-[#0f1520]/60 dark:to-[#0f1520] pointer-events-none translate-y-full"></div>
+
+      <div class="container mx-auto px-6 text-center mb-12 relative z-20">
  <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 dark:bg-blue-900/20 dark:border-blue-500/20 mb-8 backdrop-blur-sm">
             <span class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
             <span class="text-xs font-bold uppercase tracking-widest text-blue-700 dark:text-blue-300">Ecosistema Tecnológico</span>
@@ -233,7 +239,7 @@ const VALUES = [
   </section>
 
 <!-- === FILOSOFÍA & VALORES (Deep Core Design) === -->
-  <section class="relative pt-16 overflow-hidden">
+  <section class="relative mt-40 overflow-hidden">
     
     <!-- Ambient Background -->
     <div class="absolute inset-0 pointer-events-none">
@@ -400,10 +406,18 @@ const VALUES = [
     animation-play-state: paused;
   }
 
-  /* Máscara de desvanecimiento para el marquee */
+  /* Máscara de desvanecimiento para el marquee - todos los lados */
   .mask-gradient {
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: 
+      linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-composite: source-in;
+    mask-image: 
+      linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-size: 100% 100%;
+    mask-composite: intersect;
   }
 
   /* Animación de flotación para partículas */
