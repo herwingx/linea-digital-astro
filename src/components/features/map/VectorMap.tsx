@@ -77,8 +77,24 @@ const VectorMap = () => {
     setPosition((pos) => ({ ...pos, zoom: pos.zoom / 1.2 }));
   };
 
-  const handleMoveEnd = (position: { coordinates: [number, number]; zoom: number }) => {
-    setPosition(position);
+  // Límites para evitar que el mapa "se vaya" (Clamping)
+  const handleMoveEnd = (newPos: { coordinates: [number, number]; zoom: number }) => {
+    const { coordinates, zoom } = newPos;
+    let [lon, lat] = coordinates;
+
+    // Límites aproximados de México y zona de interés
+    const MIN_LON = -120;
+    const MAX_LON = -85;
+    const MIN_LAT = 13;
+    const MAX_LAT = 34;
+
+    // Clamp
+    if (lon < MIN_LON) lon = MIN_LON;
+    if (lon > MAX_LON) lon = MAX_LON;
+    if (lat < MIN_LAT) lat = MIN_LAT;
+    if (lat > MAX_LAT) lat = MAX_LAT;
+
+    setPosition({ coordinates: [lon, lat], zoom });
   };
 
   // Botón de reset inteligente
@@ -182,7 +198,7 @@ const VectorMap = () => {
           center={position.coordinates}
           zoom={position.zoom}
           onMoveEnd={handleMoveEnd}
-          maxZoom={12}
+          maxZoom={10}
           minZoom={1}
         >
           {/* A. CAPA GEOGRÁFICA */}
