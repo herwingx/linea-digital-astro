@@ -2,7 +2,8 @@
 // src/pages/index.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
-import gridManImage from "../assets/grid-man-image-compress.webp"; // Mantenemos la imagen existente
+import liaEjecutivaImage from "../assets/lia-ejecutiva.png"; // Nueva imagen de Lía
+import liaHeroImage from "../assets/lia-index.png"; // Nueva imagen de Lía
 import Testimonials from "../components/sections/Testimonials.astro";
 import Button from "../components/ui/Button.astro";
 import "../styles/user.css";
@@ -14,114 +15,131 @@ const pageDesc =
 ---
 
 <BaseLayout title={pageTitle} description={pageDesc}>
-  <!-- === HERO SECTION: IMPACTO INMEDIATO === -->
-  <section class="relative pt-12 md:pb-24 overflow-hidden">
-    <!-- Elemento Decorativo de Fondo (Glow Telcel) -->
-    <div
-      class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] blur-[120px] rounded-full pointer-events-none z-0"
-    >
+  <!-- === HERO SECTION: CINEMATIC LÍA === -->
+  <section
+    class="relative min-h-[90vh] lg:min-h-[calc(100vh-5rem)] w-full overflow-visible flex items-end lg:items-center"
+  >
+    <!-- 1. AMBIENTE DE FONDO (Texture & Atmosphere) -->
+    <div class="absolute inset-0 z-0">
+      <!-- Luz de acento Cyan detrás de Lía -->
+      <div
+        class="absolute bottom-0 right-[-10%] w-[80vw] h-[80vw] lg:w-[800px] lg:h-[800px] bg-blue-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow"
+      >
+      </div>
     </div>
 
-    <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 text-center">
-      <!-- Trust Badge / Novedad -->
+    <!-- 2. LÍA (EL PERSONAJE HEROICO) - LAYERED COMPOSITION -->
+    <!-- En móvil la ponemos absoluta al fondo para que quede detrás del texto con opacidad. En Desktop a la derecha Full HD -->
+    <div
+      class="absolute bottom-20 -right-44 z-10 w-full h-full lg:w-[60%] flex items-end justify-center lg:justify-end overflow-visible pointer-events-none"
+    >
+      <!-- Contenedor de la Imagen con Máscaras -->
       <div
-        class="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/50 px-3 py-1 text-sm font-medium text-blue-700 backdrop-blur-md mb-8 dark:border-blue-500/30 dark:bg-blue-900/20 dark:text-blue-300 animate-fade-in-up"
+        class="relative h-[60%] lg:h-[90%] w-auto max-w-none transition-transform duration-1000 ease-out translate-y-10 lg:translate-y-0 lg:-translate-x-16 lg:mr-16"
       >
-        <span class="relative flex h-2 w-2">
+        <Image
+          src={liaHeroImage}
+          alt="Lía Asistente Virtual"
+          class="h-full w-auto object-cover object-top mask-gradient-b"
+          loading="eager"
+        />
+
+        <!-- C. MÁSCARA MÓVIL: Oscurece a Lía en móvil para que el texto blanco se lea encima -->
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/80 to-transparent lg:hidden"
+        >
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. CONTENIDO UI (Texto y Botones) -->
+    <div class="container relative z-20 mx-auto px-6 pb-20 pt-32 lg:py-0">
+      <div class="max-w-2xl lg:max-w-3xl">
+        <!-- Badge -->
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 dark:bg-blue-900/20 dark:border-blue-500/20 mb-8 backdrop-blur-sm"
+        >
           <span
-            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
+            class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"
           ></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"
-          ></span>
-        </span>
-        DISTRIBUIDOR AUTORIZADO TELCEL
-      </div>
-
-      <!-- H1: Copywriting Orientado a Beneficio -->
-      <h1
-        class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter dark:text-white leading-[1.1] mb-8 drop-shadow-xl"
-      >
-        Conectamos tu mundo <br class="hidden sm:block" />
-        <span
-          class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-200"
-        >
-          a la velocidad de 5G.
-        </span>
-      </h1>
-
-      <p
-        class="text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-10 max-w-2xl mx-auto text-center"
-      >
-        Ya sea para renovar tu smartphone personal, equipar a tu fuerza de
-        ventas o iniciar tu propio negocio de recargas. Tenemos la solución
-        Telcel exacta para ti.
-      </p>
-
-      <!-- CTAs: Segmentation B2C vs B2B -->
-      <div
-        class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-      >
-        <Button
-          href="/personas"
-          variant="primary"
-          size="lg"
-          class="w-full sm:w-auto shadow-lg shadow-blue-500/25"
-        >
-          Ver Equipos y Planes
-        </Button>
-        <Button
-          href="/contacto"
-          variant="secondary"
-          size="lg"
-          class="w-full sm:w-auto bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10"
-        >
-          Cotizar para Empresa
-        </Button>
-      </div>
-
-      <!-- Social Proof / Stats pequeña -->
-      <div
-        class="mt-12 flex items-center justify-center gap-x-8 gap-y-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex-wrap"
-      >
-        <span class="flex items-center gap-2">
-          <svg
-            class="w-4 h-4 text-green-500"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            ><path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clip-rule="evenodd"></path></svg
+          <span
+            class="text-xs font-bold uppercase tracking-widest text-blue-700 dark:text-blue-300"
+            >DISTRIBUIDOR AUTORIZADO TELCEL</span
           >
-          Garantía Oficial
-        </span>
-        <span class="flex items-center gap-2">
-          <svg
-            class="w-4 h-4 text-green-500"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            ><path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clip-rule="evenodd"></path></svg
+        </div>
+
+        <!-- Título Grande -->
+        <h1
+          class="text-5xl sm:text-6xl lg:text-8xl font-black dark:text-white tracking-tighter leading-[0.95] mb-8 drop-shadow-xl animate-fade-in-up animation-delay-100"
+        >
+          Conectamos tu mundo a la velocidad de 5G de <span
+            class="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-700 dark:from-blue-400 dark:to-blue-200"
+            >Telcel.</span
           >
-          Envíos Seguros
-        </span>
-        <span class="flex items-center gap-2">
-          <svg
-            class="w-4 h-4 text-green-500"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            ><path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clip-rule="evenodd"></path></svg
+        </h1>
+
+        <p
+          class="text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-10 max-w-2xl"
+        >
+          Ya sea para renovar tu <strong>smartphone personal</strong>, equipar a
+          tu fuerza de ventas o iniciar tu propio negocio de recargas. Tenemos
+          la solución Telcel exacta para ti.
+        </p>
+
+        <!-- Botones -->
+        <div
+          class="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-300"
+        >
+          <Button
+            href="/personas"
+            variant="primary"
+            size="xl"
+            class="shadow-blue-500/20 group"
           >
-          Soporte Local
-        </span>
+            <span class="flex items-center gap-3">
+              Ver Equipos y Planes
+              <!-- Icono Chat animado -->
+              <span class="w-2 h-2 bg-white rounded-full animate-bounce"></span>
+            </span>
+          </Button>
+          <Button
+            href="/empresas"
+            variant="secondary"
+            size="xl"
+            class="bg-white/5 border-white/10 text-white hover:bg-white/10"
+          >
+            Cotizar para Empresa
+          </Button>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    /* Animación de Flotación para la burbuja */
+    @keyframes float-slow {
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    .animate-float-slow {
+      animation: float-slow 5s ease-in-out infinite;
+    }
+
+    /* Máscara para desvanecer la parte inferior de la imagen */
+    .mask-gradient-b {
+      mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        black 80%,
+        transparent 100%
+      );
+    }
+  </style>
 
   <!-- === BENTO GRID COMERCIAL (The Core) === -->
   <section class="py-12 md:py-24 px-6 transition-colors duration-500 relative">
@@ -150,62 +168,108 @@ const pageDesc =
       <div
         class="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 h-auto md:h-[800px] relative"
       >
-        <!-- CARD 1: PERSONAL (Main Feature - 2 Cols Wide) -->
+        <!-- CARD 1: PERSONAL (Hero Feature - Lía) -->
         <article
-          class="group relative md:col-span-2 md:row-span-2 overflow-hidden rounded-[2.5rem] bg-white dark:bg-[#151e2e] border border-slate-200 dark:border-white/10 shadow-xl shadow-slate-200/50 dark:shadow-none flex flex-col justify-between"
+          class="group relative md:col-span-2 md:row-span-2 overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-white dark:bg-[#151e2e] border border-slate-200 dark:border-white/5 shadow-xl shadow-slate-200/50 dark:shadow-2xl flex flex-col md:flex-row items-center justify-between min-h-[550px] md:min-h-[500px]"
         >
-          <!-- Background Image / Gradient Placeholder -->
+          <!-- A. Fondos Dinámicos -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-[#151e2e] dark:to-[#1e293b] z-0"
+            class="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-blue-50 dark:from-[#1a2333] dark:via-[#0f172a] dark:to-black z-0"
+          >
+          </div>
+          <!-- Ambient Glow (Spotlight) -->
+          <div
+            class="absolute top-[-50%] left-[-20%] w-[70%] h-[100%] bg-blue-500/5 dark:bg-blue-600/10 blur-[120px] rounded-full pointer-events-none z-0 animate-pulse-slow"
           >
           </div>
 
-          <!-- Content -->
-          <div class="relative z-10 p-8 md:p-12">
+          <!-- B. CONTENIDO DE TEXTO (Lado Izquierdo / Arriba en móvil) -->
+          <div
+            class="relative z-20 p-6 md:p-12 lg:p-14 w-full md:w-[55%] flex flex-col justify-center text-center md:text-left h-full"
+          >
+            <!-- Badge -->
             <div
-              class="inline-flex items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300 mb-4"
+              class="inline-flex items-center gap-2 self-center md:self-start rounded-lg bg-blue-50 border border-blue-100 text-blue-700 dark:bg-blue-500/10 dark:border-blue-500/20 dark:text-blue-300 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest mb-6 backdrop-blur-sm shadow-sm dark:shadow-[0_0_15px_rgba(59,130,246,0.1)]"
             >
-              ENTREGA INMEDIATA
+              <span class="relative flex h-2 w-2">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"
+                ></span>
+              </span>
+              Disponible Ahora
             </div>
+
+            <!-- Título -->
             <h3
-              class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight"
+              class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tighter leading-[1.1] drop-shadow-xl"
             >
-              Venta de Celulares y Smartphones.
+              Estrena <br />
+              <span
+                class="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-700 dark:from-blue-400 dark:to-blue-200"
+              >
+                Smartphone.
+              </span>
             </h3>
-            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-md mb-8">
-              Estrena hoy y paga poco a poco. Encuentra tu equipo ideal en Plan
-              Tarifario Telcel o libre en Amigo Kit. Aceptamos tarjetas de
-              crédito, débito y puntos para que la tecnología 5G esté a tu
-              alcance.
-            </p>
-            <Button
-              href="/personas"
-              variant="primary"
-              class="rounded-full px-8"
+
+            <!-- Descripción (Con línea lateral) -->
+            <div
+              class="relative pl-0 md:pl-6 border-l-0 md:border-l-4 border-blue-400/30 dark:border-blue-500/30 mb-8"
             >
-              Ver Celulares y Precios
-            </Button>
+              <p
+                class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed"
+              >
+                Estrena hoy y paga poco a poco. Encuentra tu equipo ideal en
+                Plan Tarifario Telcel o libre en Amigo Kit. Aceptamos tarjetas
+                de crédito, débito y puntos para que la tecnología 5G esté a tu
+                alcance.
+              </p>
+            </div>
+
+            <!-- Botón -->
+            <div class="flex justify-center md:justify-start">
+              <Button
+                href="/personas"
+                variant="primary"
+                class="rounded-2xl px-8 py-3 shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]"
+              >
+                Ver Catálogo y Precios
+              </Button>
+            </div>
           </div>
 
-          <!-- Image Composition -->
+          <!-- C. PERSONAJE LÍA (Lado Derecho / Abajo) -->
+          <!-- Se sale del contenedor hacia abajo en mobile, y hacia la derecha en desktop -->
           <div
-            class="relative z-10 mt-auto flex justify-center translate-y-8 md:translate-y-12 transition-transform duration-700 group-hover:translate-y-4"
+            class="relative md:absolute bottom-0 right-0 w-full md:w-[55%] h-[350px] md:h-full z-10 flex items-end justify-center md:justify-end overflow-visible pointer-events-none"
           >
-            <!-- Usamos la imagen existente con un tratamiento visual mejorado -->
-            <div class="relative w-[80%] max-w-md">
-              <div
-                class="absolute -inset-1 bg-gradient-to-t from-blue-500 to-transparent opacity-20 blur-xl rounded-full"
-              >
-              </div>
+            <!-- Glow detrás de ella -->
+            <div
+              class="absolute bottom-0 right-10 w-[80%] h-[70%] bg-blue-400/20 dark:bg-blue-700/20 blur-[90px] rounded-full dark:mix-blend-screen"
+            >
+            </div>
+
+            <!-- Imagen con transición suave al Hover -->
+            <div
+              class="relative z-10 h-[110%] md:h-[80%] w-auto translate-y-10 md:translate-y-0 transition-transform duration-700 ease-out group-hover:scale-105 md:group-hover:translate-x-[-10px]"
+            >
               <Image
-                src={gridManImage}
-                alt="Smartphone Telcel 5G"
-                class="relative z-10 w-full drop-shadow-2xl rounded-t-3xl border-t border-x border-white/20"
+                src={liaEjecutivaImage}
+                alt="Lía recomendando Smartphone"
+                class="w-auto h-full object-contain object-bottom drop-shadow-2xl"
               />
+
+              <!-- Floating Bubble (Interactividad) -->
+              <!--    <div
+                class="absolute top-[35%] left-[-10px] md:left-0 bg-white/95 text-[#0B1120] p-3 rounded-xl rounded-bl-none shadow-lg animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-150 max-w-[140px] border border-blue-100"
+              >
+                <p class="text-xs font-bold leading-tight">👋 ¡Hola!</p>
+              </div> -->
             </div>
           </div>
         </article>
-
         <!-- CARD 2: EMPRESAS (Top Right) -->
         <article
           class="group relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 p-8 flex flex-col justify-center shadow-xl shadow-slate-200/50 dark:shadow-none"
