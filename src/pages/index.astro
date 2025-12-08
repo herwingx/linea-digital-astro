@@ -23,7 +23,7 @@ const pageDesc =
     <div class="absolute inset-0 z-0">
       <!-- Luz de acento Cyan detrás de Lía -->
       <div
-        class="absolute bottom-0 right-[-10%] w-[80vw] h-[80vw] lg:w-[800px] lg:h-[800px] bg-blue-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow"
+        class="absolute bottom-40 right-[-10%] w-[80vw] h-[80vw] lg:w-[400px] lg:h-[400px] bg-blue-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow"
       >
       </div>
     </div>
@@ -341,7 +341,10 @@ const pageDesc =
   </section>
 
   <!-- === LOCATIONS SECTION: APPLE MAPS STYLE === -->
-  <section class="py-16 md:py-24 px-6 transition-colors duration-500 relative">
+  <section
+    class="py-16 md:py-24 px-6 transition-colors duration-500 relative"
+    id="ubicaciones"
+  >
     <div class="absolute top-5 right-0 z-[-1]">
       <svg
         width="238"
@@ -578,12 +581,12 @@ const pageDesc =
               "ring-blue-500",
               "bg-white",
               "dark:bg-[#1a2333]",
-              "shadow-md"
+              "shadow-md",
             );
             btnEl.classList.remove(
               "bg-slate-50",
               "dark:bg-white/5",
-              "border-slate-200"
+              "border-slate-200",
             );
             // Mostrar flecha
             const arrow = btnEl.querySelector(".card-arrow");
@@ -594,12 +597,12 @@ const pageDesc =
               "ring-blue-500",
               "bg-white",
               "dark:bg-[#1a2333]",
-              "shadow-md"
+              "shadow-md",
             );
             btnEl.classList.add(
               "bg-slate-50",
               "dark:bg-white/5",
-              "border-slate-200"
+              "border-slate-200",
             );
             // Ocultar flecha
             const arrow = btnEl.querySelector(".card-arrow");
