@@ -78,17 +78,33 @@ const VectorMap = () => {
   };
 
   // Límites para evitar que el mapa "se vaya" (Clamping)
-  const handleMoveEnd = (newPos: { coordinates: [number, number]; zoom: number }) => {
+  const handleMoveEnd = (newPos: {
+    coordinates: [number, number];
+    zoom: number;
+  }) => {
+    // Validación de seguridad: evitar que el mapa desaparezca por coordenadas inválidas
+    if (
+      !newPos ||
+      !newPos.coordinates ||
+      !Array.isArray(newPos.coordinates) ||
+      newPos.coordinates.length !== 2
+    ) {
+      return;
+    }
+
     const { coordinates, zoom } = newPos;
     let [lon, lat] = coordinates;
 
-    // Límites aproximados de México y zona de interés
-    const MIN_LON = -120;
-    const MAX_LON = -85;
-    const MIN_LAT = 13;
-    const MAX_LAT = 34;
+    // Verificar si son números válidos (evitar NaN)
+    if (isNaN(lon) || isNaN(lat)) return;
 
-    // Clamp
+    // Límites aproximados de México y zona de interés (Ampliados para mejor UX)
+    const MIN_LON = -130;
+    const MAX_LON = -80;
+    const MIN_LAT = 10;
+    const MAX_LAT = 40;
+
+    // Clamp (Restricción de movimiento)
     if (lon < MIN_LON) lon = MIN_LON;
     if (lon > MAX_LON) lon = MAX_LON;
     if (lat < MIN_LAT) lat = MIN_LAT;
@@ -170,18 +186,20 @@ const VectorMap = () => {
           </button>
         </div>
         
-        <button
-          type="button"
-          onClick={handleReset}
-          onMouseDown={(e) => { e.stopPropagation(); }}
-          className="w-12 h-12 md:w-[52px] md:h-[52px] min-w-[3rem] min-h-[3rem] flex items-center justify-center text-slate-600 dark:text-slate-300 bg-white dark:bg-[#151e2e] hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 rounded-xl transition-all cursor-pointer touch-none"
-          aria-label="Centrar Mapa"
-          style={{ pointerEvents: 'auto' }}
-        >
-           <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-             <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-           </svg>
-        </button>
+        <div className="bg-white/90 dark:bg-[#151e2e]/90 backdrop-blur-lg rounded-2xl shadow-lg border border-slate-200 dark:border-white/10 p-1.5 flex flex-col gap-1" style={{ pointerEvents: 'auto' }}>
+          <button
+            type="button"
+            onClick={handleReset}
+            onMouseDown={(e) => { e.stopPropagation(); }}
+            className="w-10 h-10 md:w-11 md:h-11 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center text-slate-600 dark:text-slate-300 bg-white dark:bg-[#151e2e] hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 rounded-xl transition-all cursor-pointer touch-none"
+            aria-label="Centrar Mapa"
+            style={{ pointerEvents: 'auto' }}
+          >
+             <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+               <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+             </svg>
+          </button>
+        </div>
       </div>
 
       {/* === 2. MAPA INTERACTIVO === */}
