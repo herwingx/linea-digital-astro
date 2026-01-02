@@ -1,6 +1,6 @@
 {
   "name": "linea-digital-astro",
-  "description": "Sitio web para Línea Digital, creado con Astro, Tailwind CSS y React, integrado con Contentful y la API de Gemini para funcionalidades de IA.",
+  "description": "Distribuidor Telcel Premium. Plataforma corporativa de alto rendimiento con Astro, React, Bento Grid y Gemini AI para soluciones 5G y empresariales.",
   "type": "module",
   "version": "1.0.0",
   "homepage": "https://linea-digital.com",
