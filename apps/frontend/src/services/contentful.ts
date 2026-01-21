@@ -56,10 +56,13 @@ export type PromoEntry = Entry<PromoFields, undefined, string>;
 export type PlanEntry = Entry<PlanFields, undefined, string>;
 
 // Initialize the Contentful client
-const client = createClient({
-  space: import.meta.env.CONTENTFUL_SPACE_ID as string,
-  accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN as string,
-});
+const spaceId = import.meta.env.CONTENTFUL_SPACE_ID as string;
+const accessToken = import.meta.env.CONTENTFUL_ACCESS_TOKEN as string;
+
+const client = (spaceId && accessToken) ? createClient({
+  space: spaceId,
+  accessToken: accessToken,
+}) : null;
 
 /**
  * Obtiene todas las promociones marcadas como "activas" desde Contentful.
@@ -67,6 +70,7 @@ const client = createClient({
  * @returns Una promesa que resuelve a un array de entradas de promoción (`PromoEntry`).
  */
 export async function getActivePromos(): Promise<PromoEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PromoFields>({
       content_type: 'promocion',
@@ -85,14 +89,12 @@ export async function getActivePromos(): Promise<PromoEntry[]> {
  * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
  */
 export async function getPlansLibre(): Promise<PlanEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'planesTelcelLibre',
-      // Opcional: Ordenar por precio ascendente
       order: ['fields.precio'],
-
     });
-
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
@@ -105,14 +107,12 @@ export async function getPlansLibre(): Promise<PlanEntry[]> {
  * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
  */
 export async function getPlansUltra(): Promise<PlanEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'planesTelcelUltra',
-      // Opcional: Ordenar por precio ascendente
       order: ['fields.precio'],
-
     });
-
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
@@ -125,14 +125,12 @@ export async function getPlansUltra(): Promise<PlanEntry[]> {
  * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
  */
 export async function getPlansInternet(): Promise<PlanEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'planesInternetLibre',
-      // Opcional: Ordenar por precio ascendente
       order: ['fields.precio'],
-
     });
-
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
@@ -145,14 +143,12 @@ export async function getPlansInternet(): Promise<PlanEntry[]> {
  * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
  */
 export async function getInternetEnTuCasaLibre(): Promise<PlanEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'internetEnTuCasaLibre',
-      // Opcional: Ordenar por precio ascendente
       order: ['fields.precio'],
-
     });
-
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
@@ -165,13 +161,12 @@ export async function getInternetEnTuCasaLibre(): Promise<PlanEntry[]> {
  * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
  */
 export async function getPlansEmpresas(): Promise<PlanEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'planesTelcelEmpresa',
-      // Opcional: Ordenar por precio ascendente
       order: ['fields.precio'],
     });
-
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
@@ -184,13 +179,12 @@ export async function getPlansEmpresas(): Promise<PlanEntry[]> {
  * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
  */
 export async function getPlansEmpresasUltra(): Promise<PlanEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'planesTelcelUltraEmpresa',
-      // Opcional: Ordenar por precio ascendente
       order: ['fields.precio'],
     });
-
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
@@ -203,14 +197,12 @@ export async function getPlansEmpresasUltra(): Promise<PlanEntry[]> {
  * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
  */
 export async function getPlansInternetEmpresa(): Promise<PlanEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'planesInternetEmpresa',
-      // Opcional: Ordenar por precio ascendente
       order: ['fields.precio'],
-
     });
-
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
@@ -223,14 +215,12 @@ export async function getPlansInternetEmpresa(): Promise<PlanEntry[]> {
  * @returns Una promesa que resuelve a un array de entradas de planes (`PlanEntry`).
  */
 export async function getInternetEnTuEmpresa(): Promise<PlanEntry[]> {
+  if (!client) return [];
   try {
     const entries = await client.getEntries<PlanFields>({
       content_type: 'internetEnTuEmpresa',
-      // Opcional: Ordenar por precio ascendente
       order: ['fields.precio'],
-
     });
-
     return entries.items as PlanEntry[];
   } catch (error) {
     console.error('Error obteniendo planes de Contentful:', error);
@@ -292,61 +282,6 @@ export async function getAllChatbotKnowledge() {
         }
       }
     };
-
-    // Logs detallados por categoría
-   /*  console.log('\n📢 PROMOCIONES ACTIVAS:', promos.length);
-    console.log(JSON.stringify(promos, null, 2));
-
-    console.log('\n👤 PLANES PERSONAS - LIBRE:', planesLibre.length);
-    console.log(JSON.stringify(planesLibre, null, 2));
-
-    console.log('\n👤 PLANES PERSONAS - ULTRA:', planesUltra.length);
-    console.log(JSON.stringify(planesUltra, null, 2));
-
-    console.log('\n👤 PLANES PERSONAS - INTERNET:', planesInternet.length);
-    console.log(JSON.stringify(planesInternet, null, 2));
-
-    console.log('\n🏠 INTERNET EN TU CASA - LIBRE:', internetCasaLibre.length);
-    console.log(JSON.stringify(internetCasaLibre, null, 2));
-
-    console.log('\n🏢 PLANES EMPRESAS - LIBRE:', planesEmpresas.length);
-    console.log(JSON.stringify(planesEmpresas, null, 2));
-
-    console.log('\n🏢 PLANES EMPRESAS - ULTRA:', planesEmpresasUltra.length);
-    console.log(JSON.stringify(planesEmpresasUltra, null, 2));
-
-    console.log('\n🏢 PLANES EMPRESAS - INTERNET:', planesInternetEmpresa.length);
-    console.log(JSON.stringify(planesInternetEmpresa, null, 2));
-
-    console.log('\n🏢 INTERNET EN TU EMPRESA:', internetEmpresa.length);
-    console.log(JSON.stringify(internetEmpresa, null, 2));
-
- */
-    // Resumen total
-    const totalItems =
-      promos.length +
-      planesLibre.length +
-      planesUltra.length +
-      planesInternet.length +
-      internetCasaLibre.length +
-      planesEmpresas.length +
-      planesEmpresasUltra.length +
-      planesInternetEmpresa.length +
-      internetEmpresa.length;
-/* 
-    console.log('\n📊 ===== RESUMEN TOTAL =====');
-    console.log(`Total de items en knowledge base: ${totalItems}`);
-    console.log('Desglose:');
-    console.log(`  - Promociones: ${promos.length}`);
-    console.log(`  - Planes Personas Libre: ${planesLibre.length}`);
-    console.log(`  - Planes Personas Ultra: ${planesUltra.length}`);
-    console.log(`  - Planes Internet Personas: ${planesInternet.length}`);
-    console.log(`  - Internet Casa Libre: ${internetCasaLibre.length}`);
-    console.log(`  - Planes Empresas Libre: ${planesEmpresas.length}`);
-    console.log(`  - Planes Empresas Ultra: ${planesEmpresasUltra.length}`);
-    console.log(`  - Planes Internet Empresas: ${planesInternetEmpresa.length}`);
-    console.log(`  - Internet Empresa: ${internetEmpresa.length}`);
-    console.log('🤖 ===== FIN DE DATOS PARA CHATBOT =====\n'); */
 
     return knowledgeBase;
   } catch (error) {
