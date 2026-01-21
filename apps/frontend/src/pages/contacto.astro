@@ -431,7 +431,7 @@ const INPUT_STYLE =
         e.preventDefault(); // DETENER RECARGA
 
         const submitButton = form.querySelector(
-          'button[type="submit"]'
+          'button[type="submit"]',
         ) as HTMLButtonElement;
         const originalContent = submitButton
           ? submitButton.innerHTML
@@ -450,8 +450,10 @@ const INPUT_STYLE =
           const formData = new FormData(form);
           const data = Object.fromEntries(formData.entries());
 
-          // 2. Petición al API
-          const response = await fetch("/api/send-email", {
+          // 2. Petición al API Backend
+          const apiUrl =
+            (import.meta as any).env.PUBLIC_API_URL || "http://localhost:3000";
+          const response = await fetch(`${apiUrl}/email/send`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),

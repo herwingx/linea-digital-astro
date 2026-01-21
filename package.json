@@ -1,41 +1,17 @@
 {
-  "name": "linea-digital-astro",
-  "description": "Distribuidor Telcel Premium. Plataforma corporativa de alto rendimiento con Astro, React, Bento Grid y Gemini AI para soluciones 5G y empresariales.",
-  "type": "module",
-  "version": "1.0.0",
-  "homepage": "https://linea-digital.com",
+  "name": "linea-digital-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/node": "^9.5.1",
-    "@astrojs/react": "^4.4.2",
-    "@getbrevo/brevo": "^3.0.1",
-    "@google/generative-ai": "^0.24.1",
-    "astro": "^5.16.4",
-    "contentful": "^11.8.13",
-    "d3-scale": "^4.0.2",
-    "dotenv": "^17.2.3",
-    "nodemailer": "^7.0.10",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-simple-maps": "^3.0.0",
-    "react-tooltip": "^5.30.0",
-    "swiper": "^12.0.3",
-    "typescript": "^5.9.3"
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" --names \"FRONT,BACK\" --prefix-colors \"cyan,magenta\" --kill-others",
+    "dev:frontend": "npm run dev --workspace=apps/frontend",
+    "dev:backend": "npm run start:dev --workspace=apps/backend",
+    "build": "npm run build --workspaces",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^6.0.2",
-    "@types/nodemailer": "^7.0.4",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "autoprefixer": "^10.4.22",
-    "postcss": "^8.5.6",
-    "prop-types": "^15.8.1",
-    "tailwindcss": "^3.4.18"
+    "concurrently": "^8.2.2"
   }
 }

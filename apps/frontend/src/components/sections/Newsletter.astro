@@ -179,10 +179,17 @@
               />
             </div>
 
+            <!-- Feedback (Visible inline) -->
+            <div
+              id="newsletter-feedback"
+              class="text-center text-xs font-bold transition-all duration-300 opacity-0 mb-0 h-0 overflow-hidden"
+            >
+            </div>
+
             <!-- Submit Button -->
             <button
               type="submit"
-              class="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+              class="flex w-full mt-2 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
             >
               <span id="btn-text">Quiero Acceso VIP</span>
               <!-- Icono Arrow -->
@@ -218,13 +225,6 @@
                 ></path></svg
               >
             </button>
-
-            <!-- Feedback flotante (Absolute position) -->
-            <div
-              id="newsletter-feedback"
-              class="absolute left-0 right-0 -bottom-10 text-center text-xs font-medium min-h-[1.5rem] transition-all duration-500 opacity-0 translate-y-4 pointer-events-none"
-            >
-            </div>
 
             <p class="mt-4 text-center text-[10px] text-slate-500">
               Al suscribirte aceptas nuestra política de privacidad.
@@ -283,19 +283,22 @@
     const newBtnText = newForm.querySelector("#btn-text");
     const newBtnIcon = newForm.querySelector("#btn-icon");
     const newBtnSpinner = newForm.querySelector("#btn-spinner");
+    const newFeedback = newForm.querySelector("#newsletter-feedback");
     const newInput = newForm.querySelector(
-      "#email-address"
+      "#email-address",
     ) as HTMLInputElement;
 
     const updateFeedback = (msg: string, success: boolean) => {
-      feedback.innerHTML = `<span class="${success ? "text-emerald-400" : "text-red-400"} bg-[#0B1120] px-3 py-1 rounded-full border border-white/10 shadow-xl">${msg}</span>`;
-      feedback.classList.remove("opacity-0", "translate-y-4");
-      feedback.classList.add("opacity-100", "translate-y-0");
+      if (!newFeedback) return;
+      newFeedback.innerHTML = `<span class="${success ? "text-emerald-400" : "text-red-400"} bg-white/5 px-4 py-2 rounded-full border border-white/10 shadow-lg inline-block my-2">${msg}</span>`;
+      newFeedback.classList.remove("opacity-0", "h-0", "mb-0");
+      newFeedback.classList.add("opacity-100", "h-auto", "mb-4");
     };
 
     const clearFeedback = () => {
-      feedback.classList.add("opacity-0", "translate-y-4");
-      feedback.classList.remove("opacity-100", "translate-y-0");
+      if (!newFeedback) return;
+      newFeedback.classList.add("opacity-0", "h-0", "mb-0");
+      newFeedback.classList.remove("opacity-100", "h-auto", "mb-4");
     };
 
     newForm.addEventListener("submit", async (e) => {
@@ -311,9 +314,13 @@
 
       try {
         // POST al endpoint API (Backend configurado previamente)
-        const response = await fetch("/api/subscribe", {
+        // POST al endpoint API (Backend)
+        const apiUrl =
+          (import.meta as any).env.PUBLIC_API_URL || "http://localhost:3000";
+        const response = await fetch(`${apiUrl}/email/subscribe`, {
           method: "POST",
-          body: new FormData(newForm),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: newInput.value }),
         });
 
         const data = await response.json();
@@ -326,11 +333,20 @@
           newInput.value = ""; // Limpiar campo
 
           // Éxito visual en botón
+          const isAlreadySubscribed =
+            data.status === "exists" || data.status === "updated";
+
           if (newBtn) {
             newBtn.classList.remove("bg-blue-600", "hover:bg-blue-500");
-            newBtn.classList.add("bg-emerald-600", "cursor-default");
+            newBtn.classList.add(
+              isAlreadySubscribed ? "bg-amber-500" : "bg-emerald-600",
+              "cursor-default",
+            );
           }
-          if (newBtnText) newBtnText.textContent = "¡Listo!";
+          if (newBtnText)
+            newBtnText.textContent = isAlreadySubscribed
+              ? "Ya registrado"
+              : "¡Suscrito!";
           newBtnSpinner?.classList.add("hidden");
           newBtnText?.classList.remove("hidden");
 
@@ -339,7 +355,11 @@
             if (newBtn) {
               newBtn.disabled = false;
               newBtn.classList.add("bg-blue-600", "hover:bg-blue-500");
-              newBtn.classList.remove("bg-emerald-600", "cursor-default");
+              newBtn.classList.remove(
+                "bg-emerald-600",
+                "bg-amber-500",
+                "cursor-default",
+              );
             }
             if (newBtnText) newBtnText.textContent = "Quiero Acceso VIP";
             newBtnIcon?.classList.remove("hidden");

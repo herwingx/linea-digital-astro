@@ -154,38 +154,38 @@ export class ChatbotClient {
     this.elements.minimizeBtn.onclick = (e) => { e.preventDefault(); this.toggle(); };
 
     let resetTimeout: any;
-    
+
     this.elements.resetBtn.onclick = (e) => {
       e.preventDefault();
       const btn = this.elements.resetBtn;
-      
+
       if (btn.dataset.confirm === 'true') {
         this.elements.messages.style.opacity = '0';
         setTimeout(() => {
-            localStorage.removeItem(this.STORAGE_KEY);
-            location.reload();
+          localStorage.removeItem(this.STORAGE_KEY);
+          location.reload();
         }, 200);
       } else {
         btn.dataset.confirm = 'true';
-        
+
         btn.classList.remove('text-slate-400', 'hover:bg-slate-100', 'hover:text-red-500', 'dark:hover:bg-white/5');
         btn.classList.add('bg-red-500', 'text-white', 'scale-110', 'shadow-md', 'ring-2', 'ring-red-200', 'dark:ring-red-900');
-        
+
         btn.innerHTML = `<svg class="h-5 w-5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
-        
+
         const revert = () => {
-            btn.dataset.confirm = 'false';
-            btn.innerHTML = `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
-            
-            btn.classList.remove('bg-red-500', 'text-white', 'scale-110', 'shadow-md', 'ring-2', 'ring-red-200', 'dark:ring-red-900');
-            btn.classList.add('text-slate-400', 'hover:bg-slate-100', 'hover:text-red-500', 'dark:hover:bg-white/5');
+          btn.dataset.confirm = 'false';
+          btn.innerHTML = `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
+
+          btn.classList.remove('bg-red-500', 'text-white', 'scale-110', 'shadow-md', 'ring-2', 'ring-red-200', 'dark:ring-red-900');
+          btn.classList.add('text-slate-400', 'hover:bg-slate-100', 'hover:text-red-500', 'dark:hover:bg-white/5');
         };
 
         clearTimeout(resetTimeout);
         resetTimeout = setTimeout(revert, 3000);
-        
+
         btn.onmouseleave = () => {
-            setTimeout(revert, 300);
+          setTimeout(revert, 300);
         };
       }
     };
@@ -280,7 +280,8 @@ export class ChatbotClient {
     this.showTyping();
 
     try {
-      const response = await fetch('/api/chat', {
+      const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${apiUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -295,10 +296,10 @@ export class ChatbotClient {
       if (response.ok && data.response) {
         this.addMessage('bot', data.response);
       } else {
-        const errorMessage = data.fallback || 
+        const errorMessage = data.fallback ||
           'Disculpa, tuve un problema técnico. 😔\n\nPor favor intenta de nuevo o llámanos:\n📞 Tuxtla: 961 618 92 00\n📞 Tapachula: 962 625 58 10';
         this.addMessage('bot', errorMessage);
-        
+
         if (data.error) {
           console.error('❌ Error del servidor:', data.error);
         }
