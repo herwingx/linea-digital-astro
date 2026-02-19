@@ -3,7 +3,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import liaEjecutivaImage from "../assets/lia-ejecutiva.png"; // Nueva imagen de Lía
-import liaHeroImage from "../assets/lia-index.png"; // Nueva imagen de Lía
+import liaHeroImage from "../assets/lia-hero.png"; // Nueva imagen de Lía
 import Testimonials from "../components/sections/Testimonials.astro";
 import Button from "../components/ui/Button.astro";
 import "../styles/user.css";
@@ -31,16 +31,16 @@ const pageDesc =
     <!-- 2. LÍA (EL PERSONAJE HEROICO) - LAYERED COMPOSITION -->
     <!-- En móvil la ponemos absoluta al fondo para que quede detrás del texto con opacidad. En Desktop a la derecha Full HD -->
     <div
-      class="absolute bottom-0 right-0 lg:bottom-30 lg:-right-64 z-10 w-full h-full lg:w-[60%] flex items-end justify-center lg:justify-end overflow-visible pointer-events-none hidden sm:block"
+      class="absolute inset-y-0 right-0 z-10 w-full lg:w-[55%] flex items-end justify-end pointer-events-none hidden sm:block"
     >
       <!-- Contenedor de la Imagen con Máscaras -->
       <div
-        class="relative h-[55%] md:h-[60%] lg:h-[90%] w-auto max-w-none transition-transform duration-1000 ease-out translate-y-0 lg:translate-y-0 lg:-translate-x-16 lg:mr-16"
+        class="relative h-[55%] md:h-[60%] lg:h-full ml-auto"
       >
         <Image
           src={liaHeroImage}
           alt="Lía Asistente Virtual"
-          class="h-full w-auto object-cover object-top mask-gradient-b"
+          class="h-full w-auto max-w-none object-cover object-top mask-gradient-b float-right"
           loading="eager"
         />
 
